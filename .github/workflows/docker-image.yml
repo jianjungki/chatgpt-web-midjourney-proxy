@@ -33,6 +33,7 @@ jobs:
           tags: |
             type=raw,value=latest
             type=ref,event=tag
+            type=raw,value=v$(date +'%m.%d')
       
       -
         name: Set up QEMU
@@ -53,4 +54,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: ${{ inputs.use-cache == 'true' && 'type=gha' || 'type=local,src=/tmp' }}
           cache-to: ${{ inputs.use-cache == 'true' && 'type=gha, mode=max' || 'type=local,dest=/tmp' }}
-
