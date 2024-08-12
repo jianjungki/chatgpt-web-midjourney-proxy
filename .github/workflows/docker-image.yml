@@ -16,6 +16,7 @@ jobs:
       - run: |
           echo 本次构建的版本为：${{ github.ref_name }}
           echo 账号：${{ secrets.DOCKER_USERNAME }}
+          echo "Current date: $(date +'%m.%d')"
           env
       -
         name: Log in to Docker Hub
