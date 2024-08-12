@@ -10,7 +10,7 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      -
+      - 
         name: Check out the repo
         uses: actions/checkout@v3
       - run: |
@@ -24,33 +24,33 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - 
+      -
         name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ydlhero/chatgpt-web-midjourney-proxy
+          images: ag471782517/chatweb
           tags: |
             type=raw,value=latest
             type=ref,event=tag
       
-      - 
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
-      - 
+      -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       
-      - 
+      -
         name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: ${{ inputs.use-cache == 'true' && 'type=gha' || 'type=local,src=/tmp' }}
           cache-to: ${{ inputs.use-cache == 'true' && 'type=gha, mode=max' || 'type=local,dest=/tmp' }}
-            
+
