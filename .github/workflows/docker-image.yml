@@ -17,6 +17,7 @@ jobs:
           echo 本次构建的版本为：${{ github.ref_name }}
           echo 账号：${{ secrets.DOCKER_USERNAME }}
           echo "Current date: $(date +'%m.%d')"
+          echo "DATE_TAG=$(date +'%m.%d')" >> $GITHUB_ENV
           env
       -
         name: Log in to Docker Hub
@@ -34,7 +35,12 @@ jobs:
           tags: |
             type=raw,value=latest
             type=ref,event=tag
-            type=raw,value=v$(date +'%m.%d')
+            type=raw,value=v${{ env.DATE_TAG }}
+      
+      -
+        name: Verify generated tags
+        run: |
+          echo "Generated tags: ${{ steps.meta.outputs.tags }}"
       
       -
         name: Set up QEMU
