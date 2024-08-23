@@ -60,6 +60,7 @@ export default {
     avatarLink: '頭貼連結',
     name: '名稱',
     description: '描述',
+    backgroundImage: '背景圖片',
     role: '角色設定',
     temperature: 'Temperature',
     top_p: 'Top_p',
@@ -431,7 +432,10 @@ export default {
     "nosup": "暫不支持",
     "rwgen2": "版本: Gen-2, 價格實惠",
     "rwgen3": "版本: Gen-3 Alpha",
-    "repeat2":"Expired.Reget"
+    "repeat2":"Expired.Reget",
+    
+    rwgen3turbo:'版本: Gen-3 Alpha Turbo',
+    gen3a_turbo_img:'Gen-3 Alpha Turbo 必须带图',
   },
   dance:{
     menu: "跳舞",
