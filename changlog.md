@@ -1,6 +1,13 @@
 # 功能升级日志
 
 #  计划 
+# 2.20.7
+- 😄 新增：runway 可以 extend
+- 🐞 修复：ideogram 清空
+
+# 2.20.6
+- 😄 新增： 画图 ideogram 相关模块
+
 # 2.20.5
 - 😄 新增： flux 相关模型的dall.e格式
 - 🐞 修复：claude-3-5，maxtoken问题 #495
