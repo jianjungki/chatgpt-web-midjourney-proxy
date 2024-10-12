@@ -14,7 +14,7 @@ const ms= useMessage();
 const wavRecorder= new  WavRecorder({ sampleRate: 24000 })
 const wavStreamPlayer= new WavStreamPlayer({ sampleRate: 24000 }) 
  
-const st= ref({apikey:'', isConnect:false,baseUrl:'',isRealtime:false })
+const st= ref({apikey:'', isConnect:false,baseUrl:'',isRealtime:true })
 
 
 const realtimeEvents= ref<RealtimeEvent[]>([]);
