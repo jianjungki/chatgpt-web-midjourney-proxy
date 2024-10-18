@@ -336,6 +336,14 @@ export default {
     ,rtservererror:'websocket 连接服务器错误！'
     ,rtservererror2:'不支持录音，可能是设备原因！'
     ,rtconecting:'正在连接服务器'
+
+    ,confirmDelete:'确认要删除？'
+    ,pikaabout:'Pika 相关'
+    ,pikaserver:'Pika 接口地址'
+    ,pikakeyPlaceholder:'Pika 的API Key 可不填'
+    ,createFail:'生成失败'
+    ,selecteff:'参考效果'
+
   },
 
 	draw: {

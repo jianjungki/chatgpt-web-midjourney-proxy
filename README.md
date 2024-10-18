@@ -9,6 +9,7 @@
 
 ![cover](./docs/mj2a1.jpg)
 ## 支持功能 
+- [x] 支持 pika  文生视频，图生视频
 - [x] 支持 openai realtime [点击观看.youtube](https://www.youtube.com/watch?v=pKvVi3oBRQU)  [B站](https://www.bilibili.com/video/BV1Kt22YPE2c/) 
 - [x] 支持 kling 可灵 文生视频，图生视频, 绘图
 - [x] 支持 ideogram 绘图
@@ -17,6 +18,7 @@
 - [x] 支持 viggle 舞蹈
 - [x] 支持 suno 单独模块，可歌词调整 曲风调整
 - [x] 支持 suno 以音频生成音频
+- [x] 支持 flux dall.e 文生图
 - [x] 原chatgpt web 所有功能
 - [x] chatgpt web 支持自定义api key、base_url
 - [x] midjourney 文生图、垫图+文生图  、图变 U1到U4 、 V1到V4、重绘等操作
@@ -40,8 +42,8 @@
 
 ## 无服务器-个人桌面安装
 > - [x] 请到 https://github.com/Dooy/chatgpt-web-midjourney-proxy/releases 下载最新版本安装(选择合适你操作系统的版本)
-> - [x] 选择一个合适的中转服务商( 最好都支持 `gpt`  `gpts` `midjourney` `claude`  `suno` `luma` `runway` `viggle` `flux` `ideogram` `kling` )
-> - [x] 中转服务商推荐 https://www.openai-hk.com 一个`key`和`api接口地址` 同时支持 [gpt](https://www.openai-hk.com/docs/getting-started.html) [gpts](https://www.openai-hk.com/docs/openai/gpts.html) [midjourney](https://www.openai-hk.com/docs/midjourney/guide.html) [claude](https://www.openai-hk.com/docs/lab/claude-3.html) [suno](https://www.openai-hk.com/docs/lab/suno-v3.html) [luma](https://www.openai-hk.com/docs/lab/luma-video.html) [runway](https://www.openai-hk.com/docs/lab/runway-video.html) [viggle](https://www.openai-hk.com/docs/lab/viggle-dance.html) [ideogram](https://www.openai-hk.com/docs/lab/ideogram.html) [flux](https://www.openai-hk.com/docs/lab/flux.html) [kling](https://www.openai-hk.com/docs/lab/kling.html)，mj-fast最低能到0.12rmb/张,`suno` 最低能到6分一首, `luma`最低能到0.16rmb/次
+> - [x] 选择一个合适的中转服务商( 最好都支持 `gpt`  `gpts` `midjourney` `claude`  `suno` `luma` `runway` `viggle` `flux` `ideogram` `kling` `pika`)
+> - [x] 中转服务商推荐 https://www.openai-hk.com 一个`key`和`api接口地址` 同时支持 [gpt](https://www.openai-hk.com/docs/getting-started.html) [gpts](https://www.openai-hk.com/docs/openai/gpts.html) [midjourney](https://www.openai-hk.com/docs/midjourney/guide.html) [claude](https://www.openai-hk.com/docs/lab/claude-3.html) [suno](https://www.openai-hk.com/docs/lab/suno-v3.html) [luma](https://www.openai-hk.com/docs/lab/luma-video.html) [runway](https://www.openai-hk.com/docs/lab/runway-video.html) [viggle](https://www.openai-hk.com/docs/lab/viggle-dance.html) [ideogram](https://www.openai-hk.com/docs/lab/ideogram.html) [flux](https://www.openai-hk.com/docs/lab/flux.html) [kling](https://www.openai-hk.com/docs/lab/kling.html) [pika](https://www.openai-hk.com/docs/lab/pika-video.html)，mj-fast最低能到0.12rmb/张,`suno` 最低能到4分一首 
 ![多模态](./docs/suno-ds.jpg)
 
 ## Vercel 一键部署
@@ -75,7 +77,7 @@
 | AUTH_SECRET_ERROR_TIME | 防爆破验证：停留时间 单位分钟  | 无  | ✅ |  x|
 | CLOSE_MD_PREVIEW | 是否不关闭输入预览 | 无  | ✅ |  ✅|
 | UPLOAD_TYPE | 指定上传方式 [`R2` R2上传] [`API` 跟随UI前端中转]、[`Container` 本地容器]、[`MyUrl` 自定义链接]  |  空 | ✅ |  x|
-| MENU_DISABLE  | 菜单禁用 可选:gpts,draws,gallery,music,video,dance |  空 | ✅ |  ✅|
+| MENU_DISABLE  | 菜单禁用 可选:gpts,draws,gallery,music,video,dance,realtime |  空 | ✅ |  ✅|
 | VISION_MODEL  | 默认使用的识图 可选:`gpt-4o`,`gpt-4-turb`,`gpt-4-vision-preview`等 |  空 | ✅ |  ✅|
 | SYSTEM_MESSAGE  | 自定义默认角色消息 |  空 | ✅ |  ✅|
 | CUSTOM_VISION_MODELS  | 自定义可视图模型 用`,` 分开 |  空 | ✅ |  ✅|
