@@ -6,4 +6,4 @@ export function setupStore(app: App) {
 }
 
 export * from './modules'
-export * from "./homeStore"
+export * from './homeStore'

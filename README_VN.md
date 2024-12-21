@@ -114,7 +114,7 @@ curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/file" htt
 Kết quả trả về
 ```json
 {
-"url":"https://xxxxxxx.jpg"
+  "url": "https://xxxxxxx.jpg"
 }
 ```
 

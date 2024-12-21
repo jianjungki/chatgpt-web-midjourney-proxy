@@ -2,10 +2,9 @@
 import { computed, ref } from 'vue'
 import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
-import Advanced from './Advanced.vue'
+import About from './About.vue'
 import aiModel from '@/views/mj/aiModel.vue'
 import aiSetServer from '@/views/mj/aiSetServer.vue'
-import About from './About.vue'
 import { homeStore, useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
@@ -58,11 +57,11 @@ const show = computed({
           </template>
           <div class="min-h-[100px]">
             <!-- <Advanced /> -->
-            <aiModel/>
+            <aiModel />
           </div>
         </NTabPane>
 
-        <NTabPane name="server" tab="server" v-if=" ! homeStore.myData.session.isHideServer">
+        <NTabPane v-if=" !homeStore.myData.session.isHideServer" name="server" tab="server">
           <template #tab>
             <SvgIcon class="text-lg" icon="mingcute:server-line" />
             <span class="ml-2">{{ $t('mjset.server') }}</span>
@@ -77,7 +76,6 @@ const show = computed({
           </template>
           <About />
         </NTabPane>
-
       </NTabs>
     </div>
   </NModal>

@@ -4,8 +4,8 @@ import * as types from './types'
 import { fetch as globalFetch } from './fetch'
 import { streamAsyncIterable } from './stream-async-iterable'
 
-export class ChatGPTError2 extends types.ChatGPTError{
-    reason?:string
+export class ChatGPTError2 extends types.ChatGPTError {
+  reason?: string
 }
 export async function fetchSSE(
   url: string,
@@ -13,21 +13,23 @@ export async function fetchSSE(
     onMessage: (data: string) => void
     onError?: (error: any) => void
   },
-  fetch: types.FetchFn = globalFetch
+  fetch: types.FetchFn = globalFetch,
 ) {
   const { onMessage, onError, ...fetchOptions } = options
-  let res ;
-  try{
-     res = await fetch(url, fetchOptions)
-  }catch(e :any ){ 
-    throw {reason: JSON.stringify({message:'fetch error, pleace check url',url ,code:'fetch_error'}) } 
+  let res
+  try {
+    res = await fetch(url, fetchOptions)
+  }
+  catch (e: any) {
+    throw { reason: JSON.stringify({ message: 'fetch error, pleace check url', url, code: 'fetch_error' }) }
   }
   if (!res.ok) {
     let reason: string
 
     try {
       reason = await res.text()
-    } catch (err) {
+    }
+    catch (err) {
       reason = res.statusText
     }
 
@@ -35,14 +37,13 @@ export async function fetchSSE(
     const error = new ChatGPTError2(msg, { cause: res })
     error.statusCode = res.status
     error.statusText = res.statusText
-    error.reason =reason
+    error.reason = reason
     throw error
   }
 
   const parser = createParser((event) => {
-    if (event.type === 'event') {
+    if (event.type === 'event')
       onMessage(event.data)
-    }
   })
 
   // handle special response errors
@@ -51,7 +52,8 @@ export async function fetchSSE(
 
     try {
       response = JSON.parse(chunk)
-    } catch {
+    }
+    catch {
       // ignore
     }
 
@@ -61,11 +63,10 @@ export async function fetchSSE(
       error.statusCode = response.detail.code
       error.statusText = response.detail.message
 
-      if (onError) {
+      if (onError)
         onError(error)
-      } else {
+      else
         console.error(error)
-      }
 
       // don't feed to the event parser
       return
@@ -79,20 +80,19 @@ export async function fetchSSE(
     // web standards, so this is a workaround...
     const body: NodeJS.ReadableStream = res.body as any
 
-    if (!body.on || !body.read) {
+    if (!body.on || !body.read)
       throw new types.ChatGPTError('unsupported "fetch" implementation')
-    }
 
     body.on('readable', () => {
       let chunk: string | Buffer
-      while (null !== (chunk = body.read())) {
+      while ((chunk = body.read()) !== null)
         feed(chunk.toString())
-      }
     })
-  } else {
+  }
+  else {
     for await (const chunk of streamAsyncIterable(res.body)) {
       const str = new TextDecoder().decode(chunk)
-      //console.log(str );
+      // console.log(str );
       feed(str)
     }
   }

@@ -19,14 +19,14 @@ export class WavPacker {
    * @returns {ArrayBuffer}
    */
   static floatTo16BitPCM(float32Array) {
-    const buffer = new ArrayBuffer(float32Array.length * 2);
-    const view = new DataView(buffer);
-    let offset = 0;
+    const buffer = new ArrayBuffer(float32Array.length * 2)
+    const view = new DataView(buffer)
+    let offset = 0
     for (let i = 0; i < float32Array.length; i++, offset += 2) {
-      let s = Math.max(-1, Math.min(1, float32Array[i]));
-      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+      const s = Math.max(-1, Math.min(1, float32Array[i]))
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true)
     }
-    return buffer;
+    return buffer
   }
 
   /**
@@ -37,11 +37,11 @@ export class WavPacker {
    */
   static mergeBuffers(leftBuffer, rightBuffer) {
     const tmpArray = new Uint8Array(
-      leftBuffer.byteLength + rightBuffer.byteLength
-    );
-    tmpArray.set(new Uint8Array(leftBuffer), 0);
-    tmpArray.set(new Uint8Array(rightBuffer), leftBuffer.byteLength);
-    return tmpArray.buffer;
+      leftBuffer.byteLength + rightBuffer.byteLength,
+    )
+    tmpArray.set(new Uint8Array(leftBuffer), 0)
+    tmpArray.set(new Uint8Array(rightBuffer), leftBuffer.byteLength)
+    return tmpArray.buffer
   }
 
   /**
@@ -55,7 +55,7 @@ export class WavPacker {
     return [
       new Uint8Array([arg, arg >> 8]),
       new Uint8Array([arg, arg >> 8, arg >> 16, arg >> 24]),
-    ][size];
+    ][size]
   }
 
   /**
@@ -65,20 +65,20 @@ export class WavPacker {
    * @returns {WavPackerAudioType}
    */
   pack(sampleRate, audio) {
-    if (!audio?.bitsPerSample) {
-      throw new Error(`Missing "bitsPerSample"`);
-    } else if (!audio?.channels) {
-      throw new Error(`Missing "channels"`);
-    } else if (!audio?.data) {
-      throw new Error(`Missing "data"`);
-    }
-    const { bitsPerSample, channels, data } = audio;
+    if (!audio?.bitsPerSample)
+      throw new Error('Missing "bitsPerSample"')
+    else if (!audio?.channels)
+      throw new Error('Missing "channels"')
+    else if (!audio?.data)
+      throw new Error('Missing "data"')
+
+    const { bitsPerSample, channels, data } = audio
     const output = [
       // Header
       'RIFF',
       this._packData(
         1,
-        4 + (8 + 24) /* chunk 1 length */ + (8 + 8) /* chunk 2 length */
+        4 + (8 + 24) /* chunk 1 length */ + (8 + 8), /* chunk 2 length */
       ), // Length
       'WAVE',
       // chunk 1
@@ -94,20 +94,20 @@ export class WavPacker {
       'data', // Sub-chunk identifier
       this._packData(
         1,
-        (channels[0].length * channels.length * bitsPerSample) / 8
+        (channels[0].length * channels.length * bitsPerSample) / 8,
       ), // Chunk length
       data,
-    ];
-    const blob = new Blob(output, { type: 'audio/mpeg' });
-    const url = URL.createObjectURL(blob);
+    ]
+    const blob = new Blob(output, { type: 'audio/mpeg' })
+    const url = URL.createObjectURL(blob)
     return {
       blob,
       url,
       channelCount: channels.length,
       sampleRate,
       duration: data.byteLength / (channels.length * sampleRate * 2),
-    };
+    }
   }
 }
 
-globalThis.WavPacker = WavPacker;
+globalThis.WavPacker = WavPacker

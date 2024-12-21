@@ -3,12 +3,13 @@ export async function* streamAsyncIterable<T>(stream: ReadableStream<T>) {
   try {
     while (true) {
       const { done, value } = await reader.read()
-      if (done) {
+      if (done)
         return
-      }
+
       yield value
     }
-  } finally {
+  }
+  finally {
     reader.releaseLock()
   }
 }

@@ -21,7 +21,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-   {
+  {
     path: '/g',
     name: 'g',
     component: ChatLayout,
@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-   {
+  {
     path: '/m',
     name: 'm',
     component: ChatLayout,
@@ -61,7 +61,6 @@ const routes: RouteRecordRaw[] = [
     ],
   },
 
-
   {
     path: '/draw',
     name: 'Rootdraw',
@@ -76,7 +75,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
 
-    {
+  {
     path: '/music',
     name: 'music',
     component: sunoLayout,
@@ -88,8 +87,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/suno/music.vue'),
       },
     ],
-
-    
 
   },
   {
@@ -134,7 +131,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
 
-  //调试
+  // 调试
   // {
   //   path: '/mytest',
   //   name: 'mytest',

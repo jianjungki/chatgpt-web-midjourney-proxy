@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { NDropdown, useMessage } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
@@ -9,7 +9,7 @@ import { t } from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { copyToClip } from '@/utils/copy'
 import { homeStore } from '@/store'
-import { getSeed, mlog ,mjImgUrl, isDallImageModel} from '@/api' 
+import { getSeed, isDallImageModel, mjImgUrl, mlog } from '@/api'
 
 interface Props {
   dateTime?: string
@@ -17,8 +17,8 @@ interface Props {
   inversion?: boolean
   error?: boolean
   loading?: boolean
-  chat:Chat.Chat
-  index:number
+  chat: Chat.Chat
+  index: number
 }
 
 interface Emit {
@@ -67,11 +67,11 @@ const options = computed(() => {
       label: asRawText.value ? t('chat.preview') : t('chat.showRawText'),
       key: 'toggleRenderType',
       icon: iconRender({ icon: asRawText.value ? 'ic:outline-code-off' : 'ic:outline-code' }),
-    });
+    })
     common.unshift({
       label: t('mj.tts'),
       key: 'tts',
-      icon: iconRender({ icon:'mdi:tts' }),
+      icon: iconRender({ icon: 'mdi:tts' }),
     })
   }
 
@@ -80,9 +80,9 @@ const options = computed(() => {
 
 function handleSelect(key: 'copyText' | 'delete' | 'edit' | 'toggleRenderType' | 'tts') {
   switch (key) {
-    case 'tts': 
-      homeStore.setMyData({act:'gpt.ttsv2', actData:{ index:props.index , uuid:props.chat.uuid, text:props.text } });
-      return;
+    case 'tts':
+      homeStore.setMyData({ act: 'gpt.ttsv2', actData: { index: props.index, uuid: props.chat.uuid, text: props.text } })
+      return
     case 'copyText':
       handleCopy()
       return
@@ -102,28 +102,26 @@ function handleRegenerate() {
   emit('regenerate')
 }
 
-
-async function handleCopy(txt?:string) {
+async function handleCopy(txt?: string) {
   try {
-    await copyToClip( txt|| props.text || '')
-    message.success( t('chat.copied'))
+    await copyToClip(txt || props.text || '')
+    message.success(t('chat.copied'))
   }
   catch {
-    message.error( t('mj.copyFail') )
+    message.error(t('mj.copyFail'))
   }
 }
 
 const sendReload = () => {
-  homeStore.setMyData({act:'mjReload', actData:{mjID:props.chat.mjID} })
+  homeStore.setMyData({ act: 'mjReload', actData: { mjID: props.chat.mjID } })
 }
 
 function handleRegenerate2() {
   messageRef.value?.scrollIntoView()
-  //emit('regenerate')
-  mlog('重新发送！');
-  homeStore.setMyData({act:'gpt.resubmit', actData:{ index:props.index , uuid:props.chat.uuid } });
+  // emit('regenerate')
+  mlog('重新发送！')
+  homeStore.setMyData({ act: 'gpt.resubmit', actData: { index: props.index, uuid: props.chat.uuid } })
 }
- 
 </script>
 
 <template>
@@ -136,27 +134,29 @@ function handleRegenerate2() {
       class="flex items-center justify-center flex-shrink-0 h-8 overflow-hidden rounded-full basis-8"
       :class="[inversion ? 'ml-2' : 'mr-2']"
     >
-      <AvatarComponent :image="inversion" :logo="chat.logo"/>
+      <AvatarComponent :image="inversion" :logo="chat.logo" />
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
       <p class="text-xs group  text-[#b4bbc4] flex  items-center space-x-2 " :class="[inversion ? 'justify-end' : 'justify-start']">
         <span>{{ dateTime }}</span>
-        <span v-if="chat.model"  class="text-[#b4bbc4]/50">{{ chat.model }}</span>
+        <span v-if="chat.model" class="text-[#b4bbc4]/50">{{ chat.model }}</span>
         <!-- <span>{{ chat.opt?.progress }}</span> -->
-        <template  v-if="chat.opt?.status=='SUCCESS'">
-          <SvgIcon icon="ri:restart-line" @click="sendReload"  class="cursor-pointer text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-300 " ></SvgIcon>
-          
-          <div @click="getSeed(chat, message )" class="cursor-pointer">
+        <template v-if="chat.opt?.status == 'SUCCESS'">
+          <SvgIcon icon="ri:restart-line" class="cursor-pointer text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-300 " @click="sendReload" />
+
+          <div class="cursor-pointer" @click="getSeed(chat, message)">
             <span v-if="chat.opt?.seed">Seed:{{ chat.opt?.seed }}</span>
             <span v-else>Seed</span>
           </div>
           <a :href=" mjImgUrl(chat.opt?.imageUrl)" class="hidden group-hover:block active  cursor-pointer underline " target="_blank">{{ $t('mj.ulink') }}</a>
         </template>
       </p>
-      
-      <div  class="flex items-end gap-1 mt-2"
-        :class="[inversion ? 'flex-row-reverse' : 'flex-row']" > 
-        <TextComponent 
+
+      <div
+        class="flex items-end gap-1 mt-2"
+        :class="[inversion ? 'flex-row-reverse' : 'flex-row']"
+      >
+        <TextComponent
           ref="textRef"
           :inversion="inversion"
           :error="error"
@@ -166,7 +166,7 @@ function handleRegenerate2() {
           :chat="chat"
         />
         <!-- <div class="flex flex-col" v-if="!chat.mjID && chat.model!='dall-e-3' && chat.model!='dall-e-2' "> -->
-        <div class="flex flex-col" v-if="!chat.mjID &&   !isDallImageModel(chat.model) ">
+        <div v-if="!chat.mjID && !isDallImageModel(chat.model) " class="flex flex-col">
           <!-- <button
             v-if="!inversion "
             class="mb-2 transition text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-300"
@@ -185,7 +185,7 @@ function handleRegenerate2() {
             :trigger="isMobile ? 'click' : 'hover'"
             :placement="!inversion ? 'right' : 'left'"
             :options="options"
-            @select="handleSelect" 
+            @select="handleSelect"
           >
             <button class="transition text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-200">
               <SvgIcon icon="ri:more-2-fill" />

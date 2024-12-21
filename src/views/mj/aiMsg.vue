@@ -1,38 +1,36 @@
-<template>
-
-</template>
 <script lang="ts" setup>
-import {  ref ,h} from 'vue';
-import {useNotification} from "naive-ui";
+import { h, ref } from 'vue'
+import { useNotification } from 'naive-ui'
 import { t } from '@/locales'
-const notification = useNotification();
-const count = ref(0);
+const notification = useNotification()
+const count = ref(0)
 
 function increment() {
-	count.value++;
+  count.value++
 }
-function showMsg(str:string){
-	notification.success({
-		title:  t('mjchat.successTitle'),//"成功",
-		//description: "From the Beach Boys",
-		content: () => h('div',{innerHTML:str,class:'ddmsg'  } ),
-		duration: 2500,
-		keepAliveOnHover: true
-	});
-}
-
-function showError(str:string){
-	notification.info({
-		//title: "错误",
-		content:() => h('div',{innerHTML:str ,class:'ddmsg' } ),
-		duration: 3000,
-		keepAliveOnHover: true
-	});
+function showMsg(str: string) {
+  notification.success({
+    title: t('mjchat.successTitle'), // "成功",
+    // description: "From the Beach Boys",
+    content: () => h('div', { innerHTML: str, class: 'ddmsg' }),
+    duration: 2500,
+    keepAliveOnHover: true,
+  })
 }
 
-defineExpose({ count, increment,showMsg,showError });
+function showError(str: string) {
+  notification.info({
+    // title: "错误",
+    content: () => h('div', { innerHTML: str, class: 'ddmsg' }),
+    duration: 3000,
+    keepAliveOnHover: true,
+  })
+}
 
+defineExpose({ count, increment, showMsg, showError })
 </script>
+
+<template />
 
 <style>
  html.dark .ddmsg{ background-color: rgb(72, 72, 78)}

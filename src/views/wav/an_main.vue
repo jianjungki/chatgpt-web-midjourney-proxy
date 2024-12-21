@@ -1,10 +1,13 @@
 <template>
-<div class="container">
-    <div class="in-and-out"><div><div></div><div></div><div></div><div></div><div></div></div><div><div></div><div></div><div></div><div></div><div></div></div></div>
-</div>
+  <div class="container">
+    <div class="in-and-out">
+      <div><div /><div /><div /><div /><div /></div><div><div /><div /><div /><div /><div /></div>
+    </div>
+  </div>
 </template>
+
 <style  scoped>
-@import './css/in-and-out.css'; 
+@import './css/in-and-out.css';
 .container {
     -ms-flex-align: center;
     align-items: center;
@@ -19,5 +22,4 @@
     --primary: #fafafa;
     --secondary: #f9690e;
 }
-
 </style>

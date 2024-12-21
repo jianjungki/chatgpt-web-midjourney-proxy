@@ -2,7 +2,6 @@ import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { post } from '@/utils/request'
 import { homeStore, useAuthStore, useSettingStore } from '@/store'
 
-
 export function fetchChatAPI<T = any>(
   prompt: string,
   options?: { conversationId?: string; parentMessageId?: string },
@@ -55,8 +54,8 @@ export function fetchChatAPIProcess<T = any>(
 
 export function fetchSession<T>() {
   if (homeStore.myData.isClient)
-  return {"status":"Success","message":"","data":{"isHideServer":false,"isUpload":false,"auth":false,"model":"ChatGPTAPI","amodel":"gpt-4","isApiGallery":false,"cmodels":"","baiduId":"9d5fa7fc2f5fd585aa8fd3010d19be1e","googleId":"","notify":"","disableGpt4":"","isWsrv":"","uploadImgSize":"1","gptUrl":"","theme":"dark","isCloseMdPreview":false}}
-  
+    return { status: 'Success', message: '', data: { isHideServer: false, isUpload: false, auth: false, model: 'ChatGPTAPI', amodel: 'gpt-4', isApiGallery: false, cmodels: '', baiduId: '9d5fa7fc2f5fd585aa8fd3010d19be1e', googleId: '', notify: '', disableGpt4: '', isWsrv: '', uploadImgSize: '1', gptUrl: '', theme: 'dark', isCloseMdPreview: false } }
+
   return post<T>({
     url: '/session',
   })
@@ -69,15 +68,14 @@ export function fetchVerify<T>(token: string) {
   })
 }
 
-export * from "./mjapi"
-export * from "./mjsave"
-export * from "./openapi"
-export * from "./units"
-export * from "./mic"
-export * from "./chat"
-export * from "./sse/fetchsse"
-export * from "./Recognition"
-export * from "./luma"
-export * from "./ideo"
-export * from "./realtime"
-
+export * from './mjapi'
+export * from './mjsave'
+export * from './openapi'
+export * from './units'
+export * from './mic'
+export * from './chat'
+export * from './sse/fetchsse'
+export * from './Recognition'
+export * from './luma'
+export * from './ideo'
+export * from './realtime'

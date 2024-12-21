@@ -1,135 +1,142 @@
-import { mlog } from "./mjapi";
+import { mlog } from './mjapi'
 
-export interface recType{
-    timeOut:number 
-    asrLanguage?:string
-    listener?: (result: string) => void
-    onEnd?: () => void
-    onStart?: () => void
+export interface recType {
+  timeOut: number
+  asrLanguage?: string
+  listener?: (result: string) => void
+  onEnd?: () => void
+  onStart?: () => void
 }
 export class Recognition {
-  private recognition: any;
+  private recognition: any
 
-  private listener?: (result: string) => void;
+  private listener?: (result: string) => void
 
-  private isStop = false;
+  private isStop = false
 
-  //选项
-  private recOpt:recType={timeOut:2000} 
-  
+  // 选项
+  private recOpt: recType = { timeOut: 2000 }
+
   //
-  private handleTime: any ;
+  private handleTime: any
 
-  private hTime:Date | undefined;
-  //语言
+  private hTime: Date | undefined
+  // 语言
   private asrLanguage = 'cmn-Hans-CN'
   //
-  private onEnd?: () => void;
-  private onStart?: () => void;
+  private onEnd?: () => void
+  private onStart?: () => void
   public setListener(fn: (result: string) => void) {
-    this.listener = fn;
-    return this;
+    this.listener = fn
+    return this
   }
-  public setOnEnd( fn: ( ) => void){
-    this.onEnd = fn;
-    return this;
-  }
-  public setOpt( opt:recType ){
-    this.recOpt= opt;
 
-    if(opt.listener)  this.setListener(opt.listener)
-    if(opt.onEnd)  this.setListener(opt.onEnd)
-    if(opt.asrLanguage)  this.setLang(opt.asrLanguage);
-    if(opt.onStart) this.onStart= opt.onStart;
-
-    return this;
+  public setOnEnd(fn: () => void) {
+    this.onEnd = fn
+    return this
   }
-  
-  public setLang( lang:string ){
-    this.asrLanguage = lang;
-    return this;
+
+  public setOpt(opt: recType) {
+    this.recOpt = opt
+
+    if (opt.listener)
+      this.setListener(opt.listener)
+    if (opt.onEnd)
+      this.setListener(opt.onEnd)
+    if (opt.asrLanguage)
+      this.setLang(opt.asrLanguage)
+    if (opt.onStart)
+      this.onStart = opt.onStart
+
+    return this
+  }
+
+  public setLang(lang: string) {
+    this.asrLanguage = lang
+    return this
   }
 
   public start() {
-    this.isStop = false;
-    // @ts-ignore
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) return;
+    this.isStop = false
+    // @ts-expect-error
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition)
+      return
     if (!this.recognition) {
-      // @ts-ignore
-      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      this.recognition = recognition;
+      // @ts-expect-error
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
+      this.recognition = recognition
     }
-    const recognition = this.recognition;
+    const recognition = this.recognition
 
     // 返回实时识别结果
-    recognition.interimResults = true;
+    recognition.interimResults = true
     // 设置语言
-    const lang = this.asrLanguage;
-    recognition.lang = lang;
+    const lang = this.asrLanguage
+    recognition.lang = lang
 
     // 设置是否连续识别
-    recognition.continuous = true;
+    recognition.continuous = true
 
-    this.hTime = new Date();
-    this.handleTime = setInterval( ()=>this.check( this ), this.recOpt.timeOut ) 
+    this.hTime = new Date()
+    this.handleTime = setInterval(() => this.check(this), this.recOpt.timeOut)
 
     // 当识别到语音时触发该事件
-    recognition.addEventListener('result', (event: any) => { 
-
-      let transcript = '';
+    recognition.addEventListener('result', (event: any) => {
+      let transcript = ''
       for (let index = 0; index < event.results.length; index++) {
-        const item = event.results[index];
+        const item = event.results[index]
         // 中文添加逗号
-        if (transcript && lang?.includes('Han')) transcript += '，';
+        if (transcript && lang?.includes('Han'))
+          transcript += '，'
 
-        transcript += (item as unknown as SpeechRecognitionAlternative[])[0]?.transcript;
+        transcript += (item as unknown as SpeechRecognitionAlternative[])[0]?.transcript
       }
-      if (!transcript) return; 
-      this.hTime = new Date();
-      this.listener?.(transcript);
-    });
+      if (!transcript)
+        return
+      this.hTime = new Date()
+      this.listener?.(transcript)
+    })
 
     // 当识别结束时触发该事件
     recognition.addEventListener('end', () => {
-      mlog('recognition onEnd',  this.isStop );
+      mlog('recognition onEnd', this.isStop)
       if (this.isStop) {
-        this.onEnd?.();
-        this.handleTime && clearInterval( this.handleTime )
-        return;
+        this.onEnd?.()
+        this.handleTime && clearInterval(this.handleTime)
+        return
       }
       // 继续监听
-      recognition.start();
-    });
+      recognition.start()
+    })
 
     // 启动语音识别
-    recognition.start();
-    this.onStart?.();
+    recognition.start()
+    this.onStart?.()
 
-    return this;
+    return this
   }
 
   public stop() {
-    this.isStop = true;
-    this.recognition?.stop();
-    return this;
+    this.isStop = true
+    this.recognition?.stop()
+    return this
   }
 
-  private check( that:Recognition ){
-     if( !that.hTime ) {
-         mlog('mcheck 未定义');
-        return ;
-     }  
-     const nTime =  new Date();
-     
-     const dt =  nTime.getTime()- that.hTime.getTime();
-     mlog('mcheck', dt,that.recOpt.timeOut );
-     if( dt> that.recOpt.timeOut ){
-        that.stop();
-     }
-     return this;
+  private check(that: Recognition) {
+    if (!that.hTime) {
+      mlog('mcheck 未定义')
+      return
+    }
+    const nTime = new Date()
+
+    const dt = nTime.getTime() - that.hTime.getTime()
+    mlog('mcheck', dt, that.recOpt.timeOut)
+    if (dt > that.recOpt.timeOut)
+      that.stop()
+
+    return this
   }
 }
-
 
 export const supportLanguages: Record<string, string> = {
   'cmn-Hans-CN': '普通话 (中国大陆)',
@@ -164,31 +171,32 @@ export const supportLanguages: Record<string, string> = {
   'sk-SK': 'Slovenčina',
   'uk-UA': 'Українська',
   'vi-VN': 'Tiếng Việt',
-};
-
-function sleep(time: number) {
-  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-//浏览器文字播放
+function sleep(time: number) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
+// 浏览器文字播放
 export async function speakText(content: string, callback: (playing: boolean) => void) {
-  if (!window.speechSynthesis) return;
+  if (!window.speechSynthesis)
+    return
   if (speechSynthesis.speaking) {
-    speechSynthesis.cancel();
-    callback(false);
+    speechSynthesis.cancel()
+    callback(false)
   }
 
-  await sleep(300);
+  await sleep(300)
 
-  const msg = new SpeechSynthesisUtterance(content);
-  msg.lang = 'zh';
-  msg.rate = 1;
+  const msg = new SpeechSynthesisUtterance(content)
+  msg.lang = 'zh'
+  msg.rate = 1
   msg.addEventListener('end', () => {
-    callback(false);
-  });
+    callback(false)
+  })
   msg.addEventListener('error', () => {
-    callback(false);
-  });
-  callback(true);
-  speechSynthesis.speak(msg);
+    callback(false)
+  })
+  callback(true)
+  speechSynthesis.speak(msg)
 }

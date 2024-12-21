@@ -113,7 +113,7 @@ curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/file" htt
 Réponse formatée
 ```json
 {
-"url":"https://xxxxxxx.jpg"
+  "url": "https://xxxxxxx.jpg"
 }
 ```
 

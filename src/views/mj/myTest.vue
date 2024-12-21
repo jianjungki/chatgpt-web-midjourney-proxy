@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { mlog } from '@/api'; 
-import { ref } from "vue";
-import { NButton,NInput } from "naive-ui";
+import { ref } from 'vue'
+import { NButton, NInput } from 'naive-ui'
+import { mlog } from '@/api'
 
-const f = ref({text:'Hi,google ! I am a good student!'});
+const f = ref({ text: 'Hi,google ! I am a good student!' })
 const go = async () => {
-    
-  const apiKey = 'sdsd-121212';
+  const apiKey = 'sdsd-121212'
 
-const apiUrl = 'https://api.openai-sk.com/v1/audio/speech';
-const ttsModel = 'tts-1';
-const voice = 'alloy';
-//const inputText = 'I am a good student!';
+  const apiUrl = 'https://api.openai-sk.com/v1/audio/speech'
+  const ttsModel = 'tts-1'
+  const voice = 'alloy'
+  // const inputText = 'I am a good student!';
 
-//const fetchData = async () => {
+  // const fetchData = async () => {
   try {
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -23,55 +22,52 @@ const voice = 'alloy';
       },
       body: JSON.stringify({
         model: ttsModel,
-        input: f.value.text ,
-        voice: voice,
+        input: f.value.text,
+        voice,
       }),
-    });
+    })
 
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
+    if (!response.ok)
+      throw new Error(`API request failed with status ${response.status}`)
 
-    const audioData = await response.arrayBuffer();
-    const blob = new Blob([audioData], { type: 'audio/mp3' });
-    mlog('blob', blob);
+    const audioData = await response.arrayBuffer()
+    const blob = new Blob([audioData], { type: 'audio/mp3' })
+    mlog('blob', blob)
 
-    const player = new window.Audio(); 
-    player.src = URL.createObjectURL(blob);
+    const player = new window.Audio()
+    player.src = URL.createObjectURL(blob)
     player.addEventListener('ended', () => {
-      mlog('音乐播放完毕');
-    });
-     player.addEventListener('loadedmetadata', () => {
-      mlog('时长', player.duration);
-    });
-    player.load(); 
-    player.play();
+      mlog('音乐播放完毕')
+    })
+    player.addEventListener('loadedmetadata', () => {
+      mlog('时长', player.duration)
+    })
+    player.load()
+    player.play()
 
-
-     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'speech.mp3';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }catch (error) {
-    console.error('Error:', error);
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'speech.mp3'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
   }
-
- 
+  catch (error) {
+    console.error('Error:', error)
+  }
 }
-//go();
+// go();
 
-  const ccgo= (event:any )=> {
-    var file = event.target.files[0];
+const ccgo = (event: any) => {
+  const file = event.target.files[0]
 
-    // 通过 FileReader 读取文件内容并创建 Blob 对象
-    var reader = new FileReader();
-    reader.onload = function(e:any ) {
-      var blob = new Blob([e.target.result], { type: 'audio/mp3' });
-      mlog('blob', blob);
+  // 通过 FileReader 读取文件内容并创建 Blob 对象
+  const reader = new FileReader()
+  reader.onload = function (e: any) {
+    const blob = new Blob([e.target.result], { type: 'audio/mp3' })
+    mlog('blob', blob)
 
-      // 创建 Howl 实例
+    // 创建 Howl 实例
     //  let  sound = new Howl({
     //     src: [blob],
     //     format: ['mp3'],
@@ -83,34 +79,34 @@ const voice = 'alloy';
     //          mlog('onloaderror' ,e  )
     //     }
     //   });
-    //   sound.play(); 
-    const player = new window.Audio(); 
-    player.src = URL.createObjectURL(blob);
+    //   sound.play();
+    const player = new window.Audio()
+    player.src = URL.createObjectURL(blob)
     player.addEventListener('ended', () => {
-      mlog('音乐播放完毕');
-    });
-     player.addEventListener('loadedmetadata', () => {
-      mlog('时长', player.duration);
-    });
-    player.load(); 
-    player.play();
- 
-    };
+      mlog('音乐播放完毕')
+    })
+    player.addEventListener('loadedmetadata', () => {
+      mlog('时长', player.duration)
+    })
+    player.load()
+    player.play()
+  }
 
-    reader.readAsArrayBuffer(file);
-  } 
+  reader.readAsArrayBuffer(file)
+}
 </script>
+
 <template>
-<!-- <div class="text-red-300" >good</div>
+  <!-- <div class="text-red-300" >good</div>
 <div class="text-red-300" @click="go" >go</div>
 <div class="text-red-300" @click="sound.stop() " >eend</div> -->
-<div class="p-4 space-y-4">
-<NInput v-model:value="f.text" type="textarea"></NInput>
-<NButton @click="go" type="primary">提交</NButton>
-<div>
-<input type="file" id="audioFile" accept="audio/*" @change="ccgo">
-</div>
-</div>
-
-
+  <div class="p-4 space-y-4">
+    <NInput v-model:value="f.text" type="textarea" />
+    <NButton type="primary" @click="go">
+      提交
+    </NButton>
+    <div>
+      <input id="audioFile" type="file" accept="audio/*" @change="ccgo">
+    </div>
+  </div>
 </template>
