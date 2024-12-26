@@ -609,7 +609,7 @@ const ychat = computed(() => {
     class=" fixed z-[200] pointer-events-none top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
     :style="{
       'background-image': 'url(' + backgroundImage + ')',
-      opacity: 0.19,
+      opacity: 0.1,
     }"
   ></div>
   <div class="flex flex-col w-full h-full">
