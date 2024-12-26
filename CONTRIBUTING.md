@@ -1,12 +1,15 @@
 # 贡献指南
+
 感谢你的宝贵时间。你的贡献将使这个项目变得更好！在提交贡献之前，请务必花点时间阅读下面的入门指南。
 
 ## 语义化版本
+
 该项目遵循语义化版本。我们对重要的漏洞修复发布修订号，对新特性或不重要的变更发布次版本号，对重大且不兼容的变更发布主版本号。
 
 每个重大更改都将记录在 `changelog` 中。
 
 ## 提交 Pull Request
+
 1. Fork [此仓库](https://github.com/Chanzhaoyu/chatgpt-web)，从 `main` 创建分支。新功能实现请发 pull request 到 `feature` 分支。其他更改发到 `main` 分支。
 2. 使用 `npm install pnpm -g` 安装 `pnpm` 工具。
 3. `vscode` 安装了 `Eslint` 插件，其它编辑器如 `webStorm` 打开了 `eslint` 功能。
@@ -42,7 +45,6 @@ Commit messages 请遵循[conventional-changelog 标准](https://www.conventiona
 - perf: 性能优化
 - test: 单元测试
 - chore: 其他不修改 src 或测试文件的提交
-
 
 ## License
 

@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { NSpin } from 'naive-ui'
 import pkg from '../../../../package.json'
-import { fetchChatConfig ,getLastVersion} from '@/api'
+import { getLastVersion} from '@/api'
 import { useAuthStore } from '@/store'
 import { gptUsage  } from "@/api";
 
@@ -89,7 +89,7 @@ const  isShow = computed(()=>{
         <p v-html="$t('mj.infoStar')"></p>
       </div>
       <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
-      <p v-if="isChatGPTAPI" class=" flex items-center justify-between">
+      <p v-if="isChatGPTAPI" class="flex items-center justify-between">
         <div>
         {{ $t("setting.monthlyUsage") }}：{{ config?.usage ?? '-' }}
         </div>
@@ -103,10 +103,6 @@ const  isShow = computed(()=>{
       <p v-if="!isChatGPTAPI">
         {{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}
       </p>
-       
-      <!-- <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>  -->
-      <!-- <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>
-      <p>{{ $t("setting.httpsProxy") }}：{{ config?.httpsProxy ?? '-' }}</p> -->
     </div>
   </NSpin>
 </template>

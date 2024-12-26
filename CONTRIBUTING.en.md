@@ -1,12 +1,15 @@
 # Contribution Guide
+
 Thank you for your valuable time. Your contributions will make this project better! Before submitting a contribution, please take some time to read the getting started guide below.
 
 ## Semantic Versioning
+
 This project follows semantic versioning. We release patch versions for important bug fixes, minor versions for new features or non-important changes, and major versions for significant and incompatible changes.
 
 Each major change will be recorded in the `changelog`.
 
 ## Submitting Pull Request
+
 1. Fork [this repository](https://github.com/Chanzhaoyu/chatgpt-web) and create a branch from `main`. For new feature implementations, submit a pull request to the `feature` branch. For other changes, submit to the `main` branch.
 2. Install the `pnpm` tool using `npm install pnpm -g`.
 3. Install the `Eslint` plugin for `VSCode`, or enable `eslint` functionality for other editors such as `WebStorm`.
@@ -42,7 +45,6 @@ The following is a list of commit types:
 - perf: Performance optimization
 - test: Unit test
 - chore: Other commits that do not modify src or test files
-
 
 ## License
 

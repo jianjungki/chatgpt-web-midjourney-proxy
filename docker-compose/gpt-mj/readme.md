@@ -3,8 +3,7 @@
 ```shell
     git clone https://github.com/Dooy/chatgpt-web-midjourney-proxy.git
     cd chatgpt-web-midjourney-proxy/docker-compose/gpt-mj
-    #修改 docker-compose.yml 文件配置文件 
+    #修改 docker-compose.yml 文件配置文件
 
-    ./deploy.sh 
-  ``` 
-
+    ./deploy.sh
+```

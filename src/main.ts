@@ -1,23 +1,23 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import { setupI18n } from './locales'
-import { setupAssets, setupScrollbarStyle } from './plugins'
-import { setupStore } from './store'
-import { setupRouter } from './router'
+import { createApp } from "vue";
+import App from "./App.vue";
+import { setupI18n } from "./locales";
+import { setupAssets, setupScrollbarStyle } from "./plugins";
+import { setupStore } from "./store";
+import { setupRouter } from "./router";
 
 async function bootstrap() {
-  const app = createApp(App)
-  setupAssets()
+	const app = createApp(App);
+	setupAssets();
 
-  setupScrollbarStyle()
+	setupScrollbarStyle();
 
-  setupStore(app)
+	setupStore(app);
 
-  setupI18n(app)
+	setupI18n(app);
 
-  await setupRouter(app)
+	await setupRouter(app);
 
-  app.mount('#app')
+	app.mount("#app");
 }
 
-bootstrap()
+bootstrap();

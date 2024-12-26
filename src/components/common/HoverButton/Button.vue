@@ -1,20 +1,20 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 interface Emit {
-  (e: 'click'): void
+	(e: "click"): void;
 }
 
-const emit = defineEmits<Emit>()
+const emit = defineEmits<Emit>();
 
 function handleClick() {
-  emit('click')
+	emit("click");
 }
 </script>
 
 <template>
-  <button
-    class="flex items-center justify-center w-10 h-10 transition rounded-full hover:bg-neutral-100 dark:hover:bg-[#414755]"
-    @click="handleClick"
-  >
-    <slot />
-  </button>
+	<button
+		class="flex items-center justify-center w-10 h-10 transition rounded-full hover:bg-neutral-100 dark:hover:bg-[#414755]"
+		@click="handleClick"
+	>
+		<slot />
+	</button>
 </template>
