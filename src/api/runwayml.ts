@@ -1,9 +1,7 @@
 import { gptServerStore, homeStore, useAuthStore } from "@/store";
 import { mlog } from "./mjapi";
-import { KlingTask, klingStore } from "./klingStore";
 import { sleep } from "./suno";
-
-
+import { RunwayMlStore, RunwayMlTask } from "./runwaymlStore";
 
 function getHeaderAuthorization(){
     let headers={}
@@ -11,7 +9,7 @@ function getHeaderAuthorization(){
         const  vtokenh={ 'x-vtoken':  homeStore.myData.vtoken ,'x-ctoken':  homeStore.myData.ctoken};
         headers= {...headers, ...vtokenh}
     }
-    if(!gptServerStore.myData.KLING_KEY){ 
+    if(!gptServerStore.myData.RUNWAY_KEY){ 
         const authStore = useAuthStore()
         if( authStore.token ) {
             const bmi= { 'x-ptoken':  authStore.token };
@@ -21,7 +19,7 @@ function getHeaderAuthorization(){
         return headers
     }
     const bmi={
-        'Authorization': 'Bearer ' +gptServerStore.myData.KLING_KEY
+        'Authorization': 'Bearer ' +gptServerStore.myData.RUNWAY_KEY
     }
     headers= {...headers, ...bmi }
     return headers
@@ -30,23 +28,24 @@ function getHeaderAuthorization(){
 export const  getUrl=(url:string)=>{
     if(url.indexOf('http')==0) return url;
     
-    const pro_prefix= '';//homeStore.myData.is_luma_pro?'/pro':''
+    const pro_prefix= url.indexOf('/pro')>-1?'/pro':'';//homeStore.myData.is_luma_pro?'/pro':''
     url= url.replaceAll('/pro','')
-    if(gptServerStore.myData.KLING_SERVER  ){
-      
-        return `${ gptServerStore.myData.KLING_SERVER}${pro_prefix}/kling${url}`;
+    if(gptServerStore.myData.RUNWAY_SERVER  ){
+        return `${ gptServerStore.myData.RUNWAY_SERVER}${pro_prefix}/runwayml${url}`;
     }
-    return `${pro_prefix}/kling${url}`;
+    return `${pro_prefix}/runwayml${url}`;
 }
 
 
-export const klingFetch=(url:string,data?:any,opt2?:any )=>{
+export const runwayMlFetch=(url:string,data?:any,opt2?:any )=>{
     mlog('runwayFetch', url  );
     let headers= opt2?.upFile?{}: {'Content-Type':'application/json'}
      
     if(opt2 && opt2.headers ) headers= opt2.headers;
 
-    headers={...headers,...getHeaderAuthorization()}
+    const otherHeader ={ 'X-Runway-Version': '2024-11-06'}
+
+    headers={...headers,...getHeaderAuthorization()} //,...otherHeader
    
     return new Promise<any>((resolve, reject) => {
         let opt:RequestInit ={method:'GET'};
@@ -88,39 +87,39 @@ export const klingFetch=(url:string,data?:any,opt2?:any )=>{
             reject(e)
         })
     })
-
 }
 
-export const klingFeed= async(id:string,cat:string,prompt:string)=>{
-    const sunoS = new klingStore();
-    let url= '/v1/images/generations/' //images或videos
-    if (cat=='text2video'){
-        url='/v1/videos/text2video/';
-    }
-    if(cat=='image2video'){
-        url='/v1/videos/image2video/';
-    }
-    url= url+id;
-    for(let i=0; i<200;i++){
-        try{
-            
-            let a= await klingFetch( url )
-            let task= a  as KlingTask;
-            task.last_feed=new Date().getTime()
-            task.cat= cat
-            if(prompt){
-              task.prompt= prompt
-            }
-            //ss.save( task )
-            //mlog("a",a  )
-            sunoS.save( task )
-            homeStore.setMyData({act:'KlingFeed'});
-            if(  task.data.task_status =='failed' || 'succeed'== task.data.task_status ){
-                break;
-            }
-        }catch(e){
+export interface RunwayMlInput {
+    model:string
+    promptText:string
+}
+
+export const runwayMlFeed= async(id:string, input:RunwayMlInput)=>{
+    const sunoS = new RunwayMlStore();
+    for(let i=0; i<1200; i++){
+        let d= await runwayMlFetch(`/v1/tasks/${id}`)
+        let task:RunwayMlTask={...d,...input} as RunwayMlTask
+        task.last_feed=new Date().getTime()
+        sunoS.save( task )
+        homeStore.setMyData({act:'runwayml.feed'})
+        if(task.status=='SUCCEEDED' || 'FAILED'== task.status ){
             break;
         }
-        await sleep(5200)
+        //mlog('ddd>>',d )
+        await sleep(5800)
     }
+}
+
+export const runwayMlFeedById= async(id:string)=>{
+     const sunoS = new RunwayMlStore();
+     const obj= sunoS.getOneById(id)
+     if (!obj) return ;
+     runwayMlFeed(id,{ model:obj.model,promptText:obj.promptText})
+}
+
+
+export function getRandomInt(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }

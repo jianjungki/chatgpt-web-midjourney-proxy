@@ -234,7 +234,28 @@ export default {
     "pikaserver": "Pika API 주소",
     "pikakeyPlaceholder": "Pika API 키 (선택 사항)",
     "createFail": "생성 실패",
-    "selecteff": "참고 효과"
+    "selecteff": "참고 효과",
+
+    "udioabout": "Udio에 대하여",
+    "udiokeyPlaceholder": "Udio API 키 (선택 사항)",
+    "udioserver": "Udio API 주소",
+    "ud_prompt": "프롬프트",
+    "ud_prompt_pls": "프롬프트: 설명, 스타일",
+    "ud_ly_write": "사용자 정의 가사",
+    "ud_ly_auto": "지능형 가사",
+    "ud_ly_null": "순수 음악",
+    "ud_v32": "저렴한",
+    "ud_v130": "긴 시간",
+    "ud_info": "주의: <ul><li>1. Udio-32는 짧은 길이를 가집니다</li><li>2. Udio-130은 Udio-32의 2배 가격입니다</li><li>3. 프롬프트에는 스타일, 설명 등을 포함할 수 있습니다</li></ul>",
+    "ud_fail": "이 곡 생성에 실패했습니다!",
+    "ud_doing": "생성 중에는 재생할 수 없습니다",
+    "ud_continuation": "계속",
+    "ud_precede": "이전",
+
+    "upImg2": "<span><b>이미지 업로드</b><br/>이 모델은 이미지 인식을 지원합니다<br>주의: 추가 이미지 요금이 발생합니다<br/>형식: jpeg jpg png gif</span><p>드래그 앤 드롭 지원</p> <p class=\"pt-2\"><b>MP3 MP4 업로드</b> <br>자동으로 whisper-1 모델을 호출합니다<br>형식: mp3 mp4 mpeg mpga m4a wav webm</p>",
+    "rml_info": "주의:<ul><li>1. 반드시 이미지를 포함해야 합니다</li><li>2. 모델은 gen3a_turbo 하나만 있습니다</li><li>3. 10초 가격은 5초의 두 배입니다</li></ul>",
+    "rml_heng": "가로 모드",
+    "rml_shu": "세로 모드"
     
   },
   "mjset": {

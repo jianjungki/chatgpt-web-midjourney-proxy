@@ -9,6 +9,7 @@
 
 ![cover](./docs/mj2a1.jpg)
 ## 支持功能 
+- [x] 支持 udio 文生音乐
 - [x] 支持 pika  文生视频，图生视频
 - [x] 支持 openai realtime [点击观看.youtube](https://www.youtube.com/watch?v=pKvVi3oBRQU)  [B站](https://www.bilibili.com/video/BV1Kt22YPE2c/) 
 - [x] 支持 kling 可灵 文生视频，图生视频, 绘图
@@ -43,7 +44,7 @@
 ## 无服务器-个人桌面安装
 > - [x] 请到 https://github.com/Dooy/chatgpt-web-midjourney-proxy/releases 下载最新版本安装(选择合适你操作系统的版本)
 > - [x] 选择一个合适的中转服务商( 最好都支持 `gpt`  `gpts` `midjourney` `claude`  `suno` `luma` `runway` `viggle` `flux` `ideogram` `kling` `pika`)
-> - [x] 中转服务商推荐 https://www.openai-hk.com 一个`key`和`api接口地址` 同时支持 [gpt](https://www.openai-hk.com/docs/getting-started.html) [gpts](https://www.openai-hk.com/docs/openai/gpts.html) [midjourney](https://www.openai-hk.com/docs/midjourney/guide.html) [claude](https://www.openai-hk.com/docs/lab/claude-3.html) [suno](https://www.openai-hk.com/docs/lab/suno-v3.html) [luma](https://www.openai-hk.com/docs/lab/luma-video.html) [runway](https://www.openai-hk.com/docs/lab/runway-video.html) [viggle](https://www.openai-hk.com/docs/lab/viggle-dance.html) [ideogram](https://www.openai-hk.com/docs/lab/ideogram.html) [flux](https://www.openai-hk.com/docs/lab/flux.html) [kling](https://www.openai-hk.com/docs/lab/kling.html) [pika](https://www.openai-hk.com/docs/lab/pika-video.html)，mj-fast最低能到0.12rmb/张,`suno` 最低能到4分一首 
+> - [x] 中转服务商推荐 https://www.openai-hk.com 一个`key`和`api接口地址` 同时支持 [gpt](https://www.openai-hk.com/docs/getting-started.html) [gpts](https://www.openai-hk.com/docs/openai/gpts.html) [midjourney](https://www.openai-hk.com/docs/midjourney/guide.html) [claude](https://www.openai-hk.com/docs/lab/claude-3.html) [suno](https://www.openai-hk.com/docs/lab/suno-v3.html) [luma](https://www.openai-hk.com/docs/lab/luma-video.html) [runway](https://www.openai-hk.com/docs/lab/runway-video.html) [viggle](https://www.openai-hk.com/docs/lab/viggle-dance.html) [ideogram](https://www.openai-hk.com/docs/lab/ideogram.html) [flux](https://www.openai-hk.com/docs/lab/flux.html) [kling](https://www.openai-hk.com/docs/lab/kling.html) [pika](https://www.openai-hk.com/docs/lab/pika-video.html) [udio](https://www.openai-hk.com/docs/lab/udio-music.html)，mj-fast最低能到0.12rmb/张,`suno` 最低能到4分一首 
 ![多模态](./docs/suno-ds.jpg)
 
 ## Vercel 一键部署
@@ -70,7 +71,7 @@
 | SYS_NOTIFY |  系统通知，支持HTML | 无  | ✅ |  ✅|
 | DISABLE_GPT4 |  禁用GPT-4 | 无  | ✅ |  ✅|
 | GPT_URL | 自定 GPT_URL=/gpts.json  | 无 也可自己的外链 | ✅ |  ✅|
-| UPLOAD_IMG_SIZE | gpt4v 上传图片大小 |  1 | ✅ |  ✅|
+| UPLOAD_IMG_SIZE | 上传图片大小限制 默认1M |  1 | ✅ |  ✅|
 | SYS_THEME | 默认主题 `light`或者`dark`  | dark | ✅ |  ✅|
 | MJ_IMG_WSRV | 是否开启 `wsrv`图床  | 无(关闭)  | ✅ |  ✅|
 | AUTH_SECRET_ERROR_COUNT | 防爆破验证：验证次数触发 NGINX 请设置 `proxy_set_header   X-Forwarded-For  $remote_addr`  | 无  | ✅ |  x|
@@ -141,8 +142,6 @@ docker run -d --name mj6013  -p 6013:8080  \
 
 ## 更多展示
 
-### 自定义服务端api key、base_url：
-![base_url](./docs/gptbase.jpg)
 
 ### Realtime 
 
@@ -153,13 +152,20 @@ docker run -d --name mj6013  -p 6013:8080  \
 </div>
  
 
+### suno、udio 音乐AI制作
+![suno](./docs/suno2.jpg)
+
+### luma runway pika kling 视频AI制作
+![suno](./docs/luma-video.jpg)
+
+
+
+### 自定义服务端api key、base_url：
+![base_url](./docs/gptbase.jpg)
+
 ### GPTS  GTP Store 
 ![多模态](./docs/gpts.jpg)
 ![多模态](./docs/gpts1.jpg)
-
-### suno 音乐制作
-![suno](./docs/suno.jpg)
-
 
 ### 录音 whisper  和  tts
 ![whisper--tts](./docs/tts-whisper.png)

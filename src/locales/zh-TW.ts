@@ -230,7 +230,28 @@ export default {
     "pikaserver": "Pika 接口地址",
     "pikakeyPlaceholder": "Pika 的API Key 可不填",
     "createFail": "生成失敗",
-    "selecteff": "參考效果"
+    "selecteff": "參考效果",
+
+     "udioabout": "關於 Udio",
+    "udiokeyPlaceholder": "Udio API 金鑰（可選）",
+    "udioserver": "Udio 接口地址",
+    "ud_prompt": "提示詞",
+    "ud_prompt_pls": "提示詞：描述、風格",
+    "ud_ly_write": "自訂歌詞",
+    "ud_ly_auto": "智能歌詞",
+    "ud_ly_null": "純音樂",
+    "ud_v32": "實惠",
+    "ud_v130": "時間長",
+    "ud_info": "注意：<ul><li>1. Udio-32 時長短</li><li>2. Udio-130 價格是 Udio-32 的兩倍</li><li>3. 提示詞內可以放風格、描述等</li></ul>",
+    "ud_fail": "這首歌生成失敗！",
+    "ud_doing": "生成中無法播放",
+    "ud_continuation": "後擴展",
+    "ud_precede": "前擴展",
+
+    "upImg2": "<span><b>上載圖片</b><br/>該模型支持識圖<br>注意：會有額外的圖片費用<br/>格式：jpeg jpg png gif</span><p>支持拖曳</p> <p class=\"pt-2\"><b>上載MP3 MP4</b> <br>會自動直接調用 whisper-1 模型<br>格式包括：mp3 mp4 mpeg mpga m4a wav webm</p>",
+    "rml_info": "注意：<ul><li>1. 必須帶圖</li><li>2. 模型只有一個 gen3a_turbo</li><li>3. 10秒的價格是5秒的雙倍</li></ul>",
+    "rml_heng": "橫屏",
+    "rml_shu": "豎屏"
 
   },
   "mjset": {
