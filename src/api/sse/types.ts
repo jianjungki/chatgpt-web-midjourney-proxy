@@ -1,10 +1,10 @@
-// import Keyv from 'keyv'
+//import Keyv from 'keyv'
 
 export type Role = 'user' | 'assistant' | 'system'
 
 export type FetchFn = typeof fetch
 
-export interface ChatGPTAPIOptions {
+export type ChatGPTAPIOptions = {
   apiKey: string
 
   /** @defaultValue `'https://api.openai.com'` **/
@@ -27,14 +27,14 @@ export interface ChatGPTAPIOptions {
   /** @defaultValue `1000` **/
   maxResponseTokens?: number
 
-  // messageStore?: Keyv
+  //messageStore?: Keyv
   getMessageById?: GetMessageByIdFunction
   upsertMessage?: UpsertMessageFunction
 
   fetch?: FetchFn
 }
 
-export interface SendMessageOptions {
+export type SendMessageOptions = {
   /** The name of a user in a multi-user chat. */
   name?: string
   parentMessageId?: string
@@ -52,7 +52,7 @@ export interface SendMessageOptions {
 
 export type MessageActionType = 'next' | 'variant'
 
-export interface SendMessageBrowserOptions {
+export type SendMessageBrowserOptions = {
   conversationId?: string
   parentMessageId?: string
   messageId?: string
@@ -69,8 +69,8 @@ export interface ChatMessage {
   name?: string
   delta?: string
   detail?:
-  | openai.CreateChatCompletionResponse
-  | CreateChatCompletionStreamResponse
+    | openai.CreateChatCompletionResponse
+    | CreateChatCompletionStreamResponse
 
   // relevant for both ChatGPTAPI and ChatGPTUnofficialProxyAPI
   parentMessageId?: string
@@ -84,6 +84,7 @@ export class ChatGPTError extends Error {
   statusText?: string
   isFinal?: boolean
   accountId?: string
+  
 }
 
 /** Returns a chat message from a store by it's ID (or null if not found). */
@@ -105,7 +106,7 @@ export interface CreateCompletionStreamResponseUsage
 /**
  * https://chat.openapi.com/backend-api/conversation
  */
-export interface ConversationJSONBody {
+export type ConversationJSONBody = {
   /**
    * The action to take
    */
@@ -132,7 +133,7 @@ export interface ConversationJSONBody {
   parent_message_id: string
 }
 
-export interface Prompt {
+export type Prompt = {
   /**
    * The content of the prompt
    */
@@ -151,7 +152,7 @@ export interface Prompt {
 
 export type ContentType = 'text'
 
-export interface PromptContent {
+export type PromptContent = {
   /**
    * The content type of the prompt
    */
@@ -163,13 +164,13 @@ export interface PromptContent {
   parts: string[]
 }
 
-export interface ConversationResponseEvent {
+export type ConversationResponseEvent = {
   message?: Message
   conversation_id?: string
   error?: string | null
 }
 
-export interface Message {
+export type Message = {
   id: string
   content: MessageContent
   role: Role
@@ -182,7 +183,7 @@ export interface Message {
   metadata: MessageMetadata
 }
 
-export interface MessageContent {
+export type MessageContent = {
   content_type: string
   parts: string[]
 }
@@ -203,7 +204,7 @@ export namespace openai {
         }
         index: number
         finish_reason: string | null
-      },
+      }
     ]
   }
 

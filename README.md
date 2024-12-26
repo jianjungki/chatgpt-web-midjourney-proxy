@@ -123,7 +123,7 @@ curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/file" htt
 返回格式
 ```json
 {
-  "url": "https://xxxxxxx.jpg"
+"url":"https://xxxxxxx.jpg"
 }
 ```
 

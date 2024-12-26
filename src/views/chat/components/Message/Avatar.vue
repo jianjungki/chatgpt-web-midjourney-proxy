@@ -7,7 +7,7 @@ import defaultAvatar from '@/assets/avatar.jpg'
 
 interface Props {
   image?: boolean
-  logo?: string
+  logo?:string
 }
 defineProps<Props>()
 
@@ -17,7 +17,8 @@ const avatar = computed(() => userStore.userInfo.avatar)
 </script>
 
 <template>
-  <NAvatar v-if="logo" :src="logo" />
+  
+   <NAvatar v-if="logo"     :src="logo" />
   <template v-else-if="image">
     <NAvatar v-if="isString(avatar) && avatar.length > 0" :src="avatar" :fallback-src="defaultAvatar" />
     <NAvatar v-else round :src="defaultAvatar" />

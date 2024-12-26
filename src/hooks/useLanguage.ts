@@ -31,7 +31,7 @@ export function useLanguage() {
         return enUS
       case 'tr-TR':
         setLocale('tr-TR')
-        return enUS
+        return enUS  
       default:
         setLocale('zh-CN')
         return zhCN
