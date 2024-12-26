@@ -10,8 +10,7 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Check out the repo
+      - name: Check out the repo
         uses: actions/checkout@v3
       - run: |
           echo 本次构建的版本为：${{ github.ref_name }}
@@ -22,9 +21,8 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      
-      - 
-        name: Extract metadata (tags, labels) for Docker
+
+      - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -32,17 +30,14 @@ jobs:
           tags: |
             type=raw,value=latest
             type=ref,event=tag
-      
-      - 
-        name: Set up QEMU
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
-      - 
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      
-      - 
-        name: Build and push Docker image
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -52,4 +47,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: ${{ inputs.use-cache == 'true' && 'type=gha' || 'type=local,src=/tmp' }}
           cache-to: ${{ inputs.use-cache == 'true' && 'type=gha, mode=max' || 'type=local,dest=/tmp' }}
-            

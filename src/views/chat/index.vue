@@ -607,108 +607,109 @@ const ychat = computed(() => {
 </script>
 
 <template>
-  <div v-if="backgroundImage" 
-    class=" fixed z-[200] pointer-events-none top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
-    :style="{
-      'background-image': 'url(' + backgroundImage + ')',
-      opacity: 0.19,
-    }"
-  ></div>
-  <div class="flex flex-col w-full h-full">
-    <!-- v-if="isMobile" -->
-    <HeaderComponent
-      :using-context="usingContext"
-      @export="handleExport"
-      @handle-clear="handleClear"
-    />
-    <main class="flex-1 overflow-hidden">
-      <div
-        id="scrollRef"
-        ref="scrollRef"
-        class="h-full overflow-hidden overflow-y-auto"
-      >
-        <div
-          id="image-wrapper"
-          class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
-          :class="[isMobile ? 'p-2' : 'p-4']"
-        >
-          <template v-if="!dataSources.length">
-            <div
-              class="text-center pt-10"
-              v-if="
-                homeStore.myData.isClient &&
-                (!gptServerStore.myData.OPENAI_API_BASE_URL ||
-                  !gptServerStore.myData.OPENAI_API_KEY)
-              "
-            >
-              <AiTextSetting />
-            </div>
-            <div
-              v-else-if="homeStore.myData.session.notify"
-              v-html="homeStore.myData.session.notify"
-              class="text-neutral-300 mt-4"
-            ></div>
-            <div
-              class="flex items-center justify-center mt-4 text-center text-neutral-300"
-              v-else
-            >
-              <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
-              <span>Aha~</span>
-            </div>
-          </template>
-          <template v-else>
-            <div>
-              <Message
-                v-for="(item, index) of dataSources"
-                :key="index"
-                :date-time="item.dateTime"
-                :text="item.text"
-                :inversion="item.inversion"
-                :error="item.error"
-                :loading="item.loading"
-                @regenerate="onRegenerate(index)"
-                @delete="handleDelete(index)"
-                @edit="handleEdit(index)"
-                :chat="item"
-                :index="index"
-              />
-              <Message
-                v-if="ychat.text"
-                :key="dataSources.length"
-                :inversion="true"
-                :date-time="$t('mj.typing')"
-                :chat="ychat"
-                :text="ychat.text"
-                :index="dataSources.length"
-              />
-              <div class="sticky bottom-0 left-0 flex justify-center">
-                <NButton v-if="loading" type="warning" @click="handleStop">
-                  <template #icon>
-                    <SvgIcon icon="ri:stop-circle-line" />
-                  </template>
-                  {{ t("common.stopResponding") }}
-                </NButton>
-              </div>
-            </div>
-          </template>
-        </div>
-      </div>
-    </main>
-    <footer :class="footerClass" v-if="local !== 'draw'">
-      <div class="w-full max-w-screen-xl m-auto">
-        <aiGptInput
-          v-if="
-            ['gpt-4-vision-preview', 'gpt-3.5-turbo-16k'].indexOf(
-              gptConfigStore.myData.model
-            ) > -1 || st.inputme
-          "
-          v-model:modelValue="prompt"
-          :disabled="buttonDisabled"
-          :searchOptions="searchOptions"
-          :renderOption="renderOption"
-        />
-        <div class="flex items-center justify-between space-x-2" v-else>
-          <!-- 
+	<div
+		v-if="backgroundImage"
+		class="fixed z-[200] pointer-events-none top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
+		:style="{
+			'background-image': 'url(' + backgroundImage + ')',
+			opacity: 0.19,
+		}"
+	></div>
+	<div class="flex flex-col w-full h-full">
+		<!-- v-if="isMobile" -->
+		<HeaderComponent
+			:using-context="usingContext"
+			@export="handleExport"
+			@handle-clear="handleClear"
+		/>
+		<main class="flex-1 overflow-hidden">
+			<div
+				id="scrollRef"
+				ref="scrollRef"
+				class="h-full overflow-hidden overflow-y-auto"
+			>
+				<div
+					id="image-wrapper"
+					class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
+					:class="[isMobile ? 'p-2' : 'p-4']"
+				>
+					<template v-if="!dataSources.length">
+						<div
+							class="text-center pt-10"
+							v-if="
+								homeStore.myData.isClient &&
+								(!gptServerStore.myData.OPENAI_API_BASE_URL ||
+									!gptServerStore.myData.OPENAI_API_KEY)
+							"
+						>
+							<AiTextSetting />
+						</div>
+						<div
+							v-else-if="homeStore.myData.session.notify"
+							v-html="homeStore.myData.session.notify"
+							class="text-neutral-300 mt-4"
+						></div>
+						<div
+							class="flex items-center justify-center mt-4 text-center text-neutral-300"
+							v-else
+						>
+							<SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
+							<span>Aha~</span>
+						</div>
+					</template>
+					<template v-else>
+						<div>
+							<Message
+								v-for="(item, index) of dataSources"
+								:key="index"
+								:date-time="item.dateTime"
+								:text="item.text"
+								:inversion="item.inversion"
+								:error="item.error"
+								:loading="item.loading"
+								@regenerate="onRegenerate(index)"
+								@delete="handleDelete(index)"
+								@edit="handleEdit(index)"
+								:chat="item"
+								:index="index"
+							/>
+							<Message
+								v-if="ychat.text"
+								:key="dataSources.length"
+								:inversion="true"
+								:date-time="$t('mj.typing')"
+								:chat="ychat"
+								:text="ychat.text"
+								:index="dataSources.length"
+							/>
+							<div class="sticky bottom-0 left-0 flex justify-center">
+								<NButton v-if="loading" type="warning" @click="handleStop">
+									<template #icon>
+										<SvgIcon icon="ri:stop-circle-line" />
+									</template>
+									{{ t("common.stopResponding") }}
+								</NButton>
+							</div>
+						</div>
+					</template>
+				</div>
+			</div>
+		</main>
+		<footer :class="footerClass" v-if="local !== 'draw'">
+			<div class="w-full max-w-screen-xl m-auto">
+				<aiGptInput
+					v-if="
+						['gpt-4-vision-preview', 'gpt-3.5-turbo-16k'].indexOf(
+							gptConfigStore.myData.model,
+						) > -1 || st.inputme
+					"
+					v-model:modelValue="prompt"
+					:disabled="buttonDisabled"
+					:searchOptions="searchOptions"
+					:renderOption="renderOption"
+				/>
+				<div class="flex items-center justify-between space-x-2" v-else>
+					<!-- 
           <HoverButton v-if="!isMobile" @click="handleClear">
             <span class="text-xl text-[#4f555e] dark:text-white">
               <SvgIcon icon="ri:delete-bin-line" />
