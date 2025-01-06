@@ -1,173 +1,169 @@
 <script setup lang="ts">
-import { SvgIcon } from "@/components/common"
-import an_main from "./an_main.vue"
-import wavSetting from "./wavSetting.vue"
-import { WavRecorder, WavStreamPlayer } from "@openai/realtime-wavtools"
-import { onMounted, ref, watch } from "vue"
-import { mlog, RealtimeEvent, instructions } from "@/api"
-import { WavRenderer } from "@/utils/wav_renderer"
-import { RealtimeClient } from "@openai/realtime-api-beta"
-import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js"
-import { useMessage, NModal, NButton } from "naive-ui"
-import { gptServerStore } from "@/store"
-import { t } from "@/locales"
-const wavRecorderRef = ref<WavRecorder>(new WavRecorder({ sampleRate: 24000 }))
-const wavStreamPlayerRef = ref<WavStreamPlayer>(
-	new WavStreamPlayer({ sampleRate: 24000 }),
-)
-const clientCanvasRef = ref<HTMLCanvasElement | null>(null)
-const serverCanvasRef = ref<HTMLCanvasElement | null>(null)
-const items = ref<ItemType[]>([])
-const realtimeEvents = ref<RealtimeEvent[]>([])
-const clientRef = ref<RealtimeClient>()
-const ms = useMessage()
-const st = ref({
-	apikey: "",
-	isConnect: false,
-	baseUrl: "",
-	isRealtime: true,
-	msg: "Waiting",
-	isClosed: false,
-	showSetting: false,
-})
-const edmit = defineEmits(["close"])
+import { SvgIcon } from '@/components/common';
+import an_main from './an_main.vue'
+import aiTextSetting from '../mj/aiTextSetting.vue';
+import wavSetting from './wavSetting.vue';
+import { WavRecorder, WavStreamPlayer } from '@openai/realtime-wavtools';
+import { onMounted, ref, watch } from 'vue';
+import { mlog,RealtimeEvent,instructions } from '@/api';
+import { WavRenderer } from '@/utils/wav_renderer';
+import { RealtimeClient } from '@openai/realtime-api-beta';
+import { ItemType } from '@openai/realtime-api-beta/dist/lib/client.js';
+import { useMessage ,NModal,NButton} from 'naive-ui';
+import { gptServerStore } from '@/store';
+import { t } from '@/locales';
+const wavRecorderRef=  ref<WavRecorder>( new  WavRecorder({ sampleRate: 24000 })) 
+const wavStreamPlayerRef=  ref<WavStreamPlayer>( new WavStreamPlayer({ sampleRate: 24000 })) 
+const clientCanvasRef = ref<HTMLCanvasElement|null>(null);
+const serverCanvasRef = ref<HTMLCanvasElement|null>(null);
+const items= ref<ItemType[]>([]); 
+const realtimeEvents= ref<RealtimeEvent[]>([]);
+const clientRef= ref<RealtimeClient>();
+const ms= useMessage();
+const st= ref({apikey:'', isConnect:false,baseUrl:'',isRealtime:true,msg:'Waiting',isClosed:false,showSetting:false })
+const edmit= defineEmits(['close'])
 
-watch(
-	() => wavRecorderRef.value,
-	() => {
-		const wavRecorder = wavRecorderRef.value
+watch( ()=> wavRecorderRef.value,() => {
+    const wavRecorder= wavRecorderRef.value;  
+    
+        const clientCanvas = clientCanvasRef.value;
+        const wavStreamPlayer = wavStreamPlayerRef.value;
+        let clientCtx: CanvasRenderingContext2D | null = null;
+        if (clientCanvas) {
+          if (!clientCanvas.width || !clientCanvas.height) {
+            clientCanvas.width = clientCanvas.offsetWidth;
+            clientCanvas.height = clientCanvas.offsetHeight;
+          }
+          clientCtx = clientCtx || clientCanvas.getContext('2d');
+          if (clientCtx) {
+            clientCtx.clearRect(0, 0, clientCanvas.width, clientCanvas.height);
+            const result = wavRecorder.recording
+              ? wavRecorder.getFrequencies('voice')
+              : { values: new Float32Array([0]) };
+            WavRenderer.drawBars(
+              clientCanvas,
+              clientCtx,
+              result.values,
+              '#0099ff',
+              20,
+              0,
+              2
+            );
+          }
+        }
 
-		const clientCanvas = clientCanvasRef.value
-		const wavStreamPlayer = wavStreamPlayerRef.value
-		let clientCtx: CanvasRenderingContext2D | null = null
-		if (clientCanvas) {
-			if (!clientCanvas.width || !clientCanvas.height) {
-				clientCanvas.width = clientCanvas.offsetWidth
-				clientCanvas.height = clientCanvas.offsetHeight
-			}
-			clientCtx = clientCtx || clientCanvas.getContext("2d")
-			if (clientCtx) {
-				clientCtx.clearRect(0, 0, clientCanvas.width, clientCanvas.height)
-				const result = wavRecorder.recording
-					? wavRecorder.getFrequencies("voice")
-					: { values: new Float32Array([0]) }
-				WavRenderer.drawBars(
-					clientCanvas,
-					clientCtx,
-					result.values,
-					"#0099ff",
-					20,
-					0,
-					2,
-				)
-			}
-		}
+        const serverCanvas = serverCanvasRef.value;
+        let serverCtx: CanvasRenderingContext2D | null = null;
+        if (serverCanvas) {
+          if (!serverCanvas.width || !serverCanvas.height) {
+            serverCanvas.width = serverCanvas.offsetWidth;
+            serverCanvas.height = serverCanvas.offsetHeight;
+          }
+          serverCtx = serverCtx || serverCanvas.getContext('2d');
+          if (serverCtx) {
+            serverCtx.clearRect(0, 0, serverCanvas.width, serverCanvas.height);
+            const result = wavStreamPlayer.analyser
+              ? wavStreamPlayer.getFrequencies('voice')
+              : { values: new Float32Array([0]) };
+             
+            WavRenderer.drawBars(
+              serverCanvas,
+              serverCtx,
+              result.values,
+              '#009900',
+              20,
+              0,
+              2
+            );
+          }
+        }
 
-		const serverCanvas = serverCanvasRef.value
-		let serverCtx: CanvasRenderingContext2D | null = null
-		if (serverCanvas) {
-			if (!serverCanvas.width || !serverCanvas.height) {
-				serverCanvas.width = serverCanvas.offsetWidth
-				serverCanvas.height = serverCanvas.offsetHeight
-			}
-			serverCtx = serverCtx || serverCanvas.getContext("2d")
-			if (serverCtx) {
-				serverCtx.clearRect(0, 0, serverCanvas.width, serverCanvas.height)
-				const result = wavStreamPlayer.analyser
-					? wavStreamPlayer.getFrequencies("voice")
-					: { values: new Float32Array([0]) }
+},{deep:true,immediate:true});
 
-				WavRenderer.drawBars(
-					serverCanvas,
-					serverCtx,
-					result.values,
-					"#009900",
-					20,
-					0,
-					2,
-				)
-			}
-		}
-	},
-	{ deep: true, immediate: true },
-)
+const go= async()=>{
+    st.value.msg=  t('mj.rtconecting')
+    if(st.value.isConnect){
+        //mlog("isConnect yes!"  )
+        ms.info("isConnect yes!");
+        return;
+    }
+    
+    if(!clientRef.value || !st.value.isConnect ){
+        if(!st.value.apikey){
+            
+            ms.error("api key is null");
+            return;
+        }
+        if(!st.value.baseUrl){ 
+            ms.error("baseUrl is null");
+            return;
+        }
+        //ms.info("go");
+        //console.log("RealtimeClient", st.value.apikey )
 
-const go = async () => {
-	st.value.msg = t("mj.rtconecting")
-	if (st.value.isConnect) {
-		//mlog("isConnect yes!"  )
-		ms.info("isConnect yes!")
-		return
-	}
+        clientRef.value= new RealtimeClient( { 
+            apiKey:st.value.apikey,
+            dangerouslyAllowAPIKeyInBrowser: true,
+            baseUrl: st.value.baseUrl,
+            model: gptServerStore.myData.REALTIME_MODEL?gptServerStore.myData.REALTIME_MODEL: 'gpt-4o-realtime-preview-2024-10-01' 
+          }
+        )
+    }
+    //mlog("go", st.value.apikey )
+    const client= clientRef.value
+    const wavRecorder= wavRecorderRef.value
+    const wavStreamPlayer= wavStreamPlayerRef.value
+   
+    try{
+    // Connect to microphone
+        await wavRecorder.begin();
+    }catch(e){
+        st.value.msg=t('mj.rtservererror2') 
+        ms.error(st.value.msg);
+        return 
+    }
+    // Connect to realtime API
+    try{
+        await client.connect(); 
+    }catch(e ){
+        st.value.msg= t('mj.rtservererror')
+        ms.error( st.value.msg);
 
-	if (!clientRef.value || !st.value.isConnect) {
-		if (!st.value.apikey) {
-			ms.error("api key is null")
-			return
-		}
-		if (!st.value.baseUrl) {
-			ms.error("baseUrl is null")
-			return
-		}
-		clientRef.value = new RealtimeClient({
-			apiKey: st.value.apikey,
-			dangerouslyAllowAPIKeyInBrowser: true,
-			url: st.value.baseUrl,
-		})
-	}
-	mlog("go", st.value.apikey)
-	const client = clientRef.value
-	const wavRecorder = wavRecorderRef.value
-	const wavStreamPlayer = wavStreamPlayerRef.value
+        return 
+    }
 
-	try {
-		// Connect to microphone
-		await wavRecorder.begin()
-	} catch (e) {
-		st.value.msg = t("mj.rtservererror2")
-		ms.error(st.value.msg)
-		return
-	}
-	// Connect to realtime API
-	try {
-		await client.connect()
-	} catch (e) {
-		st.value.msg = t("mj.rtservererror")
-		ms.error(st.value.msg)
+    // Connect to audio output
+    await wavStreamPlayer.connect();
 
-		return
-	}
+    st.value.isConnect=true
 
-	// Connect to audio output
-	await wavStreamPlayer.connect()
+    client.sendUserMessageContent([
+      {
+        type: `input_text`,
+        text: `hello`,
+      },
+    ]);
+    
 
-	st.value.isConnect = true
+    client.updateSession({
+      turn_detection:  { type: 'server_vad' },
+    });
+    
 
-	client.sendUserMessageContent([
-		{
-			type: `input_text`,
-			text: `hello`,
-		},
-	])
+    await wavRecorder.record((data: { mono: Int16Array | ArrayBuffer; }) => {
+        try{ 
+            client.appendInputAudio(data.mono)
+            st.value.msg=  t('mj.rtsuccess')
+        }catch(e){
+            disconnectConversation();
+            // st.value.msg= t('mj.checkkey')
+            // ms.error(st.value.msg);
+            // mlog("appendInputAudio error", e )
+            return
+        }
+    });
 
-	client.updateSession({
-		turn_detection: { type: "server_vad" },
-	})
-
-	await wavRecorder.record((data: { mono: Int16Array | ArrayBuffer }) => {
-		try {
-			client.appendInputAudio(data.mono)
-			st.value.msg = t("mj.rtsuccess")
-		} catch (e) {
-			disconnectConversation()
-			// st.value.msg= t('mj.checkkey')
-			// ms.error(st.value.msg);
-			// mlog("appendInputAudio error", e )
-			return
-		}
-	})
-
-	myListen()
+    myListen();
 }
 
 const disconnectConversation = async () => {

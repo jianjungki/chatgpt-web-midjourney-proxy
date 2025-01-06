@@ -269,115 +269,112 @@ export default {
 		ud_continuation: "계속",
 		ud_precede: "이전",
 
-		upImg2:
-			'<span><b>이미지 업로드</b><br/>이 모델은 이미지 인식을 지원합니다<br>주의: 추가 이미지 요금이 발생합니다<br/>형식: jpeg jpg png gif</span><p>드래그 앤 드롭 지원</p> <p class="pt-2"><b>MP3 MP4 업로드</b> <br>자동으로 whisper-1 모델을 호출합니다<br>형식: mp3 mp4 mpeg mpga m4a wav webm</p>',
-		rml_info:
-			"주의:<ul><li>1. 반드시 이미지를 포함해야 합니다</li><li>2. 모델은 gen3a_turbo 하나만 있습니다</li><li>3. 10초 가격은 5초의 두 배입니다</li></ul>",
-		rml_heng: "가로 모드",
-		rml_shu: "세로 모드",
-	},
-	mjset: {
-		server: "서버",
-		about: "소개",
-		model: "모델",
-		sysname: "AI 그림",
-	},
-	mjtab: {
-		chat: "대화",
-		draw: "그림",
-		drawinfo: "AI 그림 Midjourney 엔진",
-		gallery: "갤러리",
-		galleryInfo: "내 갤러리",
-	},
-	mjchat: {
-		loading: "이미지 로드 중",
-		openurl: "직접 링크 열기",
-		failReason: "실패 이유:",
-		reload: "재로드",
-		progress: "진행:",
-		wait: "작업이 제출되었습니다. 기다려주세요...",
-		reroll: "재그림",
-		wait2: "작업 {id}이(가) 제출되었습니다. 기다려주세요",
-		redrawEditing: "일부 재그림 편집",
-		face: "얼굴 바꾸기",
-		blend: "혼합",
-		draw: "그림 그리기",
-		submiting: "제출 중",
-		submit: "제출",
-		wait3: "닫지 마세요! 이미지 생성 중...",
-		success: "저장 성공",
-		successTitle: "성공",
-		modlePlaceholder:
-			"여러 개의 사용자 정의 모델은 띄어쓰기로 구분됩니다. 필수 사항은 아닙니다.",
-		myModle: "내 모델",
-		historyCnt: "컨텍스트 수",
-		historyToken:
-			"더 많은 컨텍스트는 기억을 더 정확하게 만들지만 더 많은 크레딧을 소비할 수 있습니다.",
-		historyTCnt: "답장 수",
-		historyTCntInfo: "답장 수가 많을수록 더 많은 크레딧이 소비될 수 있습니다.",
-		role: "역할 설정",
-		rolePlaceholder: "대화에 고유한 역할을 설정하십시오. 필수는 아닙니다.",
-		loading2: "로딩 중...",
-		loadmore: "더 보기",
-		nofind: "찾을 수 없음",
-		nofind2: "관련 내용을 찾을 수 없습니다. 다음을 시도해 보십시오.",
-		success2: "전환 성공!",
-		modelChange: "모델 변경",
-		search: "검색",
-		searchPlaceholder: "GPTs 이름, 소개",
-		attr: "첨부 파일",
-		noproduct: "갤러리에 작품이 없습니다.",
-		myGallery: "내 갤러리",
-		yourHead: "당신의 프로필 사진",
-		your2Head: "스타 이미지",
-		tipInfo:
-			"설명：<li>1. 이미지에는 얼굴이 반드시 포함되어야 합니다. 그렇지 않으면 이미지가 생성되지 않습니다.</li> <li>2. '스타 이미지'는 먼저 MJ 그림으로 만들 수 있습니다.</li> <li>3. '스타 이미지'는 애니메이션 이미지로도 괜찮습니다.</li> <li>4. '당신의 프로필 사진'은 1인치 개인 사진을 사용하는 것이 좋습니다.</li>",
-		placeInput: "힌트를 입력하세요!",
-		more5sb: "최대 5장의 이미지를 업로드할 수 있습니다.",
-		exSuccess: "내보내기 성공... 다운로드 창을 확인하세요.",
-		downloadSave: "ai그림.txt",
-		noproducet: "아직 미완성 작품이 없습니다.",
-		imgBili: "이미지 비율",
-		imagEx: "작품 이미지 링크 내보내기",
-		prompt: "힌트",
-		imgCYes: "쿠션 이미지 포함",
-		imgCUpload: "자체 쿠션 이미지 업로드",
-		imgCInfo:
-			"쿠션 이미지 안내：<br/> 1. 쿠션 이미지는 자체 이미지를 기본으로 사용하여 MJ로 그림을 그릴 수 있습니다.<br/> 2. 최대 5 장의 쿠션 이미지를 사용할 수 있으며 각 이미지의 크기는 1M를 초과하지 않아야 합니다.<br/>",
-		imgCadd: "+추가",
-		del: "삭제",
-		img2text: "이미지에서 텍스트 생성",
-		img2textinfo:
-			"힌트가 어떻게 쓰여야 할지 모르겠나요? 이미지에서 텍스트를 생성해 보세요! <br/>이미지를 제출하면 힌트가 생성됩니다.",
-		traning: "번역 중...",
-		imgcreate: "이미지 생성",
-		imginfo:
-			"기타 매개변수：<li>1 --no를 무시하면 --no car가 이미지에 표시되지 않습니다.</li><li>2 --seed는 먼저 시드를 얻을 수 있습니다. --seed 123456</li> <li>3 --chaos 10은 혼합(범위: 0-100)</li> <li>4 --tile 조각화</li>",
-		tStyle: "스타일",
-		tView: "시점",
-		tShot: "캐릭터 샷",
-		tLight: "조명",
-		tQuality: "화질",
-		tStyles: "아트 정도",
-		tVersion: "모델 버전",
-		dalleInfo:
-			"설명：<li>1. DALL-E는 OpenAI에서 제공하는 그림 모델입니다.</li>  <li>2. OpenAI의 이미지는 일시적입니다. 백업을 잘 해 두세요.</li>   <li>3. 주의: 1790px 이미지의 가격은 두 배입니다.</li> ",
-		version: "버전",
-		size: "크기",
-		blendInfo:
-			"설명：<li>1. 최소 2 장의 이미지를 합성하십시오.</li> <li>2. 최대 6 장의 이미지를 업로드할 수 있습니다.</li> ",
-		blendStart: "합성 시작",
-		no2add: "이미지를 중복해서 추가하지 마십시오.",
-		add2more: "두 장 이상의 이미지를 추가하십시오.",
-		no1m: "이미지 크기는 1M를 초과할 수 없습니다.",
-		setSync: "Midjourney와 Suno를 동기화하십시오",
-		imgExt: "이미지는 jpg, gif, png, jpeg 형식만 지원됩니다.",
-		addGPTS: "GPTs 추가",
-		addPlaceholder:
-			"여기에 GPTs의 GID를 붙이거나 GPTs의 링크를 직접 붙여 넣을 수 있습니다.",
-		gidError: "유효한 GID를 찾을 수 없습니다. 다시 작성해주세요.",
-		success3: "GPTs 추가 성공!",
-	},
+    "upImg2": "<span><b>이미지 업로드</b><br/>이 모델은 이미지 인식을 지원합니다<br>주의: 추가 이미지 요금이 발생합니다<br/>형식: jpeg jpg png gif</span><p>드래그 앤 드롭 지원</p> <p class=\"pt-2\"><b>MP3 MP4 업로드</b> <br>자동으로 whisper-1 모델을 호출합니다<br>형식: mp3 mp4 mpeg mpga m4a wav webm</p>",
+    "rml_info": "주의:<ul><li>1. 반드시 이미지를 포함해야 합니다</li><li>2. 모델은 gen3a_turbo 하나만 있습니다</li><li>3. 10초 가격은 5초의 두 배입니다</li></ul>",
+    "rml_heng": "가로 모드",
+    "rml_shu": "세로 모드",
+  
+    "pixabout": "Pixverse 관련",
+    "pixkeyPlaceholder": "Pixverse API 키는 비워둘 수 있습니다",
+    "pixserver": "Pixverse API 주소",
+    "pixinfo": " 설명:<br> <ul> <li>1. v3.5 360p 지속시간 5초 모드 Normal을 기준으로 함</li><li>2. v2.5는 0.5배입니다</li> <li>3. 지속시간 10초는 2배입니다</li> <li>4. 540P는 1.5배, 720P는 2배, 1080P는 4배입니다</li> <li>5. 성능 모드는 2배입니다</li> <li>6. 배수는 곱해지며, 예를 들어 720P 지속시간 10초는 2*2로 4배가 되고, 성능을 추가하면 8배가 됩니다</li></ul>"
+ 
+  },
+  "mjset": {
+    "server": "서버"
+    ,"about": "소개"
+    ,"model": "모델"
+    ,"sysname": "AI 그림"
+  },
+  "mjtab": {
+    "chat": "대화"
+    ,"draw": "그림"
+    ,"drawinfo": "AI 그림 Midjourney 엔진"
+    ,"gallery": "갤러리"
+    ,"galleryInfo": "내 갤러리"
+  },
+  "mjchat": {
+    "loading": "이미지 로드 중"
+    ,"openurl": "직접 링크 열기"
+    ,"failReason": "실패 이유:"
+    ,"reload": "재로드"
+    ,"progress": "진행:"
+    ,"wait": "작업이 제출되었습니다. 기다려주세요..."
+    ,"reroll": "재그림"
+    ,"wait2": "작업 {id}이(가) 제출되었습니다. 기다려주세요"
+    ,"redrawEditing": "일부 재그림 편집"
+    ,"face": "얼굴 바꾸기"
+    ,"blend": "혼합"
+    ,"draw": "그림 그리기"
+    ,"submiting": "제출 중"
+    ,"submit": "제출"
+    ,"wait3": "닫지 마세요! 이미지 생성 중..."
+    ,"success": "저장 성공"
+    ,"successTitle": "성공"
+    ,"modlePlaceholder": "여러 개의 사용자 정의 모델은 띄어쓰기로 구분됩니다. 필수 사항은 아닙니다."
+    ,"myModle": "내 모델"
+    ,"historyCnt": "컨텍스트 수"
+    ,"historyToken": "더 많은 컨텍스트는 기억을 더 정확하게 만들지만 더 많은 크레딧을 소비할 수 있습니다."
+    ,"historyTCnt": "답장 수"
+    ,"historyTCntInfo": "답장 수가 많을수록 더 많은 크레딧이 소비될 수 있습니다."
+    ,"role": "역할 설정"
+    ,"rolePlaceholder": "대화에 고유한 역할을 설정하십시오. 필수는 아닙니다."
+    ,"loading2": "로딩 중..."
+    ,"loadmore": "더 보기"
+    ,"nofind": "찾을 수 없음"
+    ,"nofind2": "관련 내용을 찾을 수 없습니다. 다음을 시도해 보십시오."
+    ,"success2": "전환 성공!"
+    ,"modelChange": "모델 변경"
+    ,"search": "검색"
+    ,"searchPlaceholder": "GPTs 이름, 소개"
+    ,"attr": "첨부 파일"
+    ,"noproduct": "갤러리에 작품이 없습니다."
+    ,"myGallery": "내 갤러리"
+    ,"yourHead": "당신의 프로필 사진"
+    ,"your2Head": "스타 이미지"
+    ,"tipInfo": "설명：<li>1. 이미지에는 얼굴이 반드시 포함되어야 합니다. 그렇지 않으면 이미지가 생성되지 않습니다.</li> <li>2. '스타 이미지'는 먼저 MJ 그림으로 만들 수 있습니다.</li> <li>3. '스타 이미지'는 애니메이션 이미지로도 괜찮습니다.</li> <li>4. '당신의 프로필 사진'은 1인치 개인 사진을 사용하는 것이 좋습니다.</li>"
+    ,"placeInput": "힌트를 입력하세요!"
+    ,"more5sb": "최대 5장의 이미지를 업로드할 수 있습니다."
+    ,"exSuccess": "내보내기 성공... 다운로드 창을 확인하세요."
+    ,"downloadSave": "ai그림.txt"
+    ,"noproducet": "아직 미완성 작품이 없습니다."
+    ,"imgBili": "이미지 비율"
+    ,"imagEx": "작품 이미지 링크 내보내기"
+    ,"prompt": "힌트"
+    ,"imgCYes": "쿠션 이미지 포함"
+    ,"imgCUpload": "자체 쿠션 이미지 업로드"
+    ,"imgCInfo": "쿠션 이미지 안내：<br/> 1. 쿠션 이미지는 자체 이미지를 기본으로 사용하여 MJ로 그림을 그릴 수 있습니다.<br/> 2. 최대 5 장의 쿠션 이미지를 사용할 수 있으며 각 이미지의 크기는 1M를 초과하지 않아야 합니다.<br/>"
+    ,"imgCadd": "+추가"
+    ,"del": "삭제"
+    ,"img2text": "이미지에서 텍스트 생성"
+    ,"img2textinfo": "힌트가 어떻게 쓰여야 할지 모르겠나요? 이미지에서 텍스트를 생성해 보세요! <br/>이미지를 제출하면 힌트가 생성됩니다."
+    ,"traning": "번역 중..."
+    ,"imgcreate": "이미지 생성"
+    ,"imginfo": "기타 매개변수：<li>1 --no를 무시하면 --no car가 이미지에 표시되지 않습니다.</li><li>2 --seed는 먼저 시드를 얻을 수 있습니다. --seed 123456</li> <li>3 --chaos 10은 혼합(범위: 0-100)</li> <li>4 --tile 조각화</li>"
+    ,"tStyle": "스타일"
+    ,"tView": "시점"
+    ,"tShot": "캐릭터 샷"
+    ,"tLight": "조명"
+    ,"tQuality": "화질"
+    ,"tStyles": "아트 정도"
+    ,"tVersion": "모델 버전"
+    ,"dalleInfo": "설명：<li>1. DALL-E는 OpenAI에서 제공하는 그림 모델입니다.</li>  <li>2. OpenAI의 이미지는 일시적입니다. 백업을 잘 해 두세요.</li>   <li>3. 주의: 1790px 이미지의 가격은 두 배입니다.</li> "
+    ,"version": "버전"
+    ,"size": "크기"
+    ,"blendInfo": "설명：<li>1. 최소 2 장의 이미지를 합성하십시오.</li> <li>2. 최대 6 장의 이미지를 업로드할 수 있습니다.</li> "
+    ,"blendStart": "합성 시작"
+    ,"no2add": "이미지를 중복해서 추가하지 마십시오."
+    ,"add2more": "두 장 이상의 이미지를 추가하십시오."
+    ,"no1m": "이미지 크기는 1M를 초과할 수 없습니다."
+    ,"setSync": "Midjourney와 Suno를 동기화하십시오"
+    ,"imgExt": "이미지는 jpg, gif, png, jpeg 형식만 지원됩니다."
+    ,"addGPTS": "GPTs 추가",
+    "addPlaceholder": "여기에 GPTs의 GID를 붙이거나 GPTs의 링크를 직접 붙여 넣을 수 있습니다.",
+    "gidError": "유효한 GID를 찾을 수 없습니다. 다시 작성해주세요.",
+    "success3": "GPTs 추가 성공!"
+    
+  },
+
 	draw: {
 		qualityList: {
 			general: "General",

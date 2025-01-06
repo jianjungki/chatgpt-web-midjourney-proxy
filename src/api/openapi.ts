@@ -569,52 +569,58 @@ export const gptUsage = async () => {
 	}
 }
 
-export const openaiSetting = (q: any, ms: MessageApiInjection) => {
-	//mlog()
-	mlog("setting", q)
-	if (q.settings) {
-		mlog("q.setting", q.settings)
-		try {
-			let obj = JSON.parse(q.settings)
-			const url = obj.url ?? undefined
-			const key = obj.key ?? undefined
-			//let setQ= { }
-			gptServerStore.setMyData({
-				OPENAI_API_BASE_URL: url,
-				MJ_SERVER: url,
-				SUNO_SERVER: url,
-				LUMA_SERVER: url,
-				RUNWAY_SERVER: url,
-				VIGGLE_SERVER: url,
-				IDEO_SERVER: url,
-				KLING_SERVER: url,
-				PIKA_SERVER: url,
-				UDIO_SERVER: url,
+export const openaiSetting= ( q:any,ms:MessageApiInjection )=>{
+    //mlog()
+    mlog('setting', q )
+    if(q.settings){
+        mlog('q.setting', q.settings )
+        try {
+            let obj = JSON.parse( q.settings );
+            const url = obj.url ?? undefined;
+            const key = obj.key ?? undefined;
+            //let setQ= { }
+            gptServerStore.setMyData(  {
+                OPENAI_API_BASE_URL:url, 
+                MJ_SERVER:url, 
+                SUNO_SERVER:url,
+                LUMA_SERVER:url,
+                RUNWAY_SERVER:url,
+                VIGGLE_SERVER:url,
+                IDEO_SERVER:url,
+                KLING_SERVER:url,
+                PIKA_SERVER:url,
+                UDIO_SERVER:url,
+                PIXVERSE_SERVER:url,
+                
+                
+                OPENAI_API_KEY:key,
+                MJ_API_SECRET:key, 
+                SUNO_KEY:key,
+                LUMA_KEY:key,
+                RUNWAY_KEY:key,
+                VIGGLE_KEY:key,
+                IDEO_KEY:key,
+                KLING_KEY:key,
+                PIKA_KEY:key,
+                UDIO_KEY:key,
+                PIXVERSE_KEY:key,
+             } )
+            blurClean();
+            gptServerStore.setMyData( gptServerStore.myData );
+            ms.success("设置服务端成功！")
+            
+        } catch (error) {
+            
+        }
+    }
+    else if(isObject(q)){
+        mlog('setting2', q )
+        gptServerStore.setMyData(  q )
+        //gptServerStore.setMyData( gptServerStore.myData );
+        blurClean();
+        gptServerStore.setMyData( gptServerStore.myData );
 
-				OPENAI_API_KEY: key,
-				MJ_API_SECRET: key,
-				SUNO_KEY: key,
-				LUMA_KEY: key,
-				RUNWAY_KEY: key,
-				VIGGLE_KEY: key,
-				IDEO_KEY: key,
-				KLING_KEY: key,
-				PIKA_KEY: key,
-				UDIO_KEY: key,
-			})
-			blurClean()
-			gptServerStore.setMyData(gptServerStore.myData)
-			ms.success("设置服务端成功！")
-		} catch (error) {
-			mlog("设置服务端失败", error)
-		}
-	} else if (isObject(q)) {
-		mlog("setting2", q)
-		gptServerStore.setMyData(q)
-		//gptServerStore.setMyData( gptServerStore.myData );
-		blurClean()
-		gptServerStore.setMyData(gptServerStore.myData)
-	}
+    }
 }
 export const blurClean = () => {
 	mlog("blurClean")

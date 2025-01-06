@@ -14,12 +14,16 @@ const save = () => {
 	emit("close")
 }
 
-const voiceList = computed(() => {
-	let rz = [] //'alloy','shimmer','echo'
-	for (let o of "alloy,echo,shimmer".split(/[ ,]+/gi))
-		rz.push({ label: o, value: o })
-	return rz
-})
+const voiceList= computed(()=>{
+    let rz=[]; //'alloy','shimmer','echo'
+    for(let o of "alloy,echo,shimmer".split(/[ ,]+/ig))rz.push({label:o,value:o}) 
+    return rz;
+});
+const modelList= computed(()=>{
+    let rz=[]; //'alloy','shimmer','echo'
+    for(let o of "gpt-4o-realtime-preview-2024-12-17,gpt-4o-mini-realtime-preview-2024-12-17,gpt-4o-realtime-preview-2024-10-01".split(/[ ,]+/ig))rz.push({label:o,value:o}) 
+    return rz;
+});
 </script>
 <template>
 	<div class="w-full">
@@ -52,31 +56,21 @@ const voiceList = computed(() => {
 				</n-input>
 			</section>
 
-			<section class="mb-4 flex justify-between items-center">
-				<n-input
-					v-model:value="gptServerStore.myData.OPENAI_API_KEY"
-					type="password"
-					:placeholder="$t('mj.setOpenKeyPlaceholder')"
-					show-password-on="click"
-					clearable
-					@blur="blurClean"
-				>
-					<template #prefix>
-						<span class="text-[var(--n-tab-text-color-active)]"
-							>OpenAI Api Key:</span
-						>
-					</template>
-				</n-input>
-			</section>
-			<section class="mb-4 flex justify-between items-center">
-				<div>{{ $t("mj.tts_voice") }}</div>
-				<n-select
-					v-model:value="gptServerStore.myData.TTS_VOICE"
-					:options="voiceList"
-					size="small"
-					class="!w-[50%]"
-				/>
-			</section>
+            <section class="mb-4 flex justify-between items-center"  >
+                <n-input  @blur="blurClean" type="password"  :placeholder="$t('mj.setOpenKeyPlaceholder')" show-password-on="click" v-model:value="gptServerStore.myData.OPENAI_API_KEY" clearable>
+                    <template #prefix>
+                    <span class="text-[var(--n-tab-text-color-active)]">OpenAI Api Key:</span>
+                    </template>
+                </n-input>
+            </section>
+            <section class="mb-4 flex justify-between items-center"  >
+                <div >{{ $t('mj.tts_voice') }}</div>
+                <n-select v-model:value="gptServerStore.myData.TTS_VOICE" :options="voiceList" size="small"  class="!w-[50%]"   />
+            </section>
+             <section class="mb-4 flex justify-between items-center"  >
+                <div >Model</div>
+                <n-select v-model:value="gptServerStore.myData.REALTIME_MODEL" :options="modelList" size="small"  class="!w-[70%]"   />
+            </section>
 
 			<section class="mb-4">
 				<div>{{ $t("mjchat.role") }}</div>
