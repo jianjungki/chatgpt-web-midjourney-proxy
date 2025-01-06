@@ -176,7 +176,7 @@ export async function speakText(
 	if (!window.speechSynthesis) return
 	if (speechSynthesis.speaking) {
 		speechSynthesis.cancel()
-		callback(false)
+		callback()
 	}
 
 	await sleep(300)
@@ -185,11 +185,11 @@ export async function speakText(
 	msg.lang = "zh"
 	msg.rate = 1
 	msg.addEventListener("end", () => {
-		callback(false)
+		callback()
 	})
 	msg.addEventListener("error", () => {
-		callback(false)
+		callback()
 	})
-	callback(true)
+	callback()
 	speechSynthesis.speak(msg)
 }
