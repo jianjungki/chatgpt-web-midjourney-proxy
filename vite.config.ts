@@ -1,11 +1,12 @@
-import path from "path";
-import type { PluginOption } from "vite";
-import { defineConfig, loadEnv } from "vite";
-import vue from "@vitejs/plugin-vue";
-import { VitePWA } from "vite-plugin-pwa";
-import { viteStaticCopy } from "vite-plugin-static-copy";
+import path from "path"
+import type { PluginOption } from "vite"
+import { defineConfig, loadEnv } from "vite"
+import vue from "@vitejs/plugin-vue"
+import { VitePWA } from "vite-plugin-pwa"
+import { viteStaticCopy } from "vite-plugin-static-copy"
+import type { ImportMetaEnv } from "@/typings/env"
 
-function setupPlugins(env: ImportMetaEnv): PluginOption[] {
+function setupPlugins(): PluginOption[] {
 	return [
 		vue(),
 		viteStaticCopy({
@@ -28,11 +29,11 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
 				],
 			},
 		}),
-	];
+	]
 }
 
 export default defineConfig((env) => {
-	const viteEnv = loadEnv(env.mode, process.cwd()) as unknown as ImportMetaEnv;
+	const viteEnv = loadEnv(env.mode, process.cwd())  as ImportMetaEnv
 
 	return {
 		resolve: {
@@ -40,7 +41,7 @@ export default defineConfig((env) => {
 				"@": path.resolve(process.cwd(), "src"),
 			},
 		},
-		plugins: setupPlugins(viteEnv),
+		plugins: setupPlugins(),
 		server: {
 			host: "0.0.0.0",
 			port: 1002,
@@ -95,5 +96,5 @@ export default defineConfig((env) => {
 				ignoreTryCatch: false,
 			},
 		},
-	};
-});
+	}
+})

@@ -1,5 +1,4 @@
-import { ss } from "@/utils/storage";
-import { mlog } from "./mjapi";
+import { ss } from "@/utils/storage"
 
 export interface udioTask {
 	// id: string;
@@ -57,39 +56,39 @@ export interface udioTask {
 
 export class udioStore {
 	//private id: string;
-	private localKey = "udio-store";
+	private localKey = "udio-store"
 	public save(obj: udioTask) {
-		if (!obj.id) throw "taskID must";
-		let arr = this.getObjs();
-		let i = arr.findIndex((v) => v.id == obj.id);
-		if (i > -1) arr[i] = obj;
-		else arr.push(obj);
-		ss.set(this.localKey, arr);
-		return this;
+		if (!obj.id) throw "taskID must"
+		let arr = this.getObjs()
+		let i = arr.findIndex((v) => v.id == obj.id)
+		if (i > -1) arr[i] = obj
+		else arr.push(obj)
+		ss.set(this.localKey, arr)
+		return this
 	}
 	public findIndex(id: string) {
-		return this.getObjs().findIndex((v) => v.id == id);
+		return this.getObjs().findIndex((v) => v.id == id)
 	}
 
 	public getObjs(): udioTask[] {
-		const obj = ss.get(this.localKey) as undefined | udioTask[];
-		if (!obj) return [];
-		return obj;
+		const obj = ss.get(this.localKey) as undefined | udioTask[]
+		if (!obj) return []
+		return obj
 	}
 	public getOneById(id: string): udioTask | null {
-		const i = this.findIndex(id);
-		if (i < 0) return null;
-		let arr = this.getObjs();
-		return arr[i];
+		const i = this.findIndex(id)
+		if (i < 0) return null
+		let arr = this.getObjs()
+		return arr[i]
 	}
 	public delete(id: string) {
-		let arr = this.getObjs();
+		let arr = this.getObjs()
 
-		let i = arr.findIndex((v) => v.id == id);
+		let i = arr.findIndex((v) => v.id == id)
 		//mlog('ddd',i , arr)
-		if (i < 0) return false;
-		arr.splice(i, 1);
-		ss.set(this.localKey, arr);
-		return true;
+		if (i < 0) return false
+		arr.splice(i, 1)
+		ss.set(this.localKey, arr)
+		return true
 	}
 }

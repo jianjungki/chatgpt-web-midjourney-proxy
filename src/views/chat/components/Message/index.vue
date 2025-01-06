@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { NDropdown, useMessage } from "naive-ui";
-import AvatarComponent from "./Avatar.vue";
-import TextComponent from "./Text.vue";
-import { SvgIcon } from "@/components/common";
-import { useIconRender } from "@/hooks/useIconRender";
-import { t } from "@/locales";
-import { useBasicLayout } from "@/hooks/useBasicLayout";
-import { copyToClip } from "@/utils/copy";
-import { homeStore } from "@/store";
-import { getSeed, mlog, mjImgUrl, isDallImageModel } from "@/api";
+import type { Chat } from "@/typings/chat"
+import { computed, ref } from "vue"
+import { NDropdown, useMessage } from "naive-ui"
+import AvatarComponent from "./Avatar.vue"
+import TextComponent from "./Text.vue"
+import { SvgIcon } from "@/components/common"
+import { useIconRender } from "@/hooks/useIconRender"
+import { t } from "@/locales"
+import { useBasicLayout } from "@/hooks/useBasicLayout"
+import { copyToClip } from "@/utils/copy"
+import { homeStore } from "@/store"
+import { getSeed, mlog, mjImgUrl, isDallImageModel } from "@/api"
 
 interface Props {
 	dateTime?: string;
@@ -22,28 +23,31 @@ interface Props {
 }
 
 interface Emit {
+	// eslint-disable-next-line no-unused-vars
 	(ev: "regenerate"): void;
+	// eslint-disable-next-line no-unused-vars
 	(ev: "delete"): void;
+	// eslint-disable-next-line no-unused-vars
 	(ev: "edit"): void;
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
-const emit = defineEmits<Emit>();
+const emit = defineEmits<Emit>()
 
-const { isMobile } = useBasicLayout();
+const { isMobile } = useBasicLayout()
 
-const { iconRender } = useIconRender();
+const { iconRender } = useIconRender()
 
-const message = useMessage();
+const message = useMessage()
 
-const textRef = ref<HTMLElement>();
+const textRef = ref<HTMLElement>()
 
 const asRawText = ref(
 	props.inversion && homeStore.myData.session.isCloseMdPreview,
-);
+)
 
-const messageRef = ref<HTMLElement>();
+const messageRef = ref<HTMLElement>()
 
 const options = computed(() => {
 	const common = [
@@ -62,7 +66,7 @@ const options = computed(() => {
 			key: "edit",
 			icon: iconRender({ icon: "ri:edit-2-line" }),
 		},
-	];
+	]
 
 	if (!props.inversion) {
 		common.unshift({
@@ -71,16 +75,16 @@ const options = computed(() => {
 			icon: iconRender({
 				icon: asRawText.value ? "ic:outline-code-off" : "ic:outline-code",
 			}),
-		});
+		})
 		common.unshift({
 			label: t("mj.tts"),
 			key: "tts",
 			icon: iconRender({ icon: "mdi:tts" }),
-		});
+		})
 	}
 
-	return common;
-});
+	return common
+})
 
 function handleSelect(
 	key: "copyText" | "delete" | "edit" | "toggleRenderType" | "tts",
@@ -94,48 +98,48 @@ function handleSelect(
 					uuid: props.chat.uuid,
 					text: props.text,
 				},
-			});
-			return;
+			})
+			return
 		case "copyText":
-			handleCopy();
-			return;
+			handleCopy()
+			return
 		case "toggleRenderType":
-			asRawText.value = !asRawText.value;
-			return;
+			asRawText.value = !asRawText.value
+			return
 		case "delete":
-			emit("delete");
-			return;
+			emit("delete")
+			return
 		case "edit":
-			emit("edit");
+			emit("edit")
 	}
 }
 
-function handleRegenerate() {
-	messageRef.value?.scrollIntoView();
-	emit("regenerate");
-}
+// function handleRegenerate() {
+// 	messageRef.value?.scrollIntoView()
+// 	emit("regenerate")
+// }
 
 async function handleCopy(txt?: string) {
 	try {
-		await copyToClip(txt || props.text || "");
-		message.success(t("chat.copied"));
+		await copyToClip(txt || props.text || "")
+		message.success(t("chat.copied"))
 	} catch {
-		message.error(t("mj.copyFail"));
+		message.error(t("mj.copyFail"))
 	}
 }
 
 const sendReload = () => {
-	homeStore.setMyData({ act: "mjReload", actData: { mjID: props.chat.mjID } });
-};
+	homeStore.setMyData({ act: "mjReload", actData: { mjID: props.chat.mjID } })
+}
 
 function handleRegenerate2() {
-	messageRef.value?.scrollIntoView();
+	messageRef.value?.scrollIntoView()
 	//emit('regenerate')
-	mlog("重新发送！");
+	mlog("重新发送！")
 	homeStore.setMyData({
 		act: "gpt.resubmit",
 		actData: { index: props.index, uuid: props.chat.uuid },
-	});
+	})
 }
 </script>
 
@@ -149,7 +153,9 @@ function handleRegenerate2() {
 			class="flex items-center justify-center flex-shrink-0 h-8 overflow-hidden rounded-full basis-8"
 			:class="[inversion ? 'ml-2' : 'mr-2']"
 		>
-			<AvatarComponent :image="inversion" :logo="chat.logo" />
+			<AvatarComponent
+:image="inversion"
+:logo="chat.logo" />
 		</div>
 		<div
 			class="overflow-hidden text-sm"
@@ -160,18 +166,22 @@ function handleRegenerate2() {
 				:class="[inversion ? 'justify-end' : 'justify-start']"
 			>
 				<span>{{ dateTime }}</span>
-				<span v-if="chat.model" class="text-[#b4bbc4]/50">{{
+				<span
+v-if="chat.model"
+class="text-[#b4bbc4]/50">{{
 					chat.model
 				}}</span>
 				<!-- <span>{{ chat.opt?.progress }}</span> -->
 				<template v-if="chat.opt?.status == 'SUCCESS'">
 					<SvgIcon
 						icon="ri:restart-line"
-						@click="sendReload"
 						class="cursor-pointer text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-300"
+						@click="sendReload"
 					></SvgIcon>
 
-					<div @click="getSeed(chat, message)" class="cursor-pointer">
+					<div
+class="cursor-pointer"
+@click="getSeed(chat, message)">
 						<span v-if="chat.opt?.seed">Seed:{{ chat.opt?.seed }}</span>
 						<span v-else>Seed</span>
 					</div>
@@ -199,8 +209,8 @@ function handleRegenerate2() {
 				/>
 				<!-- <div class="flex flex-col" v-if="!chat.mjID && chat.model!='dall-e-3' && chat.model!='dall-e-2' "> -->
 				<div
-					class="flex flex-col"
 					v-if="!chat.mjID && !isDallImageModel(chat.model)"
+					class="flex flex-col"
 				>
 					<!-- <button
             v-if="!inversion "

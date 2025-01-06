@@ -3,7 +3,7 @@ import {
 	noteFrequencyLabels,
 	voiceFrequencies,
 	voiceFrequencyLabels,
-} from "./constants.js";
+} from "./constants.js"
 
 /**
  * Output of AudioAnalysis for the frequency domain of the audio
@@ -38,51 +38,51 @@ export class AudioAnalysis {
 		maxDecibels = -30,
 	) {
 		if (!fftResult) {
-			fftResult = new Float32Array(analyser.frequencyBinCount);
-			analyser.getFloatFrequencyData(fftResult);
+			fftResult = new Float32Array(analyser.frequencyBinCount)
+			analyser.getFloatFrequencyData(fftResult)
 		}
-		const nyquistFrequency = sampleRate / 2;
-		const frequencyStep = (1 / fftResult.length) * nyquistFrequency;
-		let outputValues;
-		let frequencies;
-		let labels;
+		const nyquistFrequency = sampleRate / 2
+		const frequencyStep = (1 / fftResult.length) * nyquistFrequency
+		let outputValues
+		let frequencies
+		let labels
 		if (analysisType === "music" || analysisType === "voice") {
 			const useFrequencies =
-				analysisType === "voice" ? voiceFrequencies : noteFrequencies;
-			const aggregateOutput = Array(useFrequencies.length).fill(minDecibels);
+				analysisType === "voice" ? voiceFrequencies : noteFrequencies
+			const aggregateOutput = Array(useFrequencies.length).fill(minDecibels)
 			for (let i = 0; i < fftResult.length; i++) {
-				const frequency = i * frequencyStep;
-				const amplitude = fftResult[i];
+				const frequency = i * frequencyStep
+				const amplitude = fftResult[i]
 				for (let n = useFrequencies.length - 1; n >= 0; n--) {
 					if (frequency > useFrequencies[n]) {
-						aggregateOutput[n] = Math.max(aggregateOutput[n], amplitude);
-						break;
+						aggregateOutput[n] = Math.max(aggregateOutput[n], amplitude)
+						break
 					}
 				}
 			}
-			outputValues = aggregateOutput;
+			outputValues = aggregateOutput
 			frequencies =
-				analysisType === "voice" ? voiceFrequencies : noteFrequencies;
+				analysisType === "voice" ? voiceFrequencies : noteFrequencies
 			labels =
-				analysisType === "voice" ? voiceFrequencyLabels : noteFrequencyLabels;
+				analysisType === "voice" ? voiceFrequencyLabels : noteFrequencyLabels
 		} else {
-			outputValues = Array.from(fftResult);
-			frequencies = outputValues.map((_, i) => frequencyStep * i);
-			labels = frequencies.map((f) => `${f.toFixed(2)} Hz`);
+			outputValues = Array.from(fftResult)
+			frequencies = outputValues.map((_, i) => frequencyStep * i)
+			labels = frequencies.map((f) => `${f.toFixed(2)} Hz`)
 		}
 		// We normalize to {0, 1}
 		const normalizedOutput = outputValues.map((v) => {
 			return Math.max(
 				0,
 				Math.min((v - minDecibels) / (maxDecibels - minDecibels), 1),
-			);
-		});
-		const values = new Float32Array(normalizedOutput);
+			)
+		})
+		const values = new Float32Array(normalizedOutput)
 		return {
 			values,
 			frequencies,
 			labels,
-		};
+		}
 	}
 
 	/**
@@ -92,7 +92,7 @@ export class AudioAnalysis {
 	 * @returns {AudioAnalysis}
 	 */
 	constructor(audioElement, audioBuffer = null) {
-		this.fftResults = [];
+		this.fftResults = []
 		if (audioBuffer) {
 			/**
 			 * Modified from
@@ -102,57 +102,57 @@ export class AudioAnalysis {
 			 * The reason to do this is that Safari fails when using `createMediaElementSource`
 			 * This has a non-zero RAM cost so we only opt-in to run it on Safari, Chrome is better
 			 */
-			const { length, sampleRate } = audioBuffer;
+			const { length, sampleRate } = audioBuffer
 			const offlineAudioContext = new OfflineAudioContext({
 				length,
 				sampleRate,
-			});
-			const source = offlineAudioContext.createBufferSource();
-			source.buffer = audioBuffer;
-			const analyser = offlineAudioContext.createAnalyser();
-			analyser.fftSize = 8192;
-			analyser.smoothingTimeConstant = 0.1;
-			source.connect(analyser);
+			})
+			const source = offlineAudioContext.createBufferSource()
+			source.buffer = audioBuffer
+			const analyser = offlineAudioContext.createAnalyser()
+			analyser.fftSize = 8192
+			analyser.smoothingTimeConstant = 0.1
+			source.connect(analyser)
 			// limit is :: 128 / sampleRate;
 			// but we just want 60fps - cuts ~1s from 6MB to 1MB of RAM
-			const renderQuantumInSeconds = 1 / 60;
-			const durationInSeconds = length / sampleRate;
+			const renderQuantumInSeconds = 1 / 60
+			const durationInSeconds = length / sampleRate
 			const analyze = (index) => {
-				const suspendTime = renderQuantumInSeconds * index;
+				const suspendTime = renderQuantumInSeconds * index
 				if (suspendTime < durationInSeconds) {
 					offlineAudioContext.suspend(suspendTime).then(() => {
-						const fftResult = new Float32Array(analyser.frequencyBinCount);
-						analyser.getFloatFrequencyData(fftResult);
-						this.fftResults.push(fftResult);
-						analyze(index + 1);
-					});
+						const fftResult = new Float32Array(analyser.frequencyBinCount)
+						analyser.getFloatFrequencyData(fftResult)
+						this.fftResults.push(fftResult)
+						analyze(index + 1)
+					})
 				}
 				if (index === 1) {
-					offlineAudioContext.startRendering();
+					offlineAudioContext.startRendering()
 				} else {
-					offlineAudioContext.resume();
+					offlineAudioContext.resume()
 				}
-			};
-			source.start(0);
-			analyze(1);
-			this.audio = audioElement;
-			this.context = offlineAudioContext;
-			this.analyser = analyser;
-			this.sampleRate = sampleRate;
-			this.audioBuffer = audioBuffer;
+			}
+			source.start(0)
+			analyze(1)
+			this.audio = audioElement
+			this.context = offlineAudioContext
+			this.analyser = analyser
+			this.sampleRate = sampleRate
+			this.audioBuffer = audioBuffer
 		} else {
-			const audioContext = new AudioContext();
-			const track = audioContext.createMediaElementSource(audioElement);
-			const analyser = audioContext.createAnalyser();
-			analyser.fftSize = 8192;
-			analyser.smoothingTimeConstant = 0.1;
-			track.connect(analyser);
-			analyser.connect(audioContext.destination);
-			this.audio = audioElement;
-			this.context = audioContext;
-			this.analyser = analyser;
-			this.sampleRate = this.context.sampleRate;
-			this.audioBuffer = null;
+			const audioContext = new AudioContext()
+			const track = audioContext.createMediaElementSource(audioElement)
+			const analyser = audioContext.createAnalyser()
+			analyser.fftSize = 8192
+			analyser.smoothingTimeConstant = 0.1
+			track.connect(analyser)
+			analyser.connect(audioContext.destination)
+			this.audio = audioElement
+			this.context = audioContext
+			this.analyser = analyser
+			this.sampleRate = this.context.sampleRate
+			this.audioBuffer = null
 		}
 	}
 
@@ -168,14 +168,14 @@ export class AudioAnalysis {
 		minDecibels = -100,
 		maxDecibels = -30,
 	) {
-		let fftResult = null;
+		let fftResult = null
 		if (this.audioBuffer && this.fftResults.length) {
-			const pct = this.audio.currentTime / this.audio.duration;
+			const pct = this.audio.currentTime / this.audio.duration
 			const index = Math.min(
 				(pct * this.fftResults.length) | 0,
 				this.fftResults.length - 1,
-			);
-			fftResult = this.fftResults[index];
+			)
+			fftResult = this.fftResults[index]
 		}
 		return AudioAnalysis.getFrequencies(
 			this.analyser,
@@ -184,7 +184,7 @@ export class AudioAnalysis {
 			analysisType,
 			minDecibels,
 			maxDecibels,
-		);
+		)
 	}
 
 	/**
@@ -194,10 +194,10 @@ export class AudioAnalysis {
 	 */
 	async resumeIfSuspended() {
 		if (this.context.state === "suspended") {
-			await this.context.resume();
+			await this.context.resume()
 		}
-		return true;
+		return true
 	}
 }
 
-globalThis.AudioAnalysis = AudioAnalysis;
+globalThis.AudioAnalysis = AudioAnalysis

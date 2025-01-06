@@ -1,17 +1,16 @@
 import type {
-	AxiosProgressEvent,
 	AxiosResponse,
 	GenericAbortSignal,
-} from "axios";
-import request from "./axios";
-import { useAuthStore } from "@/store";
+} from "axios"
+import request from "./axios"
+import { useAuthStore } from "@/store"
 
 export interface HttpOption {
 	url: string;
 	data?: any;
 	method?: string;
 	headers?: any;
-	onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
+	onDownloadProgress?: () => void;
 	signal?: GenericAbortSignal;
 	beforeRequest?: () => void;
 	afterRequest?: () => void;
@@ -34,32 +33,32 @@ function http<T = any>({
 	afterRequest,
 }: HttpOption) {
 	const successHandler = (res: AxiosResponse<Response<T>>) => {
-		const authStore = useAuthStore();
+		const authStore = useAuthStore()
 
 		if (res.data.status === "Success" || typeof res.data === "string")
-			return res.data;
+			return res.data
 
 		if (res.data.status === "Unauthorized") {
-			authStore.removeToken();
-			window.location.reload();
+			authStore.removeToken()
+			window.location.reload()
 		}
 
-		return Promise.reject(res.data);
-	};
+		return Promise.reject(res.data)
+	}
 
 	const failHandler = (error: Response<Error>) => {
-		afterRequest?.();
-		throw new Error(error?.message || "Error");
-	};
+		afterRequest?.()
+		throw new Error(error?.message || "Error")
+	}
 
-	beforeRequest?.();
+	beforeRequest?.()
 
-	method = method || "GET";
+	method = method || "GET"
 
 	const params = Object.assign(
 		typeof data === "function" ? data() : (data ?? {}),
 		{},
-	);
+	)
 
 	return method === "GET"
 		? request
@@ -67,7 +66,7 @@ function http<T = any>({
 				.then(successHandler, failHandler)
 		: request
 				.post(url, params, { headers, signal, onDownloadProgress })
-				.then(successHandler, failHandler);
+				.then(successHandler, failHandler)
 }
 
 export function get<T = any>({
@@ -87,7 +86,7 @@ export function get<T = any>({
 		signal,
 		beforeRequest,
 		afterRequest,
-	});
+	})
 }
 
 export function post<T = any>({
@@ -109,7 +108,7 @@ export function post<T = any>({
 		signal,
 		beforeRequest,
 		afterRequest,
-	});
+	})
 }
 
-export default post;
+export default post

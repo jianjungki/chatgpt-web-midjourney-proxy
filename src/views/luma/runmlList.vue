@@ -6,43 +6,45 @@ import {
 	NPopconfirm,
 	NButton,
 	NButtonGroup,
-} from "naive-ui";
-import { RunwayMlStore, RunwayMlTask } from "@/api/runwaymlStore";
-import { ref, watch } from "vue";
-import { runwayMlFeedById } from "@/api/runwayml";
-import { t } from "@/locales";
-import { SvgIcon } from "@/components/common";
-import { homeStore } from "@/store";
+} from "naive-ui"
+import { RunwayMlStore, RunwayMlTask } from "@/api/runwaymlStore"
+import { ref, watch } from "vue"
+import { runwayMlFeedById } from "@/api/runwayml"
+import { t } from "@/locales"
+import { SvgIcon } from "@/components/common"
+import { homeStore } from "@/store"
 
 //runwayml.feed
-const ms = useMessage();
-const st = ref({ pIndex: -1 });
-const list = ref<RunwayMlTask[]>([]);
-const csuno = new RunwayMlStore();
+const ms = useMessage()
+const st = ref({ pIndex: -1 })
+const list = ref<RunwayMlTask[]>([])
+const csuno = new RunwayMlStore()
 const initLoad = () => {
-	let arr = csuno.getObjs();
-	list.value = arr.reverse();
-};
+	let arr = csuno.getObjs()
+	list.value = arr.reverse()
+}
 
 const deleteGo = (item: RunwayMlTask) => {
 	//..mlog('deleteGo',item )
 	if (csuno.delete(item)) {
-		ms.success(t("common.deleteSuccess"));
-		initLoad();
+		ms.success(t("common.deleteSuccess"))
+		initLoad()
 	}
-};
+}
 
 watch(
 	() => homeStore.myData.act,
 	(n) => {
-		if (n == "runwayml.feed") initLoad();
+		if (n == "runwayml.feed") initLoad()
 	},
-);
+)
 
-initLoad();
+initLoad()
 </script>
 <template>
-	<div v-if="list.length > 0" class="p-4">
+	<div
+v-if="list.length > 0"
+class="p-4">
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
 			<div
 				v-for="(item, index) in list"
@@ -69,22 +71,28 @@ initLoad();
 							class="w-full h-full object-cover"
 						></video>
 					</template>
-					<div class="text-center" v-else>
+					<div
+v-else
+class="text-center">
 						<div v-if="item.status == 'FAILED'">
 							{{ $t("video.failed") }}
-							<div v-text="item.failure" class="p-2"></div>
+							<div
+class="p-2"
+v-text="item.failure"></div>
 						</div>
 						<NButton
-							size="small"
-							type="primary"
-							@click="runwayMlFeedById(item.id)"
 							v-else-if="
 								!item.last_feed ||
 								new Date().getTime() - item.last_feed > 20 * 1000
 							"
+							size="small"
+							type="primary"
+							@click="runwayMlFeedById(item.id)"
 							>{{ $t("video.repeat") }}</NButton
 						>
-						<div class="pt-2" v-else>
+						<div
+v-else
+class="pt-2">
 							<div>
 								{{ $t("video.process")
 								}}{{ new Date(item.last_feed).toLocaleString() }}
@@ -110,23 +118,29 @@ initLoad();
 						</n-popover>
 					</div>
 					<div
-						class="flex justify-end items-center pt-1"
 						v-if="item.status == 'SUCCEEDED' || item.status == 'FAILED'"
+						class="flex justify-end items-center pt-1"
 					>
 						<n-button-group size="tiny">
 							<n-button
+								v-if="item.status == 'SUCCEEDED'"
 								size="tiny"
 								round
 								ghost
-								v-if="item.status == 'SUCCEEDED'"
-								><a :href="item.output[0]" target="_blank" class="flex"
+								><a
+:href="item.output[0]"
+target="_blank"
+class="flex"
 									><SvgIcon icon="mdi:download" /> {{ $t("video.download") }}
 								</a></n-button
 							>
-							<n-button size="tiny" round ghost>
+							<n-button
+size="tiny"
+round
+ghost>
 								<n-popconfirm
-									@positive-click="() => deleteGo(item)"
 									placement="bottom"
+									@positive-click="() => deleteGo(item)"
 								>
 									<template #trigger>
 										<div class="cursor-pointer">
@@ -143,7 +157,9 @@ initLoad();
 			</div>
 		</div>
 	</div>
-	<div class="w-full h-full flex justify-center items-center" v-else>
+	<div
+v-else
+class="w-full h-full flex justify-center items-center">
 		<NEmpty :description="$t('video.nodata')"></NEmpty>
 	</div>
 </template>

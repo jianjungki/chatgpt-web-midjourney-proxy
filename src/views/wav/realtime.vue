@@ -1,27 +1,26 @@
 <script setup lang="ts">
-import { SvgIcon } from "@/components/common";
-import an_main from "./an_main.vue";
-import aiTextSetting from "../mj/aiTextSetting.vue";
-import wavSetting from "./wavSetting.vue";
-import { WavRecorder, WavStreamPlayer } from "@openai/realtime-wavtools";
-import { onMounted, ref, watch } from "vue";
-import { mlog, RealtimeEvent, instructions } from "@/api";
-import { WavRenderer } from "@/utils/wav_renderer";
-import { RealtimeClient } from "@openai/realtime-api-beta";
-import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js";
-import { useMessage, NModal, NButton } from "naive-ui";
-import { gptServerStore } from "@/store";
-import { t } from "@/locales";
-const wavRecorderRef = ref<WavRecorder>(new WavRecorder({ sampleRate: 24000 }));
+import { SvgIcon } from "@/components/common"
+import an_main from "./an_main.vue"
+import wavSetting from "./wavSetting.vue"
+import { WavRecorder, WavStreamPlayer } from "@openai/realtime-wavtools"
+import { onMounted, ref, watch } from "vue"
+import { mlog, RealtimeEvent, instructions } from "@/api"
+import { WavRenderer } from "@/utils/wav_renderer"
+import { RealtimeClient } from "@openai/realtime-api-beta"
+import { ItemType } from "@openai/realtime-api-beta/dist/lib/client.js"
+import { useMessage, NModal, NButton } from "naive-ui"
+import { gptServerStore } from "@/store"
+import { t } from "@/locales"
+const wavRecorderRef = ref<WavRecorder>(new WavRecorder({ sampleRate: 24000 }))
 const wavStreamPlayerRef = ref<WavStreamPlayer>(
 	new WavStreamPlayer({ sampleRate: 24000 }),
-);
-const clientCanvasRef = ref<HTMLCanvasElement | null>(null);
-const serverCanvasRef = ref<HTMLCanvasElement | null>(null);
-const items = ref<ItemType[]>([]);
-const realtimeEvents = ref<RealtimeEvent[]>([]);
-const clientRef = ref<RealtimeClient>();
-const ms = useMessage();
+)
+const clientCanvasRef = ref<HTMLCanvasElement | null>(null)
+const serverCanvasRef = ref<HTMLCanvasElement | null>(null)
+const items = ref<ItemType[]>([])
+const realtimeEvents = ref<RealtimeEvent[]>([])
+const clientRef = ref<RealtimeClient>()
+const ms = useMessage()
 const st = ref({
 	apikey: "",
 	isConnect: false,
@@ -30,28 +29,28 @@ const st = ref({
 	msg: "Waiting",
 	isClosed: false,
 	showSetting: false,
-});
-const edmit = defineEmits(["close"]);
+})
+const edmit = defineEmits(["close"])
 
 watch(
 	() => wavRecorderRef.value,
 	() => {
-		const wavRecorder = wavRecorderRef.value;
+		const wavRecorder = wavRecorderRef.value
 
-		const clientCanvas = clientCanvasRef.value;
-		const wavStreamPlayer = wavStreamPlayerRef.value;
-		let clientCtx: CanvasRenderingContext2D | null = null;
+		const clientCanvas = clientCanvasRef.value
+		const wavStreamPlayer = wavStreamPlayerRef.value
+		let clientCtx: CanvasRenderingContext2D | null = null
 		if (clientCanvas) {
 			if (!clientCanvas.width || !clientCanvas.height) {
-				clientCanvas.width = clientCanvas.offsetWidth;
-				clientCanvas.height = clientCanvas.offsetHeight;
+				clientCanvas.width = clientCanvas.offsetWidth
+				clientCanvas.height = clientCanvas.offsetHeight
 			}
-			clientCtx = clientCtx || clientCanvas.getContext("2d");
+			clientCtx = clientCtx || clientCanvas.getContext("2d")
 			if (clientCtx) {
-				clientCtx.clearRect(0, 0, clientCanvas.width, clientCanvas.height);
+				clientCtx.clearRect(0, 0, clientCanvas.width, clientCanvas.height)
 				const result = wavRecorder.recording
 					? wavRecorder.getFrequencies("voice")
-					: { values: new Float32Array([0]) };
+					: { values: new Float32Array([0]) }
 				WavRenderer.drawBars(
 					clientCanvas,
 					clientCtx,
@@ -60,23 +59,23 @@ watch(
 					20,
 					0,
 					2,
-				);
+				)
 			}
 		}
 
-		const serverCanvas = serverCanvasRef.value;
-		let serverCtx: CanvasRenderingContext2D | null = null;
+		const serverCanvas = serverCanvasRef.value
+		let serverCtx: CanvasRenderingContext2D | null = null
 		if (serverCanvas) {
 			if (!serverCanvas.width || !serverCanvas.height) {
-				serverCanvas.width = serverCanvas.offsetWidth;
-				serverCanvas.height = serverCanvas.offsetHeight;
+				serverCanvas.width = serverCanvas.offsetWidth
+				serverCanvas.height = serverCanvas.offsetHeight
 			}
-			serverCtx = serverCtx || serverCanvas.getContext("2d");
+			serverCtx = serverCtx || serverCanvas.getContext("2d")
 			if (serverCtx) {
-				serverCtx.clearRect(0, 0, serverCanvas.width, serverCanvas.height);
+				serverCtx.clearRect(0, 0, serverCanvas.width, serverCanvas.height)
 				const result = wavStreamPlayer.analyser
 					? wavStreamPlayer.getFrequencies("voice")
-					: { values: new Float32Array([0]) };
+					: { values: new Float32Array([0]) }
 
 				WavRenderer.drawBars(
 					serverCanvas,
@@ -86,135 +85,134 @@ watch(
 					20,
 					0,
 					2,
-				);
+				)
 			}
 		}
 	},
 	{ deep: true, immediate: true },
-);
+)
 
 const go = async () => {
-	st.value.msg = t("mj.rtconecting");
+	st.value.msg = t("mj.rtconecting")
 	if (st.value.isConnect) {
 		//mlog("isConnect yes!"  )
-		ms.info("isConnect yes!");
-		return;
+		ms.info("isConnect yes!")
+		return
 	}
 
 	if (!clientRef.value || !st.value.isConnect) {
 		if (!st.value.apikey) {
-			ms.error("api key is null");
-			return;
+			ms.error("api key is null")
+			return
 		}
 		if (!st.value.baseUrl) {
-			ms.error("baseUrl is null");
-			return;
+			ms.error("baseUrl is null")
+			return
 		}
 		clientRef.value = new RealtimeClient({
 			apiKey: st.value.apikey,
 			dangerouslyAllowAPIKeyInBrowser: true,
-			baseUrl: st.value.baseUrl,
-		});
+			url: st.value.baseUrl,
+		})
 	}
-	mlog("go", st.value.apikey);
-	const client = clientRef.value;
-	const wavRecorder = wavRecorderRef.value;
-	const wavStreamPlayer = wavStreamPlayerRef.value;
+	mlog("go", st.value.apikey)
+	const client = clientRef.value
+	const wavRecorder = wavRecorderRef.value
+	const wavStreamPlayer = wavStreamPlayerRef.value
 
 	try {
 		// Connect to microphone
-		await wavRecorder.begin();
+		await wavRecorder.begin()
 	} catch (e) {
-		st.value.msg = t("mj.rtservererror2");
-		ms.error(st.value.msg);
-		return;
+		st.value.msg = t("mj.rtservererror2")
+		ms.error(st.value.msg)
+		return
 	}
 	// Connect to realtime API
 	try {
-		await client.connect();
+		await client.connect()
 	} catch (e) {
-		st.value.msg = t("mj.rtservererror");
-		ms.error(st.value.msg);
+		st.value.msg = t("mj.rtservererror")
+		ms.error(st.value.msg)
 
-		return;
+		return
 	}
 
 	// Connect to audio output
-	await wavStreamPlayer.connect();
+	await wavStreamPlayer.connect()
 
-	st.value.isConnect = true;
+	st.value.isConnect = true
 
 	client.sendUserMessageContent([
 		{
 			type: `input_text`,
 			text: `hello`,
 		},
-	]);
+	])
 
 	client.updateSession({
 		turn_detection: { type: "server_vad" },
-	});
+	})
 
 	await wavRecorder.record((data: { mono: Int16Array | ArrayBuffer }) => {
 		try {
-			client.appendInputAudio(data.mono);
-			st.value.msg = t("mj.rtsuccess");
+			client.appendInputAudio(data.mono)
+			st.value.msg = t("mj.rtsuccess")
 		} catch (e) {
-			disconnectConversation();
+			disconnectConversation()
 			// st.value.msg= t('mj.checkkey')
 			// ms.error(st.value.msg);
 			// mlog("appendInputAudio error", e )
-			return;
+			return
 		}
-	});
+	})
 
-	myListen();
-};
+	myListen()
+}
 
 const disconnectConversation = async () => {
-	const wavRecorder = wavRecorderRef.value;
-	const wavStreamPlayer = wavStreamPlayerRef.value;
+	const wavRecorder = wavRecorderRef.value
+	const wavStreamPlayer = wavStreamPlayerRef.value
 	//clientRef.value?.disconnect();
-	st.value.isConnect = false;
-	const client = clientRef.value;
+	st.value.isConnect = false
+	const client = clientRef.value
 	//client?.reset();
-	client?.disconnect();
-	await wavRecorder.end();
-	await wavStreamPlayer.interrupt();
-	st.value.msg = t("mj.rjcloded");
-	ms.success(st.value.msg);
-};
+	client?.disconnect()
+	await wavRecorder.end()
+	await wavStreamPlayer.interrupt()
+	st.value.msg = t("mj.rjcloded")
+	ms.success(st.value.msg)
+}
 
 /**
  * Type for all event logs
  */
 
 const myListen = () => {
-	const client = clientRef.value;
-	const wavRecorder = wavRecorderRef.value;
-	const wavStreamPlayer = wavStreamPlayerRef.value;
+	const client = clientRef.value
+	const wavStreamPlayer = wavStreamPlayerRef.value
 
 	if (!client) {
-		return;
+		return
 	}
 	// Set instructions
 	client.updateSession({
 		instructions: gptServerStore.myData.REALTIME_SYSMSG
 			? gptServerStore.myData.REALTIME_SYSMSG
 			: instructions,
-	});
+	})
 
 	if (
 		gptServerStore.myData.TTS_VOICE &&
 		["alloy", "shimmer", "echo"].indexOf(gptServerStore.myData.TTS_VOICE) > -1
 	) {
-		client.updateSession({ voice: gptServerStore.myData.TTS_VOICE });
-		mlog("log", "voice", gptServerStore.myData.TTS_VOICE);
+		client.updateSession({ voice: gptServerStore.myData.TTS_VOICE as any })
+		mlog("log", "voice", gptServerStore.myData.TTS_VOICE)
 	}
 	// Set transcription, otherwise we don't get user transcriptions back
 
 	if (gptServerStore.myData.REALTIME_IS_WHISPER)
-		client.updateSession({ input_audio_transcription: { model: "whisper-1" } });
+		client.updateSession({ input_audio_transcription: { model: "whisper-1" } })
 
 	// Add tools
 	client.addTool(
@@ -238,14 +236,15 @@ const myListen = () => {
 			},
 		},
 		async ({ key, value }: { [key: string]: any }) => {
+			mlog("set_memory", key, value)
 			// setMemoryKv((memoryKv) => {
 			//   const newKv = { ...memoryKv };
 			//   newKv[key] = value;
 			//   return newKv;
 			// });
-			return { ok: true };
+			return { ok: true }
 		},
-	);
+	)
 	client.addTool(
 		{
 			name: "get_weather",
@@ -271,12 +270,13 @@ const myListen = () => {
 			},
 		},
 		async ({ lat, lng, location }: { [key: string]: any }) => {
+			mlog("get_weather", lat, lng, location)
 			// setMarker({ lat, lng, location });
 			// setCoords({ lat, lng, location });
 			const result = await fetch(
 				`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,wind_speed_10m`,
-			);
-			const json = await result.json();
+			)
+			const json = await result.json()
 			// const temperature = {
 			//   value: json.current.temperature_2m as number,
 			//   units: json.current_units.temperature_2m as string,
@@ -286,97 +286,100 @@ const myListen = () => {
 			//   units: json.current_units.wind_speed_10m as string,
 			// };
 			// setMarker({ lat, lng, location, temperature, wind_speed });
-			return json;
+			return json
 		},
-	);
+	)
 
 	// handle realtime events from client + server for event logging
 	client.on("realtime.event", (realtimeEvent: RealtimeEvent) => {
-		setRealtimeEvents(realtimeEvent);
-	});
+		setRealtimeEvents(realtimeEvent)
+	})
 	client.on("error", (event: any) => {
-		ms.error("发生错误：" + event);
-		console.error("error.event>>", event);
-	});
+		ms.error("发生错误：" + event)
+		console.error("error.event>>", event)
+	})
 	client.on("conversation.interrupted", async () => {
-		const trackSampleOffset = await wavStreamPlayer.interrupt();
+		const trackSampleOffset = await wavStreamPlayer.interrupt()
 		if (trackSampleOffset?.trackId) {
-			const { trackId, offset } = trackSampleOffset;
-			await client.cancelResponse(trackId, offset);
+			const { trackId, offset } = trackSampleOffset
+			await client.cancelResponse(trackId, offset)
 		}
-	});
+	})
 	client.on("conversation.updated", async ({ item, delta }: any) => {
-		const items = client.conversation.getItems();
+		const items = client.conversation.getItems()
 		if (delta?.audio) {
-			wavStreamPlayer.add16BitPCM(delta.audio, item.id);
+			wavStreamPlayer.add16BitPCM(delta.audio, item.id)
 		}
 		if (item.status === "completed" && item.formatted.audio?.length) {
 			const wavFile = await WavRecorder.decode(
 				item.formatted.audio,
 				24000,
 				24000,
-			);
-			item.formatted.file = wavFile;
+			)
+			item.formatted.file = wavFile
 		}
-		setItems(items);
-	});
-};
+		setItems(items)
+	})
+}
 const setItems = (iitems: ItemType[]) => {
 	//mlog("setItems", iitems.length, iitems  )
-	items.value = iitems;
-};
-const setMemoryKv = (kv: { [key: string]: any }) => {};
+	items.value = iitems
+}
 const setRealtimeEvents = (realtimeEvent: RealtimeEvent) => {
 	//mlog("setRealtimeEvents", realtimeEvent.event ,  realtimeEvent  )
-	let ev = { ...realtimeEvent.event };
+	let ev = { ...realtimeEvent.event }
 	if (ev.type == "error" && ev.error && ev.error.message) {
-		ms.error(ev.error.message);
+		ms.error(ev.error.message)
 	}
 
-	const lastEvent = realtimeEvents.value[realtimeEvents.value.length - 1];
+	const lastEvent = realtimeEvents.value[realtimeEvents.value.length - 1]
 	if (lastEvent?.event.type === realtimeEvent.event.type) {
 		// if we receive multiple events in a row, aggregate them for display purposes
-		lastEvent.count = (lastEvent.count || 0) + 1;
-		return realtimeEvents.value.slice(0, -1).concat(lastEvent);
+		lastEvent.count = (lastEvent.count || 0) + 1
+		return realtimeEvents.value.slice(0, -1).concat(lastEvent)
 	} else {
-		return realtimeEvents.value.concat(realtimeEvent);
+		return realtimeEvents.value.concat(realtimeEvent)
 	}
-};
+}
 const loadConfig = () => {
-	let base = gptServerStore.myData.OPENAI_API_BASE_URL;
-	const key = gptServerStore.myData.OPENAI_API_KEY;
-	st.value.apikey = key;
+	let base = gptServerStore.myData.OPENAI_API_BASE_URL
+	const key = gptServerStore.myData.OPENAI_API_KEY
+	st.value.apikey = key
 	if (base) {
-		base = base.replaceAll("https://", "wss://").replaceAll("http://", "ws://");
-		st.value.baseUrl = base + "/v1/realtime";
+		base = base.replaceAll("https://", "wss://").replaceAll("http://", "ws://")
+		st.value.baseUrl = base + "/v1/realtime"
 	}
 	//mlog('baseUrl', st.value.baseUrl, key )
 	if (st.value.baseUrl && st.value.apikey) {
-		go();
+		go()
 	}
-};
+}
 
 onMounted(() => {
-	loadConfig();
-});
+	loadConfig()
+})
 const close = () => {
-	st.value.isClosed = true;
+	st.value.isClosed = true
 	try {
-		disconnectConversation();
-	} catch (error) {}
+		disconnectConversation()
+	} catch (error: any) {
+		ms.error("关闭失败" + error.message)
+	}
 
 	//edmit('close')
 	setTimeout(() => {
-		edmit("close");
-	}, 1000);
-};
+		edmit("close")
+	}, 1000)
+}
 </script>
 <template>
 	<div
 		class="w-full h-full fixed top-0 left-0 bottom-0 right-0 z-[1001] bg-pan-bottom opacity-98 scale-in-tr text-white/80"
 		:class="st.isClosed ? ['scale-out-tr'] : []"
 	>
-		<div class="w-full h-full relative" style="--vh: 80px; --vw: 400px">
+		<div
+class="w-full h-full relative"
+style="--vh: 80px; --vw: 400px">
 			<div class="absolute top-0 left-0">
 				<canvas
 					ref="clientCanvasRef"
@@ -399,9 +402,13 @@ const close = () => {
 				<section>
 					<!-- <aiTextSetting @close="loadConfig"  :msgInfo="$t('mj.rtsetting')" v-if="!st.apikey||!st.baseUrl"/> -->
 					<div v-if="!st.apikey || !st.baseUrl">
-						<div v-html="$t('mj.rtsetting')" class="p-5 text-center"></div>
+						<div
+class="p-5 text-center"
+v-text="$t('mj.rtsetting')"></div>
 						<div class="text-center">
-							<NButton type="primary" @click="st.showSetting = true"
+							<NButton
+type="primary"
+@click="st.showSetting = true"
 								>{{ $t("setting.setting") }}
 							</NButton>
 						</div>
@@ -437,9 +444,9 @@ const close = () => {
 							<div class="pt-1">{{ $t("mj.mCanel") }}</div>
 						</div>
 						<div
+							v-if="st.isConnect"
 							class="flex flex-col justify-center items-center cursor-pointer"
 							@click="disconnectConversation()"
-							v-if="st.isConnect"
 						>
 							<div class="bg-white rounded-full p-2">
 								<SvgIcon
@@ -450,9 +457,9 @@ const close = () => {
 							<div class="pt-1">{{ $t("mj.mPause") }}</div>
 						</div>
 						<div
+							v-else
 							class="flex flex-col justify-center items-center cursor-pointer"
 							@click="go()"
-							v-else
 						>
 							<div class="bg-white rounded-full p-2">
 								<SvgIcon

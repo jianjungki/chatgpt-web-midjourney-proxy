@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import VoInput from "./voInput.vue";
+import VoInput from "./voInput.vue"
 //import VoInput from './lumaInput.vue';
-import VoList from "./voList.vue";
-import RunwayList from "./runwayList.vue";
-import PikaList from "./pikaList.vue";
-import KlingList from "../kling/kgList.vue";
-import RunmlList from "./runmlList.vue";
-import { gptServerStore } from "@/store";
+import VoList from "./voList.vue"
+import RunwayList from "./runwayList.vue"
+import PikaList from "./pikaList.vue"
+import KlingList from "../kling/kgList.vue"
+import RunmlList from "./runmlList.vue"
+import { gptServerStore } from "@/store"
 </script>
 <template>
 	<div class="flex w-full h-full">

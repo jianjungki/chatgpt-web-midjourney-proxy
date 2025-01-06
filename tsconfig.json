@@ -1,23 +1,42 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
-		"module": "ESNext",
-		"target": "ESNext",
-		"lib": ["DOM", "ESNext"],
+		"target": "esnext",
+		"module": "esnext",
 		"strict": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
 		"jsx": "preserve",
 		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"noUnusedLocals": true,
-		"strictNullChecks": true,
-		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"useDefineForClassFields": true,
+		"sourceMap": true,
+		"baseUrl": ".",
+		"types": [
+			"webpack-env",
+			"node"
+		],
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": [
+				"src/*"
+			]
 		},
-		"types": ["vite/client", "node", "naive-ui/volar"]
+		"lib": [
+			"dom",
+			"esnext",
+			"scripthost"
+		]
 	},
-	"exclude": ["node_modules", "dist", "service"]
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"src/**/*.vue",
+		"tests/**/*.ts",
+		"tests/**/*.tsx",
+		"src/**/*.d.ts", // Ensure this
+		"src/**/*.json"
+	],
+	"exclude": [
+		"node_modules"
+	]
 }

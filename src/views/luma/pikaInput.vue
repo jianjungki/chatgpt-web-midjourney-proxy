@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { mlog, upImg } from "@/api";
+import { ref } from "vue"
+import { mlog, upImg } from "@/api"
 import {
 	useMessage,
 	NButton,
@@ -8,11 +8,10 @@ import {
 	NTag,
 	NSelect,
 	NPopover,
-	NSwitch,
-} from "naive-ui";
+} from "naive-ui"
 
-import { t } from "@/locales";
-import { pikaFeed, pikaFetch } from "@/api/pika";
+import { t } from "@/locales"
+import { pikaFeed, pikaFetch } from "@/api/pika"
 
 let txt2v = {
 	pikaffect: "",
@@ -25,7 +24,7 @@ let txt2v = {
 		parameters: { guidanceScale: 12, motion: 1, negativePrompt: "" },
 		extend: false,
 	},
-};
+}
 let img2v = {
 	pikaffect: "",
 	promptText: "",
@@ -37,7 +36,7 @@ let img2v = {
 		extend: false,
 	},
 	image: "https://www.openai-hk.com/res/img/open.png",
-};
+}
 
 const vf = [
 	{ s: "width: 100%; height: 100%;", label: "1:1", value: 1 },
@@ -45,11 +44,11 @@ const vf = [
 	{ s: "width: 75%; height: 100%;", label: "3:4", value: 0.75 },
 	{ s: "width: 100%; height: 50%;", label: "16:9", value: 1.7777777777777777 },
 	{ s: "width: 50%; height: 100%;", label: "9:16", value: 0.5625 },
-];
+]
 const mvOption = [
 	{ label: "verion: v2.0", value: "2.0" },
 	{ label: "verion: v1.5", value: "1.5" },
-];
+]
 
 let ezOption = [
 	{
@@ -133,7 +132,7 @@ let ezOption = [
 		title: "Explode",
 		//text:'Explode it'
 	},
-];
+]
 
 const pika = ref({
 	image: "",
@@ -142,63 +141,65 @@ const pika = ref({
 	negativePrompt: "",
 	pe_index: -1,
 	mv: "2.0",
-});
-const fsRef = ref();
-const ms = useMessage();
-const st = ref({ isLoading: false });
+})
+const fsRef = ref()
+const ms = useMessage()
+const st = ref({ isLoading: false })
 
 function selectFile(input: any) {
 	// fsFile.value= input.target.files[0];
 	upImg(input.target.files[0])
 		.then((d) => {
-			pika.value.image = d;
-			fsRef.value = "";
+			pika.value.image = d
+			fsRef.value = ""
 		})
-		.catch((e) => ms.error(e));
+		.catch((e) => ms.error(e))
 }
 const clearInput = () => {
-	pika.value.prompt = "";
-	pika.value.image = "";
-	fsRef.value = "";
-	pika.value.pe_index = -1;
-};
+	pika.value.prompt = ""
+	pika.value.image = ""
+	fsRef.value = ""
+	pika.value.pe_index = -1
+}
 const createVideo = async () => {
-	let sb = pika.value.image ? { ...img2v } : { ...txt2v };
-	sb.promptText = pika.value.prompt;
-	sb.options.parameters.negativePrompt = pika.value.negativePrompt;
+	let sb = pika.value.image ? { ...img2v } : { ...txt2v }
+	sb.promptText = pika.value.prompt
+	sb.options.parameters.negativePrompt = pika.value.negativePrompt
 	if (pika.value.image) {
-		sb.image = pika.value.image;
+		sb.image = pika.value.image
 	} else {
-		sb.options.aspectRatio = pika.value.aspectRatio;
+		sb.options.aspectRatio = pika.value.aspectRatio
 	}
 	if (pika.value.pe_index >= 0) {
-		sb.pikaffect = ezOption[pika.value.pe_index].title;
+		sb.pikaffect = ezOption[pika.value.pe_index].title
 	}
-	sb.model = pika.value.mv;
-	mlog("sb>> ", sb);
-	st.value.isLoading = true;
+	sb.model = pika.value.mv
+	mlog("sb>> ", sb)
+	st.value.isLoading = true
 	try {
-		const a: any = await pikaFetch("/generate", sb);
-		st.value.isLoading = false;
+		const a: any = await pikaFetch("/generate", sb)
+		st.value.isLoading = false
 		if (a.id) {
-			pikaFeed(a.id);
+			pikaFeed(a.id)
 		} else {
-			ms.error(t("mj.createFail")); //createFail
+			ms.error(t("mj.createFail")) //createFail
 		}
 	} catch (error) {
-		st.value.isLoading = false;
+		st.value.isLoading = false
 	}
-};
+}
 
 const selecteffect = (i: number) => {
-	pika.value.pe_index = i;
-	pika.value.prompt = ezOption[i].title + " it";
-};
+	pika.value.pe_index = i
+	pika.value.prompt = ezOption[i].title + " it"
+}
 </script>
 <template>
 	<div class="p-2">
 		<div class="flex items-center justify-between space-x-1">
-			<template v-for="(item, index) in vf">
+			<template
+v-for="item in vf"
+:key="item.value">
 				<section
 					class="aspect-item flex-1 rounded border-2 dark:border-neutral-700 cursor-pointer"
 					:class="{ active: pika.aspectRatio == item.value }"
@@ -227,7 +228,10 @@ const selecteffect = (i: number) => {
 			/>
 		</div>
 		<div class="pt-1">
-			<n-select v-model:value="pika.mv" :options="mvOption" size="small" />
+			<n-select
+v-model:value="pika.mv"
+:options="mvOption"
+size="small" />
 		</div>
 		<section class="pt-1 flex justify-between items-center">
 			<div>{{ $t("mj.nohead") }}</div>
@@ -243,18 +247,22 @@ const selecteffect = (i: number) => {
 			<div class="flex justify-between items-end">
 				<div>
 					<input
-						type="file"
-						@change="selectFile"
 						ref="fsRef"
+						type="file"
 						style="display: none"
 						accept="image/jpeg, image/jpg, image/png, image/gif"
+						@change="selectFile"
 					/>
 					<div
 						class="h-[80px] w-[80px] overflow-hidden rounded-sm border border-gray-400/20 flex justify-center items-center cursor-pointer"
 						@click="fsRef.click()"
 					>
-						<img :src="pika.image" v-if="pika.image" />
-						<div class="text-center" v-else>{{ $t("video.selectimg") }}</div>
+						<img
+v-if="pika.image"
+:src="pika.image" />
+						<div
+v-else
+class="text-center">{{ $t("video.selectimg") }}</div>
 					</div>
 				</div>
 				<div>
@@ -269,14 +277,18 @@ const selecteffect = (i: number) => {
 										{{ ezOption[pika.pe_index].title }}
 									</div>
 								</template>
-								<div class="text-center" v-else>{{ $t("mj.selecteff") }}</div>
+								<div
+v-else
+class="text-center">{{ $t("mj.selecteff") }}</div>
 							</div>
 						</template>
 						<div
 							class="w-[320px] h-[400px] overflow-y-auto overflow-hidden mx-[-4px]"
 						>
 							<div class="grid grid-cols-2 gap-2">
-								<div v-for="(item, index) in ezOption" :key="index">
+								<div
+v-for="(item, index) in ezOption"
+:key="index">
 									<div
 										class="relative overflow-hidden cursor-pointer"
 										@click="selecteffect(index)"
@@ -304,11 +316,15 @@ const selecteffect = (i: number) => {
 		</div>
 		<section class="pt-2 flex justify-end items-end">
 			<div
+				v-if="pika.image || pika.prompt"
 				class="cursor-pointer pr-2"
 				@click="clearInput"
-				v-if="pika.image || pika.prompt"
 			>
-				<NTag type="success" size="small" :bordered="false" round
+				<NTag
+type="success"
+size="small"
+:bordered="false"
+round
 					><span class="cursor-pointer">{{ $t("video.clear") }}</span></NTag
 				>
 			</div>
@@ -317,8 +333,8 @@ const selecteffect = (i: number) => {
 				<NButton
 					:loading="st.isLoading"
 					type="primary"
-					@click="createVideo()"
 					:disabled="!pika.prompt"
+					@click="createVideo()"
 					>{{ $t("video.generate") }}</NButton
 				>
 			</div>

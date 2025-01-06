@@ -1,38 +1,37 @@
 <script setup lang="ts">
-import { pikaFeed } from "@/api/pika";
-import { PikaTask, pikaStore } from "@/api/pikaStore";
-import { onMounted, ref, watch } from "vue";
+import { pikaFeed } from "@/api/pika"
+import { PikaTask, pikaStore } from "@/api/pikaStore"
+import { onMounted, ref, watch } from "vue"
 import {
 	NEmpty,
 	NButton,
-	NPopover,
 	NButtonGroup,
 	useMessage,
 	NPopconfirm,
-} from "naive-ui";
-import { mlog } from "@/api";
-import { SvgIcon } from "@/components/common";
-import { t } from "@/locales";
-import { homeStore } from "@/store";
+} from "naive-ui"
+import { mlog } from "@/api"
+import { SvgIcon } from "@/components/common"
+import { t } from "@/locales"
+import { homeStore } from "@/store"
 
-const st = ref({ pIndex: -1 });
-const list = ref<PikaTask[]>([]);
-const csuno = new pikaStore();
+const st = ref({ pIndex: -1 })
+const list = ref<PikaTask[]>([])
+const csuno = new pikaStore()
 
-const ms = useMessage();
+const ms = useMessage()
 
 const initLoad = () => {
-	let arr = csuno.getObjs();
-	list.value = arr.reverse();
-};
+	let arr = csuno.getObjs()
+	list.value = arr.reverse()
+}
 
 const deleteGo = (item: PikaTask) => {
-	mlog("deleteGo", item);
+	mlog("deleteGo", item)
 	if (csuno.delete(item)) {
-		ms.success(t("common.deleteSuccess"));
-		initLoad();
+		ms.success(t("common.deleteSuccess"))
+		initLoad()
 	}
-};
+}
 
 //pikaFeed('66e0818e-05fb-454e-b246-a6f253e9ffbf')
 //pikaFeed('e90a4fa4-009a-4ca8-9002-57d2f2cbb6c3')
@@ -40,16 +39,18 @@ const deleteGo = (item: PikaTask) => {
 watch(
 	() => homeStore.myData.act,
 	(n) => {
-		if (n == "PikaFeed") initLoad();
+		if (n == "PikaFeed") initLoad()
 	},
-);
+)
 onMounted(() => {
-	initLoad();
-	homeStore.setMyData({ ms: ms });
-});
+	initLoad()
+	homeStore.setMyData({ ms: ms })
+})
 </script>
 <template>
-	<div v-if="list.length > 0" class="p-4">
+	<div
+v-if="list.length > 0"
+class="p-4">
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
 			<div
 				v-for="(item, index) in list"
@@ -63,19 +64,19 @@ onMounted(() => {
 				>
 					<template v-if="item.videos.length > 0">
 						<video
+							v-if="item.videos[0].resultUrl"
 							loop
 							playsinline
 							:controls="st.pIndex == index"
-							v-if="item.videos[0].resultUrl"
 							referrerpolicy="no-referrer"
 							:poster="item.videos[0].videoPoster"
 							class="w-full h-full object-cover"
 						>
 							<source
+								v-if="st.pIndex == index"
 								:src="item.videos[0].resultUrl"
 								referrerpolicy="no-referrer"
 								type="video/mp4"
-								v-if="st.pIndex == index"
 							/>
 						</video>
 						<div v-else-if="'error' == item.videos[0].status">
@@ -102,15 +103,21 @@ onMounted(() => {
 								>
 							</div>
 						</template>
-						<div class="pt-2" v-else>
+						<div
+v-else
+class="pt-2">
 							<div>
 								{{ $t("video.process")
 								}}{{ new Date(item.last_feed).toLocaleString() }}
 							</div>
-							<div v-if="item.videos[0].progress" class="text-center">
+							<div
+v-if="item.videos[0].progress"
+class="text-center">
 								{{ item.videos[0].progress }}%
 							</div>
-							<div v-if="item.videos[0].status == 'queued'" class="text-center">
+							<div
+v-if="item.videos[0].status == 'queued'"
+class="text-center">
 								{{ t("video.pending") }}
 							</div>
 						</div>
@@ -122,7 +129,11 @@ onMounted(() => {
 					</section>
 					<section class="flex justify-end items-center pt-1">
 						<n-button-group size="tiny">
-							<n-button size="tiny" round ghost v-if="item.videos[0].resultUrl">
+							<n-button
+v-if="item.videos[0].resultUrl"
+size="tiny"
+round
+ghost>
 								<a
 									:href="item.videos[0].resultUrl"
 									download
@@ -132,10 +143,13 @@ onMounted(() => {
 									<SvgIcon icon="mdi:download" /> {{ $t("video.download") }}
 								</a>
 							</n-button>
-							<n-button size="tiny" round ghost>
+							<n-button
+size="tiny"
+round
+ghost>
 								<n-popconfirm
-									@positive-click="() => deleteGo(item)"
 									placement="bottom"
+									@positive-click="() => deleteGo(item)"
 								>
 									<template #trigger> <SvgIcon icon="mdi:delete" /></template>
 									{{ $t("mj.confirmDelete") }}
@@ -148,7 +162,9 @@ onMounted(() => {
 			</div>
 		</div>
 	</div>
-	<div class="w-full h-full flex justify-center items-center" v-else>
+	<div
+v-else
+class="w-full h-full flex justify-center items-center">
 		<NEmpty :description="$t('video.nodata')"></NEmpty>
 	</div>
 </template>

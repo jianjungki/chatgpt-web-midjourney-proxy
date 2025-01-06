@@ -1,6 +1,6 @@
-import { gptsType, mlog } from "@/api";
-import { reactive } from "vue";
-import { ss } from "@/utils/storage";
+import { gptsType } from "@/api"
+import { reactive } from "vue"
+import { ss } from "@/utils/storage"
 
 export const homeStore = reactive({
 	myData: {
@@ -19,21 +19,21 @@ export const homeStore = reactive({
 	},
 
 	setMyData(v: object) {
-		this.myData = { ...this.myData, ...v };
+		this.myData = { ...this.myData, ...v }
 		if (Object.keys(v).indexOf("act") > -1) {
 			setTimeout(() => {
-				this.myData.act = "";
-				this.myData.actData = "";
-			}, 2000);
+				this.myData.act = ""
+				this.myData.actData = ""
+			}, 2000)
 		}
 		if (Object.keys(v).indexOf("act2") > -1) {
 			setTimeout(() => {
-				this.myData.act2 = "";
-				this.myData.actData = "";
-			}, 500);
+				this.myData.act2 = ""
+				this.myData.actData = ""
+			}, 500)
 		}
 	},
-});
+})
 
 export interface gptConfigType {
 	model: string;
@@ -50,17 +50,17 @@ export interface gptConfigType {
 	tts_voice?: string; //TTS 人物
 }
 const getGptInt = (): gptConfigType => {
-	let v: gptConfigType = getDefault();
-	let str = localStorage.getItem("gptConfigStore");
+	let v: gptConfigType = getDefault()
+	let str = localStorage.getItem("gptConfigStore")
 	if (str) {
-		let old = JSON.parse(str);
-		if (old) v = { ...v, ...old };
+		let old = JSON.parse(str)
+		if (old) v = { ...v, ...old }
 	}
-	return v;
-};
+	return v
+}
 
 const getDefault = () => {
-	const amodel = homeStore.myData.session.amodel ?? "gpt-3.5-turbo";
+	const amodel = homeStore.myData.session.amodel ?? "gpt-3.5-turbo"
 	let v: gptConfigType = {
 		model: amodel,
 		max_tokens: 1024,
@@ -72,22 +72,22 @@ const getDefault = () => {
 		presence_penalty: 0,
 		frequency_penalty: 0,
 		tts_voice: "alloy",
-	};
-	return v;
-};
+	}
+	return v
+}
 export const gptConfigStore = reactive({
 	myData: getGptInt(),
 	setMyData(v: Partial<gptConfigType>) {
-		this.myData = { ...this.myData, ...v };
+		this.myData = { ...this.myData, ...v }
 		//mlog('gptConfigStore', v )
-		if (v.model && !v.gpts) this.myData.gpts = undefined;
+		if (v.model && !v.gpts) this.myData.gpts = undefined
 
-		localStorage.setItem("gptConfigStore", JSON.stringify(this.myData));
+		localStorage.setItem("gptConfigStore", JSON.stringify(this.myData))
 	},
 	setInit() {
-		this.setMyData(getDefault());
+		this.setMyData(getDefault())
 	},
-});
+})
 
 export interface gptServerType {
 	OPENAI_API_KEY: string;
@@ -152,43 +152,43 @@ const getServerDefault = () => {
 		TTS_VOICE: "alloy",
 		UDIO_SERVER: "",
 		UDIO_KEY: "",
-	};
-	return v;
-};
-const getServerInit = (): gptServerType => {
-	let v: gptServerType = getServerDefault();
-	let str = localStorage.getItem("gptServerStore");
-	if (str) {
-		let old = JSON.parse(str);
-		if (old) v = { ...v, ...old };
 	}
-	return v;
-};
+	return v
+}
+const getServerInit = (): gptServerType => {
+	let v: gptServerType = getServerDefault()
+	let str = localStorage.getItem("gptServerStore")
+	if (str) {
+		let old = JSON.parse(str)
+		if (old) v = { ...v, ...old }
+	}
+	return v
+}
 
 export const gptServerStore = reactive({
 	myData: getServerInit(),
 	setMyData(v: Partial<gptServerType>) {
-		this.myData = { ...this.myData, ...v };
-		localStorage.setItem("gptServerStore", JSON.stringify(this.myData));
+		this.myData = { ...this.myData, ...v }
+		localStorage.setItem("gptServerStore", JSON.stringify(this.myData))
 	},
 	setInit() {
-		this.setMyData(getServerDefault());
+		this.setMyData(getServerDefault())
 	},
-});
+})
 
 const gptsUlistInit = (): gptsType[] => {
-	const lk = ss.get("gpts-use-list");
-	if (!lk) return [];
-	return lk as gptsType[];
-};
+	const lk = ss.get("gpts-use-list")
+	if (!lk) return []
+	return lk as gptsType[]
+}
 
 //使用gtps列表
 export const gptsUlistStore = reactive({
 	myData: gptsUlistInit(),
 	setMyData(v: gptsType) {
-		this.myData = this.myData.filter((v2) => v2.gid != v.gid);
-		this.myData.unshift(v);
-		ss.set("gpts-use-list", this.myData);
-		return this;
+		this.myData = this.myData.filter((v2) => v2.gid != v.gid)
+		this.myData.unshift(v)
+		ss.set("gpts-use-list", this.myData)
+		return this
 	},
-});
+})

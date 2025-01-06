@@ -1,4 +1,4 @@
-import { ss } from "@/utils/storage";
+import { ss } from "@/utils/storage"
 
 interface Options {
 	name: string;
@@ -77,38 +77,38 @@ export interface RunwayTask {
 
 export class runwayStore {
 	//private id: string;
-	private localKey = "runway-store";
+	private localKey = "runway-store"
 	public save(obj: RunwayTask) {
-		if (!obj.id) throw "taskID must";
-		let arr = this.getObjs();
-		let i = arr.findIndex((v) => v.id == obj.id);
-		if (i > -1) arr[i] = obj;
-		else arr.push(obj);
-		ss.set(this.localKey, arr);
-		return this;
+		if (!obj.id) throw "taskID must"
+		let arr = this.getObjs()
+		let i = arr.findIndex((v) => v.id == obj.id)
+		if (i > -1) arr[i] = obj
+		else arr.push(obj)
+		ss.set(this.localKey, arr)
+		return this
 	}
 	public findIndex(id: string) {
-		return this.getObjs().findIndex((v) => v.id == id);
+		return this.getObjs().findIndex((v) => v.id == id)
 	}
 
 	public getObjs(): RunwayTask[] {
-		const obj = ss.get(this.localKey) as undefined | RunwayTask[];
-		if (!obj) return [];
-		return obj;
+		const obj = ss.get(this.localKey) as undefined | RunwayTask[]
+		if (!obj) return []
+		return obj
 	}
 	public getOneById(id: string): RunwayTask | null {
-		const i = this.findIndex(id);
-		if (i < 0) return null;
-		let arr = this.getObjs();
-		return arr[i];
+		const i = this.findIndex(id)
+		if (i < 0) return null
+		let arr = this.getObjs()
+		return arr[i]
 	}
 	public delete(obj: RunwayTask) {
-		if (!obj.id) throw "id must";
-		let arr = this.getObjs();
-		let i = arr.findIndex((v) => v.id == obj.id);
-		if (i < 0) return false;
-		arr.splice(i, 1);
-		ss.set(this.localKey, arr);
-		return true;
+		if (!obj.id) throw "id must"
+		let arr = this.getObjs()
+		let i = arr.findIndex((v) => v.id == obj.id)
+		if (i < 0) return false
+		arr.splice(i, 1)
+		ss.set(this.localKey, arr)
+		return true
 	}
 }

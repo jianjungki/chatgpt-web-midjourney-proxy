@@ -552,4 +552,4 @@ export default {
 		moban2: "템플릿 이름",
 		use: "사용",
 	},
-};
+}

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { NAvatar } from "naive-ui";
-import { useUserStore } from "@/store";
-import defaultAvatar from "@/assets/avatar.jpg";
-import { isString } from "@/utils/is";
+import { computed } from "vue"
+import { NAvatar } from "naive-ui"
+import { useUserStore } from "@/store"
+import defaultAvatar from "@/assets/avatar.jpg"
+import { isString } from "@/utils/is"
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
-const userInfo = computed(() => userStore.userInfo);
+const userInfo = computed(() => userStore.userInfo)
 </script>
 
 <template>
@@ -22,7 +22,10 @@ const userInfo = computed(() => userStore.userInfo);
 				/>
 			</template>
 			<template v-else>
-				<NAvatar size="large" round :src="defaultAvatar" />
+				<NAvatar
+size="large"
+round
+:src="defaultAvatar" />
 			</template>
 		</div>
 		<div class="flex-1 min-w-0 ml-2">
@@ -36,7 +39,7 @@ const userInfo = computed(() => userStore.userInfo);
 			>
 				<span
 					v-if="isString(userInfo.description) && userInfo.description !== ''"
-					v-html="userInfo.description"
+					v-text="userInfo.description"
 				/>
 			</p>
 		</div>

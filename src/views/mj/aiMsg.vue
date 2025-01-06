@@ -1,13 +1,15 @@
-<template></template>
+<template>
+	<div></div>
+</template>
 <script lang="ts" setup>
-import { ref, h } from "vue";
-import { useNotification } from "naive-ui";
-import { t } from "@/locales";
-const notification = useNotification();
-const count = ref(0);
+import { ref, h } from "vue"
+import { useNotification } from "naive-ui"
+import { t } from "@/locales"
+const notification = useNotification()
+const count = ref(0)
 
 function increment() {
-	count.value++;
+	count.value++
 }
 function showMsg(str: string) {
 	notification.success({
@@ -16,7 +18,7 @@ function showMsg(str: string) {
 		content: () => h("div", { innerHTML: str, class: "ddmsg" }),
 		duration: 2500,
 		keepAliveOnHover: true,
-	});
+	})
 }
 
 function showError(str: string) {
@@ -25,10 +27,10 @@ function showError(str: string) {
 		content: () => h("div", { innerHTML: str, class: "ddmsg" }),
 		duration: 3000,
 		keepAliveOnHover: true,
-	});
+	})
 }
 
-defineExpose({ count, increment, showMsg, showError });
+defineExpose({ count, increment, showMsg, showError })
 </script>
 
 <style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { RunwayTask, runwayStore } from "@/api/runwayStore";
-import { ref, watch } from "vue";
+import { RunwayTask, runwayStore } from "@/api/runwayStore"
+import { ref, watch } from "vue"
 import {
 	NEmpty,
 	NButton,
@@ -8,74 +8,76 @@ import {
 	NButtonGroup,
 	useMessage,
 	NPopconfirm,
-} from "naive-ui";
-import { runwayFeed } from "@/api/runway";
-import { mlog } from "@/api";
-import { homeStore } from "@/store";
-import { SvgIcon } from "@/components/common";
-import { t } from "@/locales";
+} from "naive-ui"
+import { runwayFeed } from "@/api/runway"
+import { mlog } from "@/api"
+import { homeStore } from "@/store"
+import { SvgIcon } from "@/components/common"
+import { t } from "@/locales"
 
-const ms = useMessage();
-const mapRef = ref(new Map<string, number>());
+const ms = useMessage()
+const mapRef = ref(new Map<string, number>())
 
-const st = ref({ pIndex: -1 });
-const list = ref<RunwayTask[]>([]);
-const csuno = new runwayStore();
+const st = ref({ pIndex: -1 })
+const list = ref<RunwayTask[]>([])
+const csuno = new runwayStore()
 const initLoad = () => {
-	let arr = csuno.getObjs();
-	list.value = arr.reverse();
-};
+	let arr = csuno.getObjs()
+	list.value = arr.reverse()
+}
 const RunwayTaskDown = (item: RunwayTask) => {
-	mlog("RunwayTaskDown", item);
-	if (!item.artifacts || item.artifacts.length == 0) return;
+	mlog("RunwayTaskDown", item)
+	if (!item.artifacts || item.artifacts.length == 0) return
 
-	const link = document.createElement("a");
+	const link = document.createElement("a")
 
-	link.href = item.artifacts[0].url;
-	link.download = item.id + ".mp4";
-	link.target = "_blank";
-	link.rel = "noreferrer";
-	document.body.appendChild(link);
-	link.click();
-	document.body.removeChild(link);
-};
+	link.href = item.artifacts[0].url
+	link.download = item.id + ".mp4"
+	link.target = "_blank"
+	link.rel = "noreferrer"
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+}
 
 const extend = (item: RunwayTask) => {
-	mlog("extend ", item);
-	homeStore.setMyData({ act: "runway.extend", actData: item });
-};
+	mlog("extend ", item)
+	homeStore.setMyData({ act: "runway.extend", actData: item })
+}
 
 watch(
 	() => homeStore.myData.act,
 	(n) => {
-		if (n == "RunwayFeed") initLoad();
+		if (n == "RunwayFeed") initLoad()
 	},
-);
+)
 
 const videoError = (item: RunwayTask, index: number) => {
 	//if(  st.value.pIndex!=index ) return;
-	mlog("videoError", index, item);
+	mlog("videoError", index, item)
 	//item.artifacts[0].url= item.artifacts[0].previewUrls[0]
-	mapRef.value.set(item.id, index + 1);
-};
+	mapRef.value.set(item.id, index + 1)
+}
 
 const reRunwayFeed = async (id: string) => {
-	await runwayFeed(id);
-	mapRef.value.delete(id);
-};
+	await runwayFeed(id)
+	mapRef.value.delete(id)
+}
 
 const deleteGo = (item: RunwayTask) => {
-	mlog("deleteGo", item);
+	mlog("deleteGo", item)
 	if (csuno.delete(item)) {
-		ms.success(t("common.deleteSuccess"));
-		initLoad();
+		ms.success(t("common.deleteSuccess"))
+		initLoad()
 	}
-};
+}
 
-initLoad();
+initLoad()
 </script>
 <template>
-	<div v-if="list.length > 0" class="p-4">
+	<div
+v-if="list.length > 0"
+class="p-4">
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
 			<div
 				v-for="(item, index) in list"
@@ -113,29 +115,35 @@ initLoad();
 							@error="videoError(item, index)"
 						>
 							<source
+								v-if="st.pIndex == index"
 								:src="item.artifacts[0].url"
 								referrerpolicy="no-referrer"
 								type="video/mp4"
-								v-if="st.pIndex == index"
 							/>
 						</video>
 					</template>
-					<div class="text-center" v-else>
-						<div v-if="item.status == 'FAILED'" class="pt-2">
+					<div
+v-else
+class="text-center">
+						<div
+v-if="item.status == 'FAILED'"
+class="pt-2">
 							<div>{{ $t("video.failed") }}</div>
 							<div class="line-clamp-3">{{ item.progressText }}</div>
 						</div>
 						<NButton
-							size="small"
-							type="primary"
-							@click="runwayFeed(item.id)"
 							v-else-if="
 								!item.last_feed ||
 								new Date().getTime() - item.last_feed > 20 * 1000
 							"
+							size="small"
+							type="primary"
+							@click="runwayFeed(item.id)"
 							>{{ $t("video.repeat") }}</NButton
 						>
-						<div class="pt-2" v-else>
+						<div
+v-else
+class="pt-2">
 							<div>
 								{{ $t("video.process")
 								}}{{ new Date(item.last_feed).toLocaleString() }}
@@ -181,7 +189,9 @@ initLoad();
 							<div v-if="item.createdAt">
 								createdAt: {{ new Date(item.createdAt).toLocaleString() }}
 							</div>
-							<div class="max-w-[300px]" v-if="item.options.text_prompt">
+							<div
+v-if="item.options.text_prompt"
+class="max-w-[300px]">
 								{{ item.options.text_prompt }}
 							</div>
 							<div class="max-w-[300px]">
@@ -194,30 +204,41 @@ initLoad();
 						</n-popover>
 					</div>
 					<div
-						class="flex justify-end items-center pt-1"
 						v-if="
 							item.artifacts &&
 							item.artifacts.length > 0 &&
 							item.artifacts[0].url
 						"
+						class="flex justify-end items-center pt-1"
 					>
 						<!-- <span    @click="FeedLumaTaskDown( item.id )" class="cursor-pointer" ><SvgIcon icon="mdi:download" /></span> -->
 
 						<n-button-group size="tiny">
-							<n-button size="tiny" round ghost @click="RunwayTaskDown(item)"
+							<n-button
+size="tiny"
+round
+ghost
+@click="RunwayTaskDown(item)"
 								><SvgIcon icon="mdi:download" />
 								{{ $t("video.download") }}</n-button
 							>
-							<n-button size="tiny" round ghost>
+							<n-button
+size="tiny"
+round
+ghost>
 								<n-popconfirm
-									@positive-click="() => deleteGo(item)"
 									placement="bottom"
+									@positive-click="() => deleteGo(item)"
 								>
 									<template #trigger> <SvgIcon icon="mdi:delete" /></template>
 									{{ $t("mj.confirmDelete") }}
 								</n-popconfirm>
 							</n-button>
-							<n-button size="tiny" round ghost @click="extend(item)"
+							<n-button
+size="tiny"
+round
+ghost
+@click="extend(item)"
 								><SvgIcon icon="ri:video-add-line" />
 								{{ $t("video.extend") }}</n-button
 							>
@@ -229,7 +250,9 @@ initLoad();
 			</div>
 		</div>
 	</div>
-	<div class="w-full h-full flex justify-center items-center" v-else>
+	<div
+v-else
+class="w-full h-full flex justify-center items-center">
 		<NEmpty :description="$t('video.nodata')"></NEmpty>
 	</div>
 </template>

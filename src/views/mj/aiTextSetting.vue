@@ -1,23 +1,29 @@
 <script setup lang="ts">
-import { homeStore } from "@/store";
-import { computed, ref } from "vue";
-import aiSetServer from "./aiSetServer.vue";
-import { NTag, NModal, NButton } from "naive-ui";
-const isHideServer = computed(() => homeStore.myData.session.isHideServer);
-const st = ref({ show: false });
-const pp = defineProps<{ msgInfo?: string }>();
-const emit = defineEmits(["close"]);
+import { homeStore } from "@/store"
+import { computed, ref } from "vue"
+import aiSetServer from "./aiSetServer.vue"
+import { NTag, NModal, NButton } from "naive-ui"
+const isHideServer = computed(() => homeStore.myData.session.isHideServer)
+const st = ref({ show: false })
+const pp = defineProps<{ msgInfo?: string }>()
+const emit = defineEmits(["close"])
 const closeed = () => {
-	emit("close");
-	st.value.show = false;
-};
+	emit("close")
+	st.value.show = false
+}
 </script>
 <template>
-	<div class="whitespace-pre-wrap pb-10" v-if="!isHideServer || pp.msgInfo">
+	<div
+v-if="!isHideServer || pp.msgInfo"
+class="whitespace-pre-wrap pb-10">
 		<div v-if="pp.msgInfo">
-			<div v-html="pp.msgInfo" class="p-5 text-center"></div>
+			<div
+class="p-5 text-center"
+v-text="pp.msgInfo"></div>
 			<div class="text-center">
-				<NButton type="primary" @click="st.show = true"
+				<NButton
+type="primary"
+@click="st.show = true"
 					>{{ $t("setting.setting") }}
 				</NButton>
 			</div>
@@ -27,10 +33,10 @@ const closeed = () => {
 			<NTag
 				type="primary"
 				effect="dark"
-				@click="st.show = true"
 				size="small"
 				round
 				style="cursor: pointer"
+				@click="st.show = true"
 				>{{ $t("setting.setting") }}</NTag
 			>
 		</template>
@@ -41,6 +47,8 @@ const closeed = () => {
 		preset="card"
 		style="width: 95%; max-width: 640px"
 	>
-		<aiSetServer v-if="st.show" @close="closeed" />
+		<aiSetServer
+v-if="st.show"
+@close="closeed" />
 	</NModal>
 </template>

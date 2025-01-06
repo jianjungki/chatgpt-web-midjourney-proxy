@@ -1,42 +1,42 @@
-import { computed } from "vue";
-import { enUS, koKR, zhCN, zhTW } from "naive-ui";
-import { useAppStore } from "@/store";
-import { setLocale } from "@/locales";
+import { computed } from "vue"
+import { enUS, koKR, zhCN, zhTW } from "naive-ui"
+import { useAppStore } from "@/store"
+import { setLocale } from "@/locales"
 
 export function useLanguage() {
-	const appStore = useAppStore();
+	const appStore = useAppStore()
 
 	const language = computed(() => {
 		switch (appStore.language) {
 			case "en-US":
-				setLocale("en-US");
-				return enUS;
+				setLocale("en-US")
+				return enUS
 			case "ru-RU":
-				setLocale("ru-RU");
-				return enUS;
+				setLocale("ru-RU")
+				return enUS
 			case "ko-KR":
-				setLocale("ko-KR");
-				return koKR;
+				setLocale("ko-KR")
+				return koKR
 			case "zh-CN":
-				setLocale("zh-CN");
-				return zhCN;
+				setLocale("zh-CN")
+				return zhCN
 			case "zh-TW":
-				setLocale("zh-TW");
-				return zhTW;
+				setLocale("zh-TW")
+				return zhTW
 			case "vi-VN":
-				setLocale("vi-VN");
-				return zhTW;
+				setLocale("vi-VN")
+				return zhTW
 			case "fr-FR":
-				setLocale("fr-FR");
-				return enUS;
+				setLocale("fr-FR")
+				return enUS
 			case "tr-TR":
-				setLocale("tr-TR");
-				return enUS;
+				setLocale("tr-TR")
+				return enUS
 			default:
-				setLocale("zh-CN");
-				return zhCN;
+				setLocale("zh-CN")
+				return zhCN
 		}
-	});
+	})
 
-	return { language };
+	return { language }
 }

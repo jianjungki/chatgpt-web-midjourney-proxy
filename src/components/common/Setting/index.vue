@@ -1,40 +1,40 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { NModal, NTabPane, NTabs } from "naive-ui";
-import General from "./General.vue";
-import Advanced from "./Advanced.vue";
-import aiModel from "@/views/mj/aiModel.vue";
-import aiSetServer from "@/views/mj/aiSetServer.vue";
-import About from "./About.vue";
-import { homeStore, useAuthStore } from "@/store";
-import { SvgIcon } from "@/components/common";
+import { computed, ref } from "vue"
+import { NModal, NTabPane, NTabs } from "naive-ui"
+import General from "./General.vue"
+import aiModel from "@/views/mj/aiModel.vue"
+import aiSetServer from "@/views/mj/aiSetServer.vue"
+import About from "./About.vue"
+import { homeStore, useAuthStore } from "@/store"
+import { SvgIcon } from "@/components/common"
 
 interface Props {
 	visible: boolean;
 }
 
 interface Emit {
-	(e: "update:visible", visible: boolean): void;
+	// eslint-disable-next-line no-unused-vars
+	 (e: "update:visible", visible: boolean): void;
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
-const emit = defineEmits<Emit>();
+const emit = defineEmits<Emit>()
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
-const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI);
+const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
-const active = ref("General");
+const active = ref("General")
 
 const show = computed({
 	get() {
-		return props.visible;
+		return props.visible
 	},
 	set(visible: boolean) {
-		emit("update:visible", visible);
+		emit("update:visible", visible)
 	},
-});
+})
 </script>
 
 <template>
@@ -45,19 +45,31 @@ const show = computed({
 		style="width: 95%; max-width: 640px"
 	>
 		<div>
-			<NTabs v-model:value="active" type="line" animated>
-				<NTabPane name="General" tab="General">
+			<NTabs
+v-model:value="active"
+type="line"
+animated>
+				<NTabPane
+name="General"
+tab="General">
 					<template #tab>
-						<SvgIcon class="text-lg" icon="ri:file-user-line" />
+						<SvgIcon
+class="text-lg"
+icon="ri:file-user-line" />
 						<span class="ml-2">{{ $t("setting.general") }}</span>
 					</template>
 					<div class="min-h-[100px]">
 						<General />
 					</div>
 				</NTabPane>
-				<NTabPane v-if="isChatGPTAPI" name="Advanced" tab="Advanced">
+				<NTabPane
+v-if="isChatGPTAPI"
+name="Advanced"
+tab="Advanced">
 					<template #tab>
-						<SvgIcon class="text-lg" icon="ri:equalizer-line" />
+						<SvgIcon
+class="text-lg"
+icon="ri:equalizer-line" />
 						<!-- <span class="ml-2">{{ $t('setting.advanced') }}</span> -->
 						<span class="ml-2">{{ $t("mjset.model") }}</span>
 					</template>
@@ -68,19 +80,25 @@ const show = computed({
 				</NTabPane>
 
 				<NTabPane
+					v-if="!homeStore.myData.session.isHideServer"
 					name="server"
 					tab="server"
-					v-if="!homeStore.myData.session.isHideServer"
 				>
 					<template #tab>
-						<SvgIcon class="text-lg" icon="mingcute:server-line" />
+						<SvgIcon
+class="text-lg"
+icon="mingcute:server-line" />
 						<span class="ml-2">{{ $t("mjset.server") }}</span>
 					</template>
 					<aiSetServer />
 				</NTabPane>
-				<NTabPane name="Config" tab="Config">
+				<NTabPane
+name="Config"
+tab="Config">
 					<template #tab>
-						<SvgIcon class="text-lg" icon="ri:list-settings-line" />
+						<SvgIcon
+class="text-lg"
+icon="ri:list-settings-line" />
 						<!-- <span class="ml-2">{{ $t('setting.config') }}</span> -->
 						<span class="ml-2">{{ $t("mjset.about") }}</span>
 					</template>

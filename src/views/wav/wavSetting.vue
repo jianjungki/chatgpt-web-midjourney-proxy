@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { gptServerStore } from "@/store";
-import { NInput, NButton, NSwitch, NSelect, useMessage } from "naive-ui";
-import { computed } from "vue";
-import { instructions } from "@/api";
-import { t } from "@/locales";
+import { gptServerStore } from "@/store"
+import { NInput, NButton, NSwitch, NSelect, useMessage } from "naive-ui"
+import { computed } from "vue"
+import { instructions } from "@/api"
+import { t } from "@/locales"
 
-const blurClean = () => {};
-const ms = useMessage();
-const emit = defineEmits(["close"]);
+const blurClean = () => {}
+const ms = useMessage()
+const emit = defineEmits(["close"])
 const save = () => {
-	gptServerStore.setMyData(gptServerStore.myData);
-	ms.success(t("mjchat.success"));
-	emit("close");
-};
+	gptServerStore.setMyData(gptServerStore.myData)
+	ms.success(t("mjchat.success"))
+	emit("close")
+}
 
 const voiceList = computed(() => {
-	let rz = []; //'alloy','shimmer','echo'
+	let rz = [] //'alloy','shimmer','echo'
 	for (let o of "alloy,echo,shimmer".split(/[ ,]+/gi))
-		rz.push({ label: o, value: o });
-	return rz;
-});
+		rz.push({ label: o, value: o })
+	return rz
+})
 </script>
 <template>
 	<div class="w-full">
@@ -39,10 +39,10 @@ const voiceList = computed(() => {
 
 			<section class="mb-4 flex justify-between items-center">
 				<n-input
-					@blur="blurClean"
-					:placeholder="$t('mj.setOpenPlaceholder')"
 					v-model:value="gptServerStore.myData.OPENAI_API_BASE_URL"
+					:placeholder="$t('mj.setOpenPlaceholder')"
 					clearable
+					@blur="blurClean"
 				>
 					<template #prefix>
 						<span class="text-[var(--n-tab-text-color-active)]"
@@ -54,12 +54,12 @@ const voiceList = computed(() => {
 
 			<section class="mb-4 flex justify-between items-center">
 				<n-input
-					@blur="blurClean"
+					v-model:value="gptServerStore.myData.OPENAI_API_KEY"
 					type="password"
 					:placeholder="$t('mj.setOpenKeyPlaceholder')"
 					show-password-on="click"
-					v-model:value="gptServerStore.myData.OPENAI_API_KEY"
 					clearable
+					@blur="blurClean"
 				>
 					<template #prefix>
 						<span class="text-[var(--n-tab-text-color-active)]"
@@ -82,9 +82,9 @@ const voiceList = computed(() => {
 				<div>{{ $t("mjchat.role") }}</div>
 				<div>
 					<n-input
+						v-model:value="gptServerStore.myData.REALTIME_SYSMSG"
 						type="textarea"
 						:placeholder="instructions"
-						v-model:value="gptServerStore.myData.REALTIME_SYSMSG"
 						:autosize="{ minRows: 3 }"
 					/>
 				</div>
@@ -92,7 +92,9 @@ const voiceList = computed(() => {
 
 			<section class="text-right flex justify-end space-x-2">
 				<!-- <NButton   @click="gptServerStore.setInit()">{{$t('mj.setBtBack')}}</NButton> -->
-				<NButton type="primary" @click="save">{{ $t("mj.setBtSave") }}</NButton>
+				<NButton
+type="primary"
+@click="save">{{ $t("mj.setBtSave") }}</NButton>
 			</section>
 		</div>
 	</div>

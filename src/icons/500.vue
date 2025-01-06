@@ -1,6 +1,9 @@
 <template>
 	<div class="text-[currentColor] dark:text-[#3a71ff]">
-		<svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<svg
+viewBox="0 0 400 300"
+fill="none"
+xmlns="http://www.w3.org/2000/svg">
 			<mask
 				id="a"
 				style="mask-type: alpha"
@@ -10,9 +13,14 @@
 				width="338"
 				height="237"
 			>
-				<path d="M368.4 32H31v236.9h337.4V32Z" fill="#fff" />
+				<path
+d="M368.4 32H31v236.9h337.4V32Z"
+fill="#fff" />
 			</mask>
-			<g mask="url(#a)" fill-rule="evenodd" clip-rule="evenodd">
+			<g
+mask="url(#a)"
+fill-rule="evenodd"
+clip-rule="evenodd">
 				<path
 					d="M79.498 122.599c-3.3-7.4-5.2-17.8-7.9-29.5-2.4-12.9-20.8-28.3-34.1-17.6-6.2 5.1-8 17.7-5.4 28.5 2.3 11 9 20.1 14 23.2 10.5 6.3 26.2.8 29.9 4.4 7.6 6.9 11.2 12.8 11.2 13 .2-.2-2.4-10.3-7.7-22Z"
 					fill="#EBEBEB"

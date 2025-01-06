@@ -1,11 +1,11 @@
-import type { App } from "vue";
-import type { RouteRecordRaw } from "vue-router";
-import { createRouter, createWebHashHistory } from "vue-router";
-import { setupPageGuard } from "./permission";
-import { ChatLayout } from "@/views/chat/layout";
-import mjlayout from "@/views/mj/layout.vue";
-import sunoLayout from "@/views/suno/layout.vue";
-import lumaLayout from "@/views/luma/layout.vue";
+import type { App } from "vue"
+import type { RouteRecordRaw } from "vue-router"
+import { createRouter, createWebHashHistory } from "vue-router"
+import { setupPageGuard } from "./permission"
+import { ChatLayout } from "@/views/chat/layout"
+import mjlayout from "@/views/mj/layout.vue"
+import sunoLayout from "@/views/suno/layout.vue"
+import lumaLayout from "@/views/luma/layout.vue"
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -154,17 +154,17 @@ const routes: RouteRecordRaw[] = [
 		name: "notFound",
 		redirect: "/404",
 	},
-];
+]
 
 export const router = createRouter({
 	history: createWebHashHistory(),
 	routes,
 	scrollBehavior: () => ({ left: 0, top: 0 }),
-});
+})
 
-setupPageGuard(router);
+setupPageGuard(router)
 
 export async function setupRouter(app: App) {
-	app.use(router);
-	await router.isReady();
+	app.use(router)
+	await router.isReady()
 }

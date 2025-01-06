@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { NButton } from "naive-ui";
-import { useRouter } from "vue-router";
+import { NButton } from "naive-ui"
+import { useRouter } from "vue-router"
 
-const router = useRouter();
+const router = useRouter()
 
 function goHome() {
-	router.push("/");
+	router.push("/")
 }
 </script>
 
@@ -21,10 +21,14 @@ function goHome() {
 			</p>
 			<div class="flex items-center justify-center text-center">
 				<div class="w-[300px]">
-					<img src="../../../icons/404.svg" alt="404" />
+					<img
+src="../../../icons/404.svg"
+alt="404" />
 				</div>
 			</div>
-			<NButton type="primary" @click="goHome"> Go to Home </NButton>
+			<NButton
+type="primary"
+@click="goHome"> Go to Home </NButton>
 		</div>
 	</div>
 </template>

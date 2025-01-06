@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { gptConfigType } from "@/store";
-import { NPopover, NAvatar } from "naive-ui";
-import { SvgIcon } from "@/components/common";
+import type { Chat } from "@/typings/chat"
+import { gptConfigType } from "@/store"
+import { NPopover, NAvatar } from "naive-ui"
+import { SvgIcon } from "@/components/common"
 
-defineProps<{ myItem: Chat.History; myObj?: gptConfigType }>();
+defineProps<{ myItem: Chat.History; myObj?: gptConfigType }>()
 </script>
 <template>
 	<span class="flex justify-start items-center">
-		<SvgIcon icon="ri:message-3-line" v-if="!myObj" />
+		<SvgIcon
+v-if="!myObj"
+icon="ri:message-3-line" />
 		<n-avatar
 			v-else-if="myObj.gpts"
 			:src="myObj.gpts.logo"
@@ -15,14 +18,19 @@ defineProps<{ myItem: Chat.History; myObj?: gptConfigType }>();
 			:size="18"
 			round
 		/>
-		<SvgIcon icon="bi:chat" v-else />
+		<SvgIcon
+v-else
+icon="bi:chat" />
 	</span>
 	<div
 		class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap"
 	>
 		<slot />
 		<span v-if="!myObj">{{ myItem.title }}</span>
-		<n-popover v-else placement="right-start" trigger="hover">
+		<n-popover
+v-else
+placement="right-start"
+trigger="hover">
 			<template #trigger>
 				{{ myItem.title }}
 			</template>

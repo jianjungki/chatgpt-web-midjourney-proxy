@@ -1,78 +1,78 @@
 <script setup lang="ts">
-import { LumaMedia, lumaStore } from "@/api/lumaStore";
-import { computed, ref, watch } from "vue";
+import { LumaMedia, lumaStore } from "@/api/lumaStore"
+import { ref, watch } from "vue"
 import {
 	NEmpty,
 	NButton,
 	NPopover,
-	NTag,
 	NButtonGroup,
 	useMessage,
 	NPopconfirm,
-} from "naive-ui";
-import { FeedLumaTask, lumaFetch, mlog } from "@/api";
-import { homeStore } from "@/store";
-import { SvgIcon } from "@/components/common";
-import { myTestTranscode } from "@/api/mp4img";
-import { t } from "@/locales";
+} from "naive-ui"
+import { FeedLumaTask, lumaFetch, mlog } from "@/api"
+import { homeStore } from "@/store"
+import { SvgIcon } from "@/components/common"
+import { t } from "@/locales"
 //import { myTestTranscode } from '@/api/mp4img';
 
-const st = ref({ pIndex: -1 });
-const list = ref<LumaMedia[]>([]);
-const csuno = new lumaStore();
-const ms = useMessage();
+const st = ref({ pIndex: -1 })
+const list = ref<LumaMedia[]>([])
+const csuno = new lumaStore()
+const ms = useMessage()
 const initLoad = () => {
-	let arr = csuno.getObjs();
-	list.value = arr.reverse();
-};
-const nowTime = computed(() => {
-	return new Date().getTime();
-});
+	let arr = csuno.getObjs()
+	list.value = arr.reverse()
+}
+// const nowTime = computed(() => {
+// 	return new Date().getTime()
+// })
 const FeedLumaTaskDown = async (item: LumaMedia) => {
 	//FeedLumaTask(id)
-	let id = item.id;
-	let url = "";
+	let id = item.id
+	let url = ""
 	try {
-		let d: any = await lumaFetch("/generations/" + id + "/download_video_url");
-		mlog("d", d);
-		url = d.url ?? item.video?.url;
+		let d: any = await lumaFetch("/generations/" + id + "/download_video_url")
+		mlog("d", d)
+		url = d.url ?? item.video?.url
 	} catch (e) {
-		url = item.video?.url ?? "";
+		url = item.video?.url ?? ""
 	}
 
 	//window.open(d.url)
-	const link = document.createElement("a");
-	link.href = url;
-	link.download = id + ".mp4";
-	link.target = "_blank";
-	document.body.appendChild(link);
-	link.click();
-	document.body.removeChild(link);
-};
+	const link = document.createElement("a")
+	link.href = url
+	link.download = id + ".mp4"
+	link.target = "_blank"
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+}
 
 //getLastFrameBase64
 const extend = async (item: LumaMedia) => {
-	mlog("extend ", item);
-	homeStore.setMyData({ act: "luma.extend", actData: item });
-};
+	mlog("extend ", item)
+	homeStore.setMyData({ act: "luma.extend", actData: item })
+}
 
 watch(
 	() => homeStore.myData.act,
 	(n) => {
-		if (n == "FeedLumaTask") initLoad();
+		if (n == "FeedLumaTask") initLoad()
 	},
-);
+)
 const deleteGo = (item: LumaMedia) => {
-	mlog("deleteGo", item);
+	mlog("deleteGo", item)
 	if (csuno.delete(item)) {
-		ms.success(t("common.deleteSuccess"));
-		initLoad();
+		ms.success(t("common.deleteSuccess"))
+		initLoad()
 	}
-};
-initLoad();
+}
+initLoad()
 </script>
 <template>
-	<div v-if="list.length > 0" class="p-4">
+	<div
+v-if="list.length > 0"
+class="p-4">
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
 			<div
 				v-for="(item, index) in list"
@@ -91,27 +91,33 @@ initLoad();
 								? item.video?.download_url
 								: item.video?.url
 						"
-						@error="$event.target.src = item.video?.url"
 						loop
 						playsinline
 						:controls="st.pIndex == index"
 						class="w-full h-full object-cover"
+						@error="$event.target.src = item.video?.url"
 					></video>
-					<div class="text-center" v-else>
-						<div v-if="item.state == 'failed'" class="pt-2">
+					<div
+v-else
+class="text-center">
+						<div
+v-if="item.state == 'failed'"
+class="pt-2">
 							{{ $t("video.failed") }}
 						</div>
 						<NButton
-							size="small"
-							type="primary"
-							@click="FeedLumaTask(item.id)"
 							v-else-if="
 								!item.last_feed ||
 								new Date().getTime() - item.last_feed > 20 * 1000
 							"
+							size="small"
+							type="primary"
+							@click="FeedLumaTask(item.id)"
 							>{{ $t("video.repeat") }}</NButton
 						>
-						<div class="pt-2" v-else>
+						<div
+v-else
+class="pt-2">
 							<div>
 								{{ $t("video.process")
 								}}{{ new Date(item.last_feed).toLocaleString() }}
@@ -140,26 +146,37 @@ initLoad();
 						</n-popover>
 					</div>
 					<div
-						class="flex justify-end items-center pt-1"
 						v-if="item.video?.url || item.video?.download_url"
+						class="flex justify-end items-center pt-1"
 					>
 						<!-- <span    @click="FeedLumaTaskDown( item.id )" class="cursor-pointer" ><SvgIcon icon="mdi:download" /></span> -->
 
 						<n-button-group size="tiny">
-							<n-button size="tiny" round ghost @click="FeedLumaTaskDown(item)"
+							<n-button
+size="tiny"
+round
+ghost
+@click="FeedLumaTaskDown(item)"
 								><SvgIcon icon="mdi:download" />
 								{{ $t("video.download") }}</n-button
 							>
-							<n-button size="tiny" round ghost>
+							<n-button
+size="tiny"
+round
+ghost>
 								<n-popconfirm
-									@positive-click="() => deleteGo(item)"
 									placement="bottom"
+									@positive-click="() => deleteGo(item)"
 								>
 									<template #trigger> <SvgIcon icon="mdi:delete" /></template>
 									{{ $t("mj.confirmDelete") }}
 								</n-popconfirm>
 							</n-button>
-							<n-button size="tiny" round ghost @click="extend(item)"
+							<n-button
+size="tiny"
+round
+ghost
+@click="extend(item)"
 								><SvgIcon icon="ri:video-add-line" />
 								{{ $t("video.extend") }}</n-button
 							>
@@ -170,7 +187,9 @@ initLoad();
 			</div>
 		</div>
 	</div>
-	<div class="w-full h-full flex justify-center items-center" v-else>
+	<div
+v-else
+class="w-full h-full flex justify-center items-center">
 		<NEmpty :description="$t('video.nodata')"></NEmpty>
 	</div>
 </template>

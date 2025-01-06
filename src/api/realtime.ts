@@ -13,7 +13,7 @@ Instructions:
 Personality:
 - Be upbeat and genuine
 - Try speaking quickly as if excited
-`;
+`
 export interface RealtimeEvent {
 	time: string;
 	source: "client" | "server";

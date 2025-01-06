@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue"
+import { Chat } from "@/typings/chat"
 //import { CavansDemo } from "@/views/aidutu";
-const pp = defineProps<{ chat?: Chat.Chat; base64: string }>();
-const st = ref({ q: "" });
-const ifdiv = ref<HTMLIFrameElement>();
-const emits = defineEmits(["success"]);
+const pp = defineProps<{ chat?: Chat.Chat; base64: string }>()
+const st = ref({ q: "" })
+const ifdiv = ref<HTMLIFrameElement>()
+const emits = defineEmits(["success"])
 
 onMounted(() => {
 	// iframe.contentWindow && iframe.contentWindow.postMessage( JSON.stringify({act:'del',obj }), '*');
@@ -19,26 +20,26 @@ onMounted(() => {
 		img_type: "png", // 按实际传入
 		// ,img_info:''
 		img_info: JSON.stringify({ image_url: "", prompt: "sunglasses" }), // 按实际传入
-	};
+	}
 	st.value.q = Object.keys(data)
 		.map((key) => key + "=" + encodeURIComponent(data[key]))
-		.join("&");
-	window.addEventListener("message", messageFun);
-});
+		.join("&")
+	window.addEventListener("message", messageFun)
+})
 onUnmounted(() => {
-	window.removeEventListener("message", messageFun);
-});
+	window.removeEventListener("message", messageFun)
+})
 
 //收到iframe的消息
 const messageFun = (e: MessageEvent) => {
 	//console.log('我收到消息了', e.data );
-	if (!e?.data) return;
-	const obj = JSON.parse(e.data);
-	emits("success", obj);
-};
+	if (!e?.data) return
+	const obj = JSON.parse(e.data)
+	emits("success", obj)
+}
 const loadOk = (e: Event) => {
 	//console.log('loadOk','good news' );
-	const iframe = e.target as HTMLIFrameElement;
+	const iframe = e.target as HTMLIFrameElement
 	iframe.contentWindow &&
 		iframe.contentWindow.postMessage(
 			JSON.stringify({
@@ -49,18 +50,18 @@ const loadOk = (e: Event) => {
 				},
 			}),
 			"*",
-		); // pp.chat?.text
-};
+		) // pp.chat?.text
+}
 </script>
 <template>
 	<!-- <iframe @load="loadOk" ref="ifdiv" :src="`./mitf/index.html?${st.q}`"  class=" h-[80vh] w-full" style="border-width: 0px; border-style: none; overflow: hidden;" v-if="st.q"></iframe> -->
 	<!-- <iframe @load="loadOk" ref="ifdiv" :src="`https://static.aitutu.cc/res/mitf/index.html?${st.q}`"  class=" h-[80vh] w-full" style="border-width: 0px; border-style: none; overflow: hidden;" v-if="st.q"></iframe> -->
 	<iframe
-		@load="loadOk"
+		v-if="st.q"
 		ref="ifdiv"
 		:src="`https://cdn.aidutu.cn/res/mitf/index.html?${st.q}`"
 		class="h-[80vh] w-full"
 		style="border-width: 0px; border-style: none; overflow: hidden"
-		v-if="st.q"
+		@load="loadOk"
 	></iframe>
 </template>

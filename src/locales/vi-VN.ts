@@ -559,4 +559,4 @@ export default {
 		moban2: "Tên mẫu",
 		use: "Sử dụng",
 	},
-};
+}

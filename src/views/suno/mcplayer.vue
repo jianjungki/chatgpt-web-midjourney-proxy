@@ -1,40 +1,42 @@
 <script setup lang="ts">
-import { watch, ref } from "vue";
-import { SunoMedia } from "@/api/sunoStore";
-import { homeStore } from "@/store";
-import { NImage, NEmpty } from "naive-ui";
-import { SvgIcon } from "@/components/common";
-import { udioTask } from "@/api/udioStore";
+import { watch, ref } from "vue"
+import { SunoMedia } from "@/api/sunoStore"
+import { homeStore } from "@/store"
+import { NImage, NEmpty } from "naive-ui"
+import { SvgIcon } from "@/components/common"
+import { udioTask } from "@/api/udioStore"
 
 //const pObj= ref<SunoMedia>()
-const pObj = ref({ image_large_url: "", title: "", tags: "", prompt: "" });
+const pObj = ref({ image_large_url: "", title: "", tags: "", prompt: "" })
 watch(
 	() => homeStore.myData.act,
 	(n) => {
 		if (n == "goPlay") {
-			let data = homeStore.myData.actData;
-			const a = data as SunoMedia;
-			pObj.value.image_large_url = a.image_large_url;
-			pObj.value.tags = a.metadata.tags ?? "";
-			pObj.value.prompt = a.metadata.prompt ?? "";
-			pObj.value.title = a.title;
+			let data = homeStore.myData.actData
+			const a = data as SunoMedia
+			pObj.value.image_large_url = a.image_large_url
+			pObj.value.tags = a.metadata.tags ?? ""
+			pObj.value.prompt = a.metadata.prompt ?? ""
+			pObj.value.title = a.title
 		}
 		if (n == "goPlayUdio") {
-			let data = homeStore.myData.actData;
+			let data = homeStore.myData.actData
 			//mlog('goPlayUdio' , data );
-			let a = data as udioTask;
-			pObj.value.image_large_url = a.image_path;
-			pObj.value.tags = a.tags ? a.tags.join(",") : "";
-			pObj.value.prompt = a.lyrics || a.prompt;
-			pObj.value.title = a.title;
+			let a = data as udioTask
+			pObj.value.image_large_url = a.image_path
+			pObj.value.tags = a.tags ? a.tags.join(",") : ""
+			pObj.value.prompt = a.lyrics || a.prompt
+			pObj.value.title = a.title
 		}
 	},
-);
+)
 </script>
 <template>
 	<div v-if="pObj.title || pObj.image_large_url">
 		<div class="w-full relative h-[300px]">
-			<NImage :src="pObj.image_large_url" class="w-full h-full">
+			<NImage
+:src="pObj.image_large_url"
+class="w-full h-full">
 				<template #placeholder>
 					<div class="w-full h-full justify-center items-center flex">
 						<SvgIcon
@@ -52,7 +54,9 @@ watch(
 
 		<pre class="whitespace-pre-wrap p-2">{{ pObj.prompt }}</pre>
 	</div>
-	<div class="flex w-full h-full justify-center items-center" v-else>
+	<div
+v-else
+class="flex w-full h-full justify-center items-center">
 		<n-empty :description="$t('suno.emputy')"></n-empty>
 	</div>
 </template>

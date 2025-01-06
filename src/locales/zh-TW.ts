@@ -536,4 +536,4 @@ export default {
 		moban2: "模板名稱",
 		use: "使用",
 	},
-};
+}

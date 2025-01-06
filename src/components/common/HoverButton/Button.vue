@@ -1,12 +1,13 @@
+<!-- eslint-disable no-unused-vars -->
 <script setup lang="ts">
 interface Emit {
 	(e: "click"): void;
 }
 
-const emit = defineEmits<Emit>();
+const emit = defineEmits<Emit>()
 
 function handleClick() {
-	emit("click");
+	emit("click")
 }
 </script>
 

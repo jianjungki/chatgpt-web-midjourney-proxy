@@ -43,7 +43,7 @@ export type SendMessageOptions = {
 	stream?: boolean;
 	systemMessage?: string;
 	timeoutMs?: number;
-	onProgress?: (partialResponse: ChatMessage) => void;
+	onProgress?: () => void;
 	abortSignal?: AbortSignal;
 	completionParams?: Partial<
 		Omit<openai.CreateChatCompletionRequest, "messages" | "n" | "stream">
@@ -58,7 +58,7 @@ export type SendMessageBrowserOptions = {
 	messageId?: string;
 	action?: MessageActionType;
 	timeoutMs?: number;
-	onProgress?: (partialResponse: ChatMessage) => void;
+	onProgress?: () => void;
 	abortSignal?: AbortSignal;
 };
 
@@ -80,17 +80,17 @@ export interface ChatMessage {
 }
 
 export class ChatGPTError extends Error {
-	statusCode?: number;
-	statusText?: string;
-	isFinal?: boolean;
-	accountId?: string;
+	statusCode?: number
+	statusText?: string
+	isFinal?: boolean
+	accountId?: string
 }
 
 /** Returns a chat message from a store by it's ID (or null if not found). */
-export type GetMessageByIdFunction = (id: string) => Promise<ChatMessage>;
+export type GetMessageByIdFunction = () => Promise<ChatMessage>;
 
 /** Upserts a chat message to a store. */
-export type UpsertMessageFunction = (message: ChatMessage) => Promise<void>;
+export type UpsertMessageFunction = () => Promise<void>;
 
 export interface CreateChatCompletionStreamResponse
 	extends openai.CreateChatCompletionDeltaResponse {
@@ -236,7 +236,7 @@ export namespace openai {
 		readonly System: "system";
 		readonly User: "user";
 		readonly Assistant: "assistant";
-	};
+	}
 	export declare type ChatCompletionRequestMessageRoleEnum =
 		(typeof ChatCompletionRequestMessageRoleEnum)[keyof typeof ChatCompletionRequestMessageRoleEnum];
 	/**
@@ -262,7 +262,7 @@ export namespace openai {
 		readonly System: "system";
 		readonly User: "user";
 		readonly Assistant: "assistant";
-	};
+	}
 	export declare type ChatCompletionResponseMessageRoleEnum =
 		(typeof ChatCompletionResponseMessageRoleEnum)[keyof typeof ChatCompletionResponseMessageRoleEnum];
 	/**

@@ -1,56 +1,57 @@
 <script setup lang="ts">
-import { FeedViggleTask } from "@/api/viggle";
-import { ViggleTask, viggleStore } from "@/api/viggleStore";
+import { FeedViggleTask } from "@/api/viggle"
+import { ViggleTask, viggleStore } from "@/api/viggleStore"
 import {
 	NEmpty,
 	NButton,
 	NPopover,
-	NTag,
 	NButtonGroup,
 	useMessage,
 	NPopconfirm,
-} from "naive-ui";
+} from "naive-ui"
 
-import { ref, watch } from "vue";
-import { SvgIcon } from "@/components/common";
-import { homeStore } from "@/store";
-import { t } from "@/locales";
+import { ref, watch } from "vue"
+import { SvgIcon } from "@/components/common"
+import { homeStore } from "@/store"
+import { t } from "@/locales"
 
-const st = ref({ pIndex: -1 });
-const list = ref<ViggleTask[]>([]);
-const ms = useMessage();
-const csuno = new viggleStore();
+const st = ref({ pIndex: -1 })
+const list = ref<ViggleTask[]>([])
+const ms = useMessage()
+const csuno = new viggleStore()
 const initLoad = () => {
-	let arr = csuno.getObjs();
-	list.value = arr.reverse();
-};
+	let arr = csuno.getObjs()
+	list.value = arr.reverse()
+}
 const TaskDown = async (item: ViggleTask) => {
-	const link = document.createElement("a");
-	link.href = item.result;
-	link.download = item.taskID + ".mp4";
-	link.target = "_blank";
-	link.rel = "noreferrer";
-	document.body.appendChild(link);
-	link.click();
-	document.body.removeChild(link);
-};
+	const link = document.createElement("a")
+	link.href = item.result
+	link.download = item.taskID + ".mp4"
+	link.target = "_blank"
+	link.rel = "noreferrer"
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+}
 
 watch(
 	() => homeStore.myData.act,
 	(n) => {
-		if (n == "FeedViggleTask") initLoad();
+		if (n == "FeedViggleTask") initLoad()
 	},
-);
+)
 const deleteGo = (v: ViggleTask) => {
 	if (csuno.delete(v)) {
-		ms.success(t("common.deleteSuccess"));
-		initLoad();
+		ms.success(t("common.deleteSuccess"))
+		initLoad()
 	}
-};
-initLoad();
+}
+initLoad()
 </script>
 <template>
-	<div v-if="list.length > 0" class="p-4">
+	<div
+v-if="list.length > 0"
+class="p-4">
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
 			<div
 				v-for="(item, index) in list"
@@ -63,8 +64,8 @@ initLoad();
 					class="relative flex items-center justify-center bg-white bg-opacity-10 rounded-[16px] overflow-hidden aspect-[16/8.85]"
 				>
 					<video
-						class="bg-[#242424] object-contain w-full h-full transition-all"
 						v-if="item.result"
+						class="bg-[#242424] object-contain w-full h-full transition-all"
 						referrerpolicy="no-referrer"
 						:poster="item.resultCover"
 						loop
@@ -72,24 +73,28 @@ initLoad();
 						:controls="st.pIndex == index"
 					>
 						<source
+							v-if="st.pIndex == index"
 							:src="item.result"
 							referrerpolicy="no-referrer"
 							type="video/mp4"
-							v-if="st.pIndex == index"
 						/>
 					</video>
-					<div class="text-center" v-else>
+					<div
+v-else
+class="text-center">
 						<NButton
-							size="small"
-							type="primary"
-							@click="FeedViggleTask(item.taskID)"
 							v-if="
 								!item.last_feed ||
 								new Date().getTime() - item.last_feed > 20 * 1000
 							"
+							size="small"
+							type="primary"
+							@click="FeedViggleTask(item.taskID)"
 							>{{ $t("video.repeat") }}</NButton
 						>
-						<div class="pt-2" v-else>
+						<div
+v-else
+class="pt-2">
 							<div>
 								{{ $t("video.process")
 								}}{{ new Date(item.last_feed).toLocaleString() }}
@@ -110,15 +115,22 @@ initLoad();
 						<!-- <span    @click="FeedLumaTaskDown( item.id )" class="cursor-pointer" ><SvgIcon icon="mdi:download" /></span> -->
 
 						<n-button-group size="tiny">
-							<n-button size="tiny" round ghost @click="TaskDown(item)"
+							<n-button
+size="tiny"
+round
+ghost
+@click="TaskDown(item)"
 								><SvgIcon icon="mdi:download" />
 								{{ $t("video.download") }}</n-button
 							>
 							<!-- <n-button   size="tiny"  round ghost   ><SvgIcon icon="ri:video-add-line" /> {{ $t('video.extend') }}</n-button> -->
-							<n-button size="tiny" round ghost>
+							<n-button
+size="tiny"
+round
+ghost>
 								<n-popconfirm
-									@positive-click="() => deleteGo(item)"
 									placement="bottom"
+									@positive-click="() => deleteGo(item)"
 								>
 									<template #trigger> <SvgIcon icon="mdi:delete" /></template>
 									{{ $t("mj.confirmDelete") }}
@@ -131,7 +143,9 @@ initLoad();
 			</div>
 		</div>
 	</div>
-	<div class="w-full h-full flex justify-center items-center" v-else>
+	<div
+v-else
+class="w-full h-full flex justify-center items-center">
 		<NEmpty description="请先创作才有跳舞视频列表"></NEmpty>
 	</div>
 </template>

@@ -1,109 +1,114 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { SvgIcon } from "@/components/common";
+import { ref, watch } from "vue"
+import { SvgIcon } from "@/components/common"
 //import {   FeedTask} from '@/api/suno';
-import { sunoStore, SunoMedia } from "@/api/sunoStore";
+import { sunoStore, SunoMedia } from "@/api/sunoStore"
 
-import playui from "./playui.vue";
-import { homeStore } from "@/store";
-import { mlog } from "@/api";
-import { NEmpty, NImage, useMessage, NPopconfirm } from "naive-ui";
-import { FeedTask } from "@/api/suno";
-import { t } from "@/locales";
+import playui from "./playui.vue"
+import { homeStore } from "@/store"
+import { mlog } from "@/api"
+import { NEmpty, NImage, useMessage, NPopconfirm } from "naive-ui"
+import { FeedTask } from "@/api/suno"
+import { t } from "@/locales"
 
-const list = ref<SunoMedia[]>([]);
-const csuno = new sunoStore();
-const st = ref({ playid: "" });
+const list = ref<SunoMedia[]>([])
+const csuno = new sunoStore()
+const st = ref({ playid: "" })
 
-const ms = useMessage();
+const ms = useMessage()
 const initLoad = () => {
-	let arr = csuno.getObjs();
-	list.value = arr.reverse();
-};
+	let arr = csuno.getObjs()
+	list.value = arr.reverse()
+}
 
 const getNowCls = (v: any) => {
 	if (v.id == st.value.playid) {
-		return ["bg-gray-200", "dark:bg-black"];
+		return ["bg-gray-200", "dark:bg-black"]
 	}
-	return [];
-};
+	return []
+}
 const goPlay = (v: SunoMedia) => {
 	if (v.status == "error") {
-		ms.info(t("mj.ud_fail"));
-		return;
+		ms.info(t("mj.ud_fail"))
+		return
 	}
-	st.value.playid = v.id;
-	homeStore.setMyData({ act: "goPlay", actData: v });
+	st.value.playid = v.id
+	homeStore.setMyData({ act: "goPlay", actData: v })
 
 	if (v.status != "complete") {
-		FeedTask([v.id]);
+		FeedTask([v.id])
 	}
-};
+}
 
 const extend = (v: SunoMedia) => {
-	mlog("extend", extend);
+	mlog("extend", extend)
 	//homeStore.myData.actData
-	homeStore.setMyData({ act: "suno.extend", actData: v });
-};
+	homeStore.setMyData({ act: "suno.extend", actData: v })
+}
 
-const sp = ref({ v: 10, max: 0, status: "", idDrop: false });
+const sp = ref({ v: 10, max: 0, status: "", idDrop: false })
 
 watch(
 	() => homeStore.myData.act,
 	(n) => {
 		if (n == "FeedTask") {
-			initLoad();
+			initLoad()
 		}
 		if (n == "playEned") {
 			//
-			let i = list.value.findIndex((v) => v.id == st.value.playid);
-			i++;
-			mlog("playEned,", i, list.value.length);
-			if (i < list.value.length) setTimeout(() => goPlay(list.value[i]), 1000);
+			let i = list.value.findIndex((v) => v.id == st.value.playid)
+			i++
+			mlog("playEned,", i, list.value.length)
+			if (i < list.value.length) setTimeout(() => goPlay(list.value[i]), 1000)
 		}
 	},
-);
+)
 
 const getExSuno = (id: string) => {
-	id = id.replace("m_", "");
-	let index = list.value.findIndex((v) => v.id == id);
+	id = id.replace("m_", "")
+	let index = list.value.findIndex((v) => v.id == id)
 
 	if (index < 0) {
-		return null;
+		return null
 	}
-	return list.value[index];
-};
+	return list.value[index]
+}
 const update = (v: any) => {
-	sp.value = v;
-};
+	sp.value = v
+}
 const deleteGo = (v: SunoMedia) => {
-	mlog("deleteGo", v);
+	mlog("deleteGo", v)
 
 	if (csuno.delete(v)) {
-		ms.success(t("common.deleteSuccess"));
-		initLoad();
+		ms.success(t("common.deleteSuccess"))
+		initLoad()
 	}
-};
-initLoad();
+}
+initLoad()
 </script>
 <template>
 	<div v-if="list.length > 0">
 		<div
 			v-for="item in list"
+			:key="item.id"
 			:class="getNowCls(item)"
 			class="flex relative justify-between items-start p-2 hover:dark:bg-black hover:bg-gray-200 border-b-[1px] border-gray-500/10"
 		>
 			<playui
-				@update="update"
 				v-if="st.playid == item.id"
 				class="absolute top-[-4px] left-0 w-full z-10"
+				@update="update"
 			></playui>
 			<div
 				class="w-[60px] h-[60px] relative cursor-pointer"
 				@click="goPlay(item)"
 			>
 				<template v-if="item.status == 'complete'">
-					<n-image lazy width="100" :src="item.image_url" preview-disabled>
+					<n-image
+lazy
+width="100"
+:src="item.image_url"
+preview-disabled>
 						<template #placeholder>
 							<div class="w-full h-full justify-center items-center flex">
 								<SvgIcon
@@ -114,23 +119,27 @@ initLoad();
 						</template>
 					</n-image>
 					<div
-						class="absolute top-0 right-0 w-full h-full flex justify-center items-center"
 						v-if="st.playid == item.id"
+						class="absolute top-0 right-0 w-full h-full flex justify-center items-center"
 					>
 						<SvgIcon
+							v-if="sp.status == 'pause'"
 							icon="mdi:pause-circle-outline"
 							class="text-[40px] text-[#fff]"
-							v-if="sp.status == 'pause'"
 						></SvgIcon>
 						<SvgIcon
+							v-else
 							icon="svg-spinners:bars-scale-middle"
 							class="text-[40px] text-[#fff]"
-							v-else
 						></SvgIcon>
 					</div>
 				</template>
 				<template v-else>
-					<n-image lazy width="100" :src="item.image_url" preview-disabled />
+					<n-image
+lazy
+width="100"
+:src="item.image_url"
+preview-disabled />
 					<div
 						class="absolute top-0 right-0 w-full h-full justify-center items-center flex"
 					>
@@ -149,8 +158,8 @@ initLoad();
 					<div class="flex justify-start items-center">
 						<h3>{{ item.title }}</h3>
 						<div
-							class="text-[8px] flex items-center border-[1px] border-gray-500/30 px-1 ml-1 list-none rounded-md"
 							v-if="item.metadata?.type == 'upload'"
+							class="text-[8px] flex items-center border-[1px] border-gray-500/30 px-1 ml-1 list-none rounded-md"
 						>
 							Uploaded
 						</div>
@@ -160,16 +169,16 @@ initLoad();
 					</div>
 				</div>
 				<div
+					v-if="item.metadata && item.metadata.prompt"
 					class="opacity-60 line-clamp-1 w-full text-[12px] cursor-pointer"
 					@click="goPlay(item)"
-					v-if="item.metadata && item.metadata.prompt"
 				>
 					{{ item.metadata.prompt }}
 				</div>
 				<div
+					v-else
 					class="opacity-60 line-clamp-1 w-full text-[12px] cursor-pointer"
 					@click="goPlay(item)"
-					v-else
 				>
 					{{ $t("suno.noly") }}
 				</div>
@@ -177,8 +186,8 @@ initLoad();
 					class="text-right text-[14px] flex justify-end items-center space-x-2"
 				>
 					<div
-						class="text-[8px] flex items-center border-[1px] border-gray-500/30 px-1 list-none rounded-md"
 						v-if="item.metadata?.audio_prompt_id"
+						class="text-[8px] flex items-center border-[1px] border-gray-500/30 px-1 list-none rounded-md"
 					>
 						{{ $t("suno.extendFrom") }}:{{
 							getExSuno(item.metadata?.audio_prompt_id)?.title
@@ -197,24 +206,26 @@ initLoad();
 							{{ item.metadata.duration.toFixed(1) }}s
 						</div>
 						<div
-							@click="extend(item)"
 							class="text-[8px] flex items-center border-[1px] border-gray-500/30 px-1 list-none rounded-md cursor-pointer"
+							@click="extend(item)"
 						>
 							{{ $t("suno.extend") }}
 						</div>
 					</template>
 					<div
-						class="text-[8px] flex items-center border-[1px] border-gray-500/30 px-1 list-none rounded-md"
 						v-if="item.major_model_version"
+						class="text-[8px] flex items-center border-[1px] border-gray-500/30 px-1 list-none rounded-md"
 					>
 						{{ item.major_model_version }}
 					</div>
 					<n-popconfirm
-						@positive-click="() => deleteGo(item)"
 						placement="bottom"
+						@positive-click="() => deleteGo(item)"
 					>
 						<template #trigger
-							><SvgIcon icon="mdi:delete" class="cursor-pointer"
+							><SvgIcon
+icon="mdi:delete"
+class="cursor-pointer"
 						/></template>
 						{{ $t("mj.confirmDelete") }}
 					</n-popconfirm>
@@ -223,14 +234,21 @@ initLoad();
 						class="cursor-pointer"
 						@click="goPlay(item)"
 					/>
-					<a :href="item.audio_url" download target="_blank"
-						><SvgIcon icon="mdi:download" class="cursor-pointer"
+					<a
+:href="item.audio_url"
+download
+target="_blank"
+						><SvgIcon
+icon="mdi:download"
+class="cursor-pointer"
 					/></a>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="w-full h-full flex justify-center items-center" v-else>
+	<div
+v-else
+class="w-full h-full flex justify-center items-center">
 		<NEmpty :description="$t('suno.nodata')"></NEmpty>
 	</div>
 </template>

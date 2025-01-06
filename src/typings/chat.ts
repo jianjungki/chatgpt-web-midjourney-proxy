@@ -1,32 +1,33 @@
-declare namespace Chat {
+export declare namespace Chat {
 	interface Chat {
 		dateTime: string;
 		text: string;
+		requestOptions: {
+			prompt: string;
+			options?: ConversationRequest | null;
+		};
 		inversion?: boolean;
 		error?: boolean;
 		loading?: boolean;
-		conversationOptions?: ConversationRequest | null;
-		requestOptions: { prompt: string; options?: ConversationRequest | null };
-		model?: string; //模型
-		mjID?: string; //MJ的ID
+		model?: string;
+		mjID?: string;
+		uuid?: number;
+		index?: number;
+		myid?: string;
+		logo?: string;
+		
 		opt?: {
-			progress?: string;
-			seed?: number;
 			imageUrl?: string;
 			status?: string;
 			images?: string[];
 			promptEn?: string;
 			buttons?: any[];
 			action?: string;
+			progress?: string;
+			seed?: number;
 			duration?: number;
 			lkey?: string;
-		}; //
-		uuid?: number;
-		index?: number;
-		myid?: string; //唯一随机
-		logo?: string;
-
-		//progress?:string
+		};
 	}
 
 	interface History {
@@ -35,7 +36,7 @@ declare namespace Chat {
 		uuid: number;
 	}
 
-	interface ChatState {
+	export interface ChatState {
 		active: number | null;
 		usingContext: boolean;
 		history: History[];
@@ -47,28 +48,22 @@ declare namespace Chat {
 		parentMessageId?: string;
 	}
 
-	interface ConversationResponse {
+	export interface ConversationResponse {
 		conversationId: string;
+		parentMessageId: string;
+		role: string;
+		text: string;
 		detail: {
-			choices: {
+			choices: Array<{
 				finish_reason: string;
 				index: number;
-				logprobs: any;
 				text: string;
-			}[];
-			created: number;
-			id: string;
-			model: string;
-			object: string;
+			}>;
 			usage: {
 				completion_tokens: number;
 				prompt_tokens: number;
 				total_tokens: number;
 			};
 		};
-		id: string;
-		parentMessageId: string;
-		role: string;
-		text: string;
 	}
 }

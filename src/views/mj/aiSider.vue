@@ -1,33 +1,33 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref } from "vue";
-import { SvgIcon, HoverButton } from "@/components/common";
-import { useBasicLayout } from "@/hooks/useBasicLayout";
-const { isMobile } = useBasicLayout();
-import { NAvatar, NTooltip } from "naive-ui";
-import { homeStore, useUserStore, useChatStore } from "@/store";
-import defaultAvatar from "@/assets/avatar.jpg";
-import { router } from "@/router";
-import { isDisableMenu } from "@/api";
-import { useRouter } from "vue-router";
+import { computed, defineAsyncComponent, ref } from "vue"
+import { SvgIcon, HoverButton } from "@/components/common"
+import { useBasicLayout } from "@/hooks/useBasicLayout"
+const { isMobile } = useBasicLayout()
+import { NAvatar, NTooltip } from "naive-ui"
+import { homeStore, useUserStore } from "@/store"
+import defaultAvatar from "@/assets/avatar.jpg"
+import { router } from "@/router"
+import { isDisableMenu } from "@/api"
+import { useRouter } from "vue-router"
 
 //import gallery from '@/views/gallery/index.vue'
 
-const chatStore = useChatStore();
+// const chatStore = useChatStore()
 const Setting = defineAsyncComponent(
 	() => import("@/components/common/Setting/index.vue"),
-);
-const userStore = useUserStore();
+)
+const userStore = useUserStore()
 
-const st = ref({ show: false, showImg: false, menu: [], active: "chat" });
+const st = ref({ show: false, showImg: false, menu: [], active: "chat" })
 
-const userInfo = computed(() => userStore.userInfo);
+const userInfo = computed(() => userStore.userInfo)
 
-const urouter = useRouter(); //
+const urouter = useRouter() //
 
 const goHome = computed(() => {
 	//router.push('/')
-	return router.currentRoute.value.name;
-});
+	return router.currentRoute.value.name
+})
 // const go=(n:string)=>{
 //   if('chat'==n){
 //         router.push('/chat/'+ chatStore.active??'1002')
@@ -38,12 +38,12 @@ const goHome = computed(() => {
 //     }
 // }
 //mlog('g', goHome() );
-const chatId = computed(() => chatStore.active ?? "1002");
+// const chatId = computed(() => chatStore.active ?? "1002")
 </script>
 <template>
 	<div
-		class="flex-shrink-0 w-[60px] z-[1000] h-full"
 		v-if="!isMobile"
+		class="flex-shrink-0 w-[60px] z-[1000] h-full"
 		data-tauri-drag-region
 	>
 		<div
@@ -55,13 +55,15 @@ const chatId = computed(() => chatStore.active ?? "1002");
 				data-tauri-drag-region
 			>
 				<a
+					class="router-link-active router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 					@click="
 						st.active = 'chat';
 						urouter.push(`/chat`);
 					"
-					class="router-link-active router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 				>
-					<n-tooltip placement="right" trigger="hover">
+					<n-tooltip
+placement="right"
+trigger="hover">
 						<template #trigger>
 							<div
 								class="flex h-full justify-center items-center py-1 flex-col"
@@ -79,15 +81,19 @@ const chatId = computed(() => chatStore.active ?? "1002");
 				</a>
 				<a
 					v-if="!isDisableMenu('gpts')"
-					@click="homeStore.setMyData({ act: 'showgpts' })"
 					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
+					@click="homeStore.setMyData({ act: 'showgpts' })"
 				>
-					<n-tooltip placement="right" trigger="hover">
+					<n-tooltip
+placement="right"
+trigger="hover">
 						<template #trigger>
 							<div
 								class="flex h-full justify-center items-center py-1 flex-col"
 							>
-								<SvgIcon icon="ri:apps-fill" class="text-3xl flex-1"></SvgIcon>
+								<SvgIcon
+icon="ri:apps-fill"
+class="text-3xl flex-1"></SvgIcon>
 								<span class="text-[10px]">GPTs</span>
 							</div>
 						</template>
@@ -97,13 +103,15 @@ const chatId = computed(() => chatStore.active ?? "1002");
 
 				<a
 					v-if="!isDisableMenu('draws')"
+					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 					@click="
 						st.active = 'draw';
 						urouter.push(`/draw`);
 					"
-					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 				>
-					<n-tooltip placement="right" trigger="hover">
+					<n-tooltip
+placement="right"
+trigger="hover">
 						<template #trigger>
 							<div
 								class="flex h-full justify-center items-center py-1 flex-col"
@@ -122,10 +130,12 @@ const chatId = computed(() => chatStore.active ?? "1002");
 
 				<a
 					v-if="!isDisableMenu('gallery')"
-					@click="homeStore.setMyData({ act: 'gallery' })"
 					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
+					@click="homeStore.setMyData({ act: 'gallery' })"
 				>
-					<n-tooltip placement="right" trigger="hover">
+					<n-tooltip
+placement="right"
+trigger="hover">
 						<template #trigger>
 							<div
 								class="flex h-full justify-center items-center py-1 flex-col"
@@ -143,13 +153,15 @@ const chatId = computed(() => chatStore.active ?? "1002");
 
 				<a
 					v-if="!isDisableMenu('music')"
+					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 					@click="
 						st.active = 'music';
 						urouter.push('/music');
 					"
-					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 				>
-					<n-tooltip placement="right" trigger="hover">
+					<n-tooltip
+placement="right"
+trigger="hover">
 						<template #trigger>
 							<div
 								class="flex h-full justify-center items-center py-1 flex-col"
@@ -168,13 +180,15 @@ const chatId = computed(() => chatStore.active ?? "1002");
 
 				<a
 					v-if="!isDisableMenu('video')"
+					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 					@click="
 						st.active = 'video';
 						urouter.push('/video');
 					"
-					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 				>
-					<n-tooltip placement="right" trigger="hover">
+					<n-tooltip
+placement="right"
+trigger="hover">
 						<template #trigger>
 							<div
 								class="flex h-full justify-center items-center py-1 flex-col"
@@ -193,13 +207,15 @@ const chatId = computed(() => chatStore.active ?? "1002");
 
 				<a
 					v-if="!isDisableMenu('dance')"
+					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 					@click="
 						st.active = 'dance';
 						urouter.push('/dance');
 					"
-					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
 				>
-					<n-tooltip placement="right" trigger="hover">
+					<n-tooltip
+placement="right"
+trigger="hover">
 						<template #trigger>
 							<div
 								class="flex h-full justify-center items-center py-1 flex-col"
@@ -218,16 +234,20 @@ const chatId = computed(() => chatStore.active ?? "1002");
 
 				<a
 					v-if="!isDisableMenu('realtime')"
-					@click="homeStore.setMyData({ act: 'openRealtime' })"
 					class="router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
+					@click="homeStore.setMyData({ act: 'openRealtime' })"
 				>
-					<n-tooltip placement="right" trigger="hover">
+					<n-tooltip
+placement="right"
+trigger="hover">
 						<template #trigger>
 							<div
 								class="flex h-full justify-center items-center py-1 flex-col"
 								:class="[goHome == 'realtime' ? 'active' : '']"
 							>
-								<SvgIcon icon="ri:mic-fill" class="text-3xl flex-1"></SvgIcon>
+								<SvgIcon
+icon="ri:mic-fill"
+class="text-3xl flex-1"></SvgIcon>
 								<span class="text-[10px]">{{ $t("mj.rttab") }}</span>
 							</div>
 						</template>
@@ -237,10 +257,10 @@ const chatId = computed(() => chatStore.active ?? "1002");
 			</div>
 			<div class="flex flex-col space-y-2">
 				<NAvatar
+					v-if="userInfo.avatar"
 					size="large"
 					round
 					:src="userInfo.avatar"
-					v-if="userInfo.avatar"
 					:fallback-src="defaultAvatar"
 					class="cursor-pointer"
 				/>
@@ -256,7 +276,9 @@ const chatId = computed(() => chatStore.active ?? "1002");
 			</div>
 		</div>
 	</div>
-	<Setting v-if="st.show" v-model:visible="st.show" />
+	<Setting
+v-if="st.show"
+v-model:visible="st.show" />
 
 	<!-- <n-drawer v-model:show="st.showImg" :placement="isMobile?'bottom':'right'"  :class="isMobile?['!h-[90vh]']: ['!w-[80vw]']" style="--n-body-padding:0">
     <n-drawer-content title="GPT store" closable>

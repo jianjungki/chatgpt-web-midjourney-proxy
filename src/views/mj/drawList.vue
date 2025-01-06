@@ -1,52 +1,51 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
-import { useDialog, useMessage } from "naive-ui";
+import { computed, onUnmounted, ref, watch } from "vue"
+import { useRoute } from "vue-router"
+import { Chat } from "@/typings/chat"
 
-import { useScroll } from "../chat/hooks/useScroll";
-import { useChat } from "../chat/hooks/useChat";
-import { useUsingContext } from "../chat/hooks/useUsingContext";
-import { useBasicLayout } from "@/hooks/useBasicLayout";
-import { homeStore, useChatStore, usePromptStore } from "@/store";
-import { mlog, subTask, localSaveAny, subGPT, isDallImageModel } from "@/api";
-import { t } from "@/locales";
+import { useScroll } from "../chat/hooks/useScroll"
+import { useChat } from "../chat/hooks/useChat"
+import { useUsingContext } from "../chat/hooks/useUsingContext"
+import { homeStore, useChatStore } from "@/store"
+import { mlog, subTask, localSaveAny, subGPT, isDallImageModel } from "@/api"
+import { t } from "@/locales"
 
-let controller = new AbortController();
+let controller = new AbortController()
 
 //const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
-const route = useRoute();
-const dialog = useDialog();
-const ms = useMessage();
+const route = useRoute()
+// const dialog = useDialog()
+// const ms = useMessage()
 
-const chatStore = useChatStore();
+const chatStore = useChatStore()
 
-const { isMobile } = useBasicLayout();
+// const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } =
-	useChat();
-const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll();
-const { usingContext, toggleUsingContext } = useUsingContext();
+	useChat()
+const { scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
+const { usingContext } = useUsingContext()
 
-const { uuid } = route.params as { uuid: string }; // || chatStore.$state.active || '1003'
+const { uuid } = route.params as { uuid: string } // || chatStore.$state.active || '1003'
 //if(!uuid) uuid= chatStore.$state.active ;
-mlog("uuid", uuid, chatStore.$state.active);
-const dataSources = computed(() => chatStore.getChatByUuid(+uuid));
+mlog("uuid", uuid, chatStore.$state.active)
+const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() =>
 	dataSources.value.filter(
 		(item) => !item.inversion && !!item.conversationOptions,
 	),
-);
+)
 
-const prompt = ref<any>(null);
-const loading = ref<boolean>(false);
+const prompt = ref<any>(null)
+const loading = ref<boolean>(false)
 
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
-	if (item.loading) updateChatSome(+uuid, index, { loading: false });
-});
+	if (item.loading) updateChatSome(+uuid, index, { loading: false })
+})
 
 function handleSubmit() {
-	onConversation();
+	onConversation()
 }
 const getInitChat = (txt: string) => {
 	let promptMsg: Chat.Chat = {
@@ -56,51 +55,51 @@ const getInitChat = (txt: string) => {
 		error: false,
 		conversationOptions: null,
 		requestOptions: { prompt: txt, options: null },
-	};
-	return promptMsg;
-};
+	}
+	return promptMsg
+}
 async function onConversation() {
-	let message = prompt.value;
+	let message = prompt.value
 
-	if (loading.value) return;
+	if (loading.value) return
 	if (!message.drawText && dataSources.value.length == 0) {
-		message.drawText = t("mjset.sysname"); //'西农er’s GPT';
+		message.drawText = t("mjset.sysname") //'西农er’s GPT';
 	}
 	//   if (!message || message.trim() === '')
 	//     return
 
-	controller = new AbortController();
+	controller = new AbortController()
 	if (message.action && message.action == "face") {
-		let promptMsg: Chat.Chat = getInitChat(t("mjchat.face")); //'换脸'
+		let promptMsg: Chat.Chat = getInitChat(t("mjchat.face")) //'换脸'
 		try {
 			let images = await localSaveAny(
 				JSON.stringify([message.data.sourceBase64, message.data.targetBase64]),
-			);
-			mlog("key", images);
-			promptMsg.opt = { images: [images] };
+			)
+			mlog("key", images)
+			promptMsg.opt = { images: [images] }
 		} catch (e) {
-			mlog("localSaveAny error", e);
+			mlog("localSaveAny error", e)
 		}
-		addChat(+uuid, promptMsg);
+		addChat(+uuid, promptMsg)
 		//return ;
 	} else if (message.action && message.action == "blend") {
 		// promptMsg.opt={  images: message.fileBase64 }
-		let promptMsg: Chat.Chat = getInitChat(t("mjchat.blend")); //'混图'
+		let promptMsg: Chat.Chat = getInitChat(t("mjchat.blend")) //'混图'
 		try {
-			let images = await localSaveAny(JSON.stringify(message.data.base64Array));
-			mlog("key", images);
-			promptMsg.opt = { images: [images] };
+			let images = await localSaveAny(JSON.stringify(message.data.base64Array))
+			mlog("key", images)
+			promptMsg.opt = { images: [images] }
 		} catch (e) {
-			mlog("localSaveAny error", e);
+			mlog("localSaveAny error", e)
 		}
-		addChat(+uuid, promptMsg);
+		addChat(+uuid, promptMsg)
 	} else if (
 		message.action &&
 		["gpt.dall-e-3", "shorten"].indexOf(message.action) > -1
 	) {
 		//gpt.dall-e-3 //subTas
-		let promptMsg: Chat.Chat = getInitChat(message.data.prompt);
-		mlog("gpt.dall-e-3", message.data.fileBase64);
+		let promptMsg: Chat.Chat = getInitChat(message.data.prompt)
+		mlog("gpt.dall-e-3", message.data.fileBase64)
 		if (message.data.fileBase64 && message.data.fileBase64.length > 0) {
 			// promptMsg.opt={  images: message.fileBase64 }
 			try {
@@ -109,16 +108,16 @@ async function onConversation() {
 						fileName: ["a.jpg"],
 						fileBase64: [message.data.fileBase64],
 					}),
-				);
-				mlog("key", images);
-				promptMsg.opt = { images: [images] };
+				)
+				mlog("key", images)
+				promptMsg.opt = { images: [images] }
 			} catch (e) {
-				mlog("localSaveAny error", e);
+				mlog("localSaveAny error", e)
 			}
 		}
-		addChat(+uuid, promptMsg);
+		addChat(+uuid, promptMsg)
 	} else if (message.drawText) {
-		let promptMsg: Chat.Chat = getInitChat(message.drawText);
+		let promptMsg: Chat.Chat = getInitChat(message.drawText)
 
 		if (message.fileBase64 && message.fileBase64.length > 0) {
 			// promptMsg.opt={  images: message.fileBase64 }
@@ -128,27 +127,27 @@ async function onConversation() {
 						fileName: ["a.jpg"],
 						fileBase64: [message.data.fileBase64],
 					}),
-				);
-				mlog("key", images);
-				promptMsg.opt = { images: [images] };
+				)
+				mlog("key", images)
+				promptMsg.opt = { images: [images] }
 			} catch (e) {
-				mlog("localSaveAny error", e);
+				mlog("localSaveAny error", e)
 			}
 		}
-		addChat(+uuid, promptMsg);
+		addChat(+uuid, promptMsg)
 	}
 
-	scrollToBottom();
+	scrollToBottom()
 
-	loading.value = true;
+	loading.value = true
 	//prompt.value = ''
 
-	let options: Chat.ConversationRequest = {};
+	let options: Chat.ConversationRequest = {}
 	const lastContext =
 		conversationList.value[conversationList.value.length - 1]
-			?.conversationOptions;
+			?.conversationOptions
 
-	if (lastContext && usingContext.value) options = { ...lastContext };
+	if (lastContext && usingContext.value) options = { ...lastContext }
 	let outMsg: Chat.Chat = {
 		dateTime: new Date().toLocaleString(),
 		text:
@@ -163,40 +162,40 @@ async function onConversation() {
 		uuid: +uuid,
 		myid: `${Date.now()}`,
 		model: message.action == "gpt.dall-e-3" ? message.data.model : "midjourney",
-	};
+	}
 	//mlog('outMsg model',outMsg.model );
-	addChat(+uuid, outMsg);
-	outMsg.index = dataSources.value.length - 1;
-	scrollToBottom();
+	addChat(+uuid, outMsg)
+	outMsg.index = dataSources.value.length - 1
+	scrollToBottom()
 
 	try {
 		if (message.action && message.action.indexOf("gpt.") == 0) {
-			await subGPT(message, outMsg);
-		} else await subTask(message, outMsg);
-		return;
+			await subGPT(message, outMsg)
+		} else await subTask(message, outMsg)
+		return
 	} catch (error: any) {
-		const errorMessage = error?.message ?? t("common.wrong");
+		const errorMessage = error?.message ?? t("common.wrong")
 
 		if (error.message === "canceled") {
 			updateChatSome(+uuid, dataSources.value.length - 1, {
 				loading: false,
-			});
-			scrollToBottomIfAtBottom();
-			return;
+			})
+			scrollToBottomIfAtBottom()
+			return
 		}
 
 		const currentChat = getChatByUuidAndIndex(
 			+uuid,
 			dataSources.value.length - 1,
-		);
+		)
 
 		if (currentChat?.text && currentChat.text !== "") {
 			updateChatSome(+uuid, dataSources.value.length - 1, {
 				text: `${currentChat.text}\n[${errorMessage}]`,
 				error: false,
 				loading: false,
-			});
-			return;
+			})
+			return
 		}
 
 		updateChat(+uuid, dataSources.value.length - 1, {
@@ -207,37 +206,37 @@ async function onConversation() {
 			loading: false,
 			conversationOptions: null,
 			requestOptions: { prompt: "", options: { ...options } },
-		});
-		scrollToBottomIfAtBottom();
+		})
+		scrollToBottomIfAtBottom()
 	} finally {
-		loading.value = false;
+		loading.value = false
 	}
 }
 
 onUnmounted(() => {
-	if (loading.value) controller.abort();
-});
+	if (loading.value) controller.abort()
+})
 
 watch(
 	() => homeStore.myData.act,
 	(n) => {
 		if (n == "draw") {
-			prompt.value = homeStore.myData.actData;
-			mlog("draw", homeStore.myData.actData.drawText);
-			handleSubmit();
+			prompt.value = homeStore.myData.actData
+			mlog("draw", homeStore.myData.actData.drawText)
+			handleSubmit()
 		}
 		if (n == "updateChat") {
-			let dchat = homeStore.myData.actData as Chat.Chat;
-			mlog("动作更新", "updateChat", dchat.uuid, dchat.index);
+			let dchat = homeStore.myData.actData as Chat.Chat
+			mlog("动作更新", "updateChat", dchat.uuid, dchat.index)
 			if (dchat.uuid && dchat.index) {
-				dchat.dateTime = new Date().toLocaleString();
-				updateChat(+dchat.uuid, +dchat.index, dchat);
+				dchat.dateTime = new Date().toLocaleString()
+				updateChat(+dchat.uuid, +dchat.index, dchat)
 				mlog(
 					"updateChat 动作更新",
 					dchat.model,
 					dchat.opt?.progress,
 					dchat.opt?.imageUrl,
-				);
+				)
 				if (
 					dchat.opt?.progress &&
 					dchat.opt?.progress == "100%" &&
@@ -248,8 +247,8 @@ watch(
 					homeStore.setMyData({
 						act: "mjReload",
 						actData: { mjID: dchat.mjID, noShow: true },
-					});
-					toBottom();
+					})
+					toBottom()
 				} else if (
 					dchat.model &&
 					isDallImageModel(dchat.model) &&
@@ -258,20 +257,22 @@ watch(
 					homeStore.setMyData({
 						act: "dallReload",
 						actData: { myid: dchat.myid, noShow: true },
-					});
-					toBottom();
+					})
+					toBottom()
 				}
 			}
 		}
 	},
 	{ deep: true },
-);
+)
 
 const toBottom = () => {
 	setTimeout(() => {
-		homeStore.setMyData({ act: "scrollToBottom" });
-	}, 1800);
-};
+		homeStore.setMyData({ act: "scrollToBottom" })
+	}, 1800)
+}
 </script>
 
-<template></template>
+<template>
+	<div></div>
+</template>

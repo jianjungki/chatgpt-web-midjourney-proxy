@@ -1,6 +1,6 @@
-import type { AxiosProgressEvent, GenericAbortSignal } from "axios";
-import { post } from "@/utils/request";
-import { homeStore, useAuthStore, useSettingStore } from "@/store";
+import type { GenericAbortSignal } from "axios"
+import { post } from "@/utils/request"
+import { homeStore, useAuthStore, useSettingStore } from "@/store"
 
 export function fetchChatAPI<T = any>(
 	prompt: string,
@@ -11,28 +11,28 @@ export function fetchChatAPI<T = any>(
 		url: "/chat",
 		data: { prompt, options },
 		signal,
-	});
+	})
 }
 
 export function fetchChatConfig<T = any>() {
 	return post<T>({
 		url: "/config",
-	});
+	})
 }
 
 export function fetchChatAPIProcess<T = any>(params: {
 	prompt: string;
 	options?: { conversationId?: string; parentMessageId?: string };
 	signal?: GenericAbortSignal;
-	onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
+	onDownloadProgress?: () => void;
 }) {
-	const settingStore = useSettingStore();
-	const authStore = useAuthStore();
+	const settingStore = useSettingStore()
+	const authStore = useAuthStore()
 
 	let data: Record<string, any> = {
 		prompt: params.prompt,
 		options: params.options,
-	};
+	}
 
 	if (authStore.isChatGPTAPI) {
 		data = {
@@ -40,7 +40,7 @@ export function fetchChatAPIProcess<T = any>(params: {
 			systemMessage: settingStore.systemMessage,
 			temperature: settingStore.temperature,
 			top_p: settingStore.top_p,
-		};
+		}
 	}
 
 	return post<T>({
@@ -48,7 +48,7 @@ export function fetchChatAPIProcess<T = any>(params: {
 		data,
 		signal: params.signal,
 		onDownloadProgress: params.onDownloadProgress,
-	});
+	})
 }
 
 export function fetchSession<T>() {
@@ -74,28 +74,28 @@ export function fetchSession<T>() {
 				theme: "dark",
 				isCloseMdPreview: false,
 			},
-		};
+		}
 
 	return post<T>({
 		url: "/session",
-	});
+	})
 }
 
 export function fetchVerify<T>(token: string) {
 	return post<T>({
 		url: "/verify",
 		data: { token },
-	});
+	})
 }
 
-export * from "./mjapi";
-export * from "./mjsave";
-export * from "./openapi";
-export * from "./units";
-export * from "./mic";
-export * from "./chat";
-export * from "./sse/fetchsse";
-export * from "./Recognition";
-export * from "./luma";
-export * from "./ideo";
-export * from "./realtime";
+export * from "./mjapi"
+export * from "./mjsave"
+export * from "./openapi"
+export * from "./units"
+export * from "./mic"
+export * from "./chat"
+export * from "./sse/fetchsse"
+export * from "./Recognition"
+export * from "./luma"
+export * from "./ideo"
+export * from "./realtime"

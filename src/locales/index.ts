@@ -1,19 +1,19 @@
-import type { App } from "vue";
-import { createI18n } from "vue-i18n";
-import enUS from "./en-US";
-import koKR from "./ko-KR";
-import zhCN from "./zh-CN";
-import zhTW from "./zh-TW";
-import ruRU from "./ru-RU";
-import viVn from "./vi-VN";
-import frFr from "./fr-FR";
-import trTr from "./tr-TR";
-import { useAppStoreWithOut } from "@/store/modules/app";
-import type { Language } from "@/store/modules/app/helper";
+import type { App } from "vue"
+import { createI18n } from "vue-i18n"
+import enUS from "./en-US"
+import koKR from "./ko-KR"
+import zhCN from "./zh-CN"
+import zhTW from "./zh-TW"
+import ruRU from "./ru-RU"
+import viVn from "./vi-VN"
+import frFr from "./fr-FR"
+import trTr from "./tr-TR"
+import { useAppStoreWithOut } from "@/store/modules/app"
+import type { Language } from "@/store/modules/app/helper"
 
-const appStore = useAppStoreWithOut();
+const appStore = useAppStoreWithOut()
 
-const defaultLocale = appStore.language || "zh-CN";
+const defaultLocale = appStore.language || "zh-CN"
 
 const i18n = createI18n({
 	locale: defaultLocale,
@@ -29,16 +29,16 @@ const i18n = createI18n({
 		"fr-FR": frFr,
 		"tr-TR": trTr,
 	},
-});
+})
 
-export const t = i18n.global.t;
+export const t = i18n.global.t
 
 export function setLocale(locale: Language) {
-	i18n.global.locale = locale;
+	i18n.global.locale = locale
 }
 
 export function setupI18n(app: App) {
-	app.use(i18n);
+	app.use(i18n)
 }
 
-export default i18n;
+export default i18n

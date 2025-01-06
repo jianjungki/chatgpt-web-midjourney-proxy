@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineComponent, h } from "vue";
+import { defineComponent, h } from "vue"
 import {
 	NDialogProvider,
 	NLoadingBarProvider,
@@ -9,24 +9,24 @@ import {
 	useLoadingBar,
 	useMessage,
 	useNotification,
-} from "naive-ui";
+} from "naive-ui"
 
 function registerNaiveTools() {
-	window.$loadingBar = useLoadingBar();
-	window.$dialog = useDialog();
-	window.$message = useMessage();
-	window.$notification = useNotification();
+	window.$loadingBar = useLoadingBar()
+	window.$dialog = useDialog()
+	window.$message = useMessage()
+	window.$notification = useNotification()
 }
 
 const NaiveProviderContent = defineComponent({
 	name: "NaiveProviderContent",
 	setup() {
-		registerNaiveTools();
+		registerNaiveTools()
 	},
 	render() {
-		return h("div");
+		return h("div")
 	},
-});
+})
 </script>
 
 <template>

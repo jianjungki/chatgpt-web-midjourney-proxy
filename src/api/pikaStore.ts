@@ -1,4 +1,4 @@
-import { ss } from "@/utils/storage";
+import { ss } from "@/utils/storage"
 interface Video {
 	id: string;
 	status: string;
@@ -22,38 +22,38 @@ export interface PikaTask {
 
 export class pikaStore {
 	//private id: string;
-	private localKey = "pika-store";
+	private localKey = "pika-store"
 	public save(obj: PikaTask) {
-		if (!obj.id) throw "taskID must";
-		let arr = this.getObjs();
-		let i = arr.findIndex((v) => v.id == obj.id);
-		if (i > -1) arr[i] = obj;
-		else arr.push(obj);
-		ss.set(this.localKey, arr);
-		return this;
+		if (!obj.id) throw "taskID must"
+		let arr = this.getObjs()
+		let i = arr.findIndex((v) => v.id == obj.id)
+		if (i > -1) arr[i] = obj
+		else arr.push(obj)
+		ss.set(this.localKey, arr)
+		return this
 	}
 	public findIndex(id: string) {
-		return this.getObjs().findIndex((v) => v.id == id);
+		return this.getObjs().findIndex((v) => v.id == id)
 	}
 
 	public getObjs(): PikaTask[] {
-		const obj = ss.get(this.localKey) as undefined | PikaTask[];
-		if (!obj) return [];
-		return obj;
+		const obj = ss.get(this.localKey) as undefined | PikaTask[]
+		if (!obj) return []
+		return obj
 	}
 	public getOneById(id: string): PikaTask | null {
-		const i = this.findIndex(id);
-		if (i < 0) return null;
-		let arr = this.getObjs();
-		return arr[i];
+		const i = this.findIndex(id)
+		if (i < 0) return null
+		let arr = this.getObjs()
+		return arr[i]
 	}
 	public delete(obj: PikaTask) {
-		if (!obj.id) throw "id must";
-		let arr = this.getObjs();
-		let i = arr.findIndex((v) => v.id == obj.id);
-		if (i < 0) return false;
-		arr.splice(i, 1);
-		ss.set(this.localKey, arr);
-		return true;
+		if (!obj.id) throw "id must"
+		let arr = this.getObjs()
+		let i = arr.findIndex((v) => v.id == obj.id)
+		if (i < 0) return false
+		arr.splice(i, 1)
+		ss.set(this.localKey, arr)
+		return true
 	}
 }

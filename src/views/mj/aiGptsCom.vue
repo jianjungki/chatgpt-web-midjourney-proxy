@@ -1,139 +1,153 @@
 <script setup lang="ts">
-import { myFetch, gptsType, mlog, chatSetting, my2Fetch } from "@/api";
+import { myFetch, gptsType, mlog, chatSetting, my2Fetch } from "@/api"
 import {
 	homeStore,
 	gptConfigStore,
 	useChatStore,
 	gptsUlistStore,
-} from "@/store";
-import { ref, computed, watch } from "vue";
-import { useMessage, NButton, NImage, NTag, NPopover } from "naive-ui";
-import { SvgIcon } from "@/components/common";
-import { useRouter } from "vue-router";
-import { t } from "@/locales";
-import aiGptsAdd from "./aiGptsAdd.vue";
-import { time } from "console";
-import { sleep } from "@/api/suno";
+} from "@/store"
+import { ref, computed, watch } from "vue"
+import { useMessage, NButton, NImage, NTag, NPopover } from "naive-ui"
+import { SvgIcon } from "@/components/common"
+import { useRouter } from "vue-router"
+import { t } from "@/locales"
+import aiGptsAdd from "./aiGptsAdd.vue"
+import { sleep } from "@/api/suno"
 
-const router = useRouter();
-const ms = useMessage();
-const chatStore = useChatStore();
-const emit = defineEmits(["close", "toq"]);
-const pp = defineProps<{ q: string }>();
+const router = useRouter()
+const ms = useMessage()
+const chatStore = useChatStore()
+const emit = defineEmits(["close", "toq"])
+const pp = defineProps<{ q: string }>()
 //const gptsList= ref<gptsType[]>([]);
-const gptsPageList = ref<gptsType[]>([]);
-const gptsInitList = ref<gptsType[]>([]);
-const gptsSearchList = ref<gptsType[]>([]);
+const gptsPageList = ref<gptsType[]>([])
+const gptsInitList = ref<gptsType[]>([])
+const gptsSearchList = ref<gptsType[]>([])
 const st = ref({
 	loadPage: false,
 	q: "",
 	tab: "",
 	search: false,
 	showAdd: false,
-});
-const tag = ref(["画图", "文件", "发票"]);
+})
+const tag = ref(["画图", "文件", "发票"])
 const load = async () => {
 	// const gptUrl= homeStore.myData.session.gptUrl?  homeStore.myData.session.gptUrl :'';
 	// mlog('load',gptUrl );
-	let d;
+	let d
 	if (homeStore.myData.session.gptUrl) {
-		d = await my2Fetch(homeStore.myData.session.gptUrl);
+		d = await my2Fetch(homeStore.myData.session.gptUrl)
 	} else {
-		d = await myFetch("https://gpts.ddaiai.com/open/gpts");
+		d = await myFetch("https://gpts.ddaiai.com/open/gpts")
 	}
-	gptsInitList.value = d.gpts as gptsType[];
-	tag.value = d.tag as string[];
-};
+	gptsInitList.value = d.gpts as gptsType[]
+	tag.value = d.tag as string[]
+}
 const go = async (item: gptsType) => {
-	let uuid = chatStore.active;
+	let uuid = chatStore.active
 	if (uuid) {
-		const chat = chatStore.getChatByUuid(uuid);
+		const chat = chatStore.getChatByUuid(uuid)
 		if (chat.length > 0) {
-			uuid = Date.now();
-			chatStore.addHistory({ title: "New Chat", uuid, isEdit: false });
-			await sleep(500);
+			uuid = Date.now()
+			chatStore.addHistory({ title: "New Chat", uuid, isEdit: false })
+			await sleep(500)
 		}
 	}
 
-	const saveObj = { model: `${item.gid}`, gpts: item };
-	gptConfigStore.setMyData(saveObj);
+	const saveObj = { model: `${item.gid}`, gpts: item }
+	gptConfigStore.setMyData(saveObj)
 	if (uuid) {
 		//保存到对话框
-		const chatSet = new chatSetting(uuid);
+		const chatSet = new chatSetting(uuid)
 		// if( chatSet.findIndex()>-1 ){
 		//    mlog('含有： ', chatSet.findIndex()  );
 
 		// }
 		//全保存
-		chatSet.save(saveObj);
+		chatSet.save(saveObj)
 	}
-	ms.success(t("mjchat.success2"));
-	const gptUrl = `https://gpts.ddaiai.com/open/gptsapi/use`;
-	myFetch(gptUrl, item);
-	emit("close");
-	mlog("go local ", homeStore.myData.local);
+	ms.success(t("mjchat.success2"))
+	const gptUrl = `https://gpts.ddaiai.com/open/gptsapi/use`
+	myFetch(gptUrl, item)
+	emit("close")
+	mlog("go local ", homeStore.myData.local)
 	if (homeStore.myData.local !== "Chat")
-		router.replace({ name: "Chat", params: { uuid: uuid } });
+		router.replace({ name: "Chat", params: { uuid: uuid } })
 
-	gptsUlistStore.setMyData(item);
-};
+	gptsUlistStore.setMyData(item)
+}
 const pageLoad = async () => {
-	st.value.loadPage = true;
-	const gptUrl = `https://gpts.ddaiai.com/open/gptsapi/list/${gptsPageList.value.length}`;
-	let d = await myFetch(gptUrl);
-	st.value.loadPage = false;
+	st.value.loadPage = true
+	const gptUrl = `https://gpts.ddaiai.com/open/gptsapi/list/${gptsPageList.value.length}`
+	let d = await myFetch(gptUrl)
+	st.value.loadPage = false
 
-	let rz = d.data.list as gptsType[];
-	gptsPageList.value = gptsPageList.value.concat(rz); //rz.concat( gptsPageList.value  )
-};
+	let rz = d.data.list as gptsType[]
+	gptsPageList.value = gptsPageList.value.concat(rz) //rz.concat( gptsPageList.value  )
+}
 const gptsList = computed(() => {
-	let rz: gptsType[] = [];
+	let rz: gptsType[] = []
 	if (st.value.tab == "search") {
-		return gptsSearchList.value;
+		return gptsSearchList.value
 		//mlog('search', st.value.tab );
 	}
-	return rz.concat(gptsInitList.value, gptsPageList.value);
-});
+	return rz.concat(gptsInitList.value, gptsPageList.value)
+})
 const searchQ = async (q: string) => {
-	st.value.q = q;
-	st.value.tab = "search";
-	st.value.search = true;
-	const gptUrl = `https://gpts.ddaiai.com/open/gptsapi/search?q=${st.value.q}`;
-	let d = await myFetch(gptUrl);
-	st.value.search = false;
-	gptsSearchList.value = d.data.list as gptsType[];
-};
+	st.value.q = q
+	st.value.tab = "search"
+	st.value.search = true
+	const gptUrl = `https://gpts.ddaiai.com/open/gptsapi/search?q=${st.value.q}`
+	let d = await myFetch(gptUrl)
+	st.value.search = false
+	gptsSearchList.value = d.data.list as gptsType[]
+}
 const goSearch = (q: string) => {
-	emit("toq", { q });
-	searchQ(q);
-};
+	emit("toq", { q })
+	searchQ(q)
+}
 
 const badgo = (item: gptsType, e: Event) => {
-	e.stopPropagation();
-	mlog("badgo", item);
-	const gptUrl = `https://gpts.ddaiai.com/open/gptsapi/bad`;
-	myFetch(gptUrl, item);
-	item.bad = item.bad ? +item.bad + 1 : 1;
-};
+	e.stopPropagation()
+	mlog("badgo", item)
+	const gptUrl = `https://gpts.ddaiai.com/open/gptsapi/bad`
+	myFetch(gptUrl, item)
+	item.bad = item.bad ? +item.bad + 1 : 1
+}
 
 watch(
 	() => pp.q,
 	(n) => {
-		if (n == "") st.value.tab = "";
+		if (n == "") st.value.tab = ""
 	},
-);
-load();
-defineExpose({ searchQ });
+)
+load()
+defineExpose({ searchQ })
 </script>
 <template>
 	<div class="w-full h-full p-4">
 		<template v-if="gptsList.length > 0">
 			<div class="flex items-center justify-start line-clamp-1 pb-4">
-				<div class="m-1 cursor-pointer" v-for="v in tag" @click="goSearch(v)">
-					<n-button strong round size="small" type="success" v-if="v == pp.q">{{
+				<div
+				v-for="v in tag"
+:key="v"
+class="m-1 cursor-pointer"
+@click="goSearch(v)">
+					<n-button
+v-if="v == pp.q"
+strong
+round
+size="small"
+type="success">{{
 						v
 					}}</n-button>
-					<n-button strong secondary round size="small" type="success" v-else>{{
+					<n-button
+v-else
+strong
+secondary
+round
+size="small"
+type="success">{{
 						v
 					}}</n-button>
 				</div>
@@ -150,15 +164,18 @@ defineExpose({ searchQ });
 					>
 				</div>
 			</div>
-			<div class="pb-4" v-if="st.showAdd">
+			<div
+v-if="st.showAdd"
+class="pb-4">
 				<div class="w-[400px]"><aiGptsAdd /></div>
 			</div>
 
 			<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
 				<div
-					@click="go(v)"
 					v-for="v in gptsList"
+					:key="v.name"
 					class="group relative flex gap-3 rounded-2xl bg-[#e8eaf1] p-5 dark:bg-neutral-600 cursor-pointer"
+					@click="go(v)"
 				>
 					<div class="min-w-0 flex-1 mt-[-10px]">
 						<div class="flex justify-between items-center">
@@ -189,7 +206,10 @@ defineExpose({ searchQ });
 					<div class="space-x-1 flex absolute bottom-2 left-4">
 						<n-popover trigger="hover">
 							<template #trigger>
-								<n-tag type="success" size="small" round>
+								<n-tag
+type="success"
+size="small"
+round>
 									<div class="flex items-center">
 										<SvgIcon icon="mdi:hot"></SvgIcon>{{ v.use_cnt }}
 									</div>
@@ -199,7 +219,10 @@ defineExpose({ searchQ });
 						</n-popover>
 						<n-popover trigger="hover">
 							<template #trigger>
-								<n-tag type="success" size="small" round>
+								<n-tag
+type="success"
+size="small"
+round>
 									<div
 										class="flex items-center cursor-pointer"
 										@click="badgo(v, $event)"
@@ -214,26 +237,41 @@ defineExpose({ searchQ });
 					</div>
 				</div>
 			</div>
-			<div class="flex items-center justify-center py-10" v-if="st.tab == ''">
-				<div @click="pageLoad()" v-if="st.loadPage">
+			<div
+v-if="st.tab == ''"
+class="flex items-center justify-center py-10">
+				<div
+v-if="st.loadPage"
+@click="pageLoad()">
 					{{ $t("mjchat.loading2") }}
 				</div>
-				<NButton @click="pageLoad()" v-else>{{
+				<NButton
+v-else
+@click="pageLoad()">{{
 					$t("mjchat.loadmore")
 				}}</NButton>
 			</div>
 		</template>
 		<div
-			class="h-full flex items-center justify-center flex-col"
 			v-else-if="st.tab == 'search' && !st.search"
+			class="h-full flex items-center justify-center flex-col"
 		>
 			<div>
 				{{ $t("mjchat.nofind") }}<b class="text-green-400">{{ st.q }}</b>
 				{{ $t("mjchat.nofind2") }}
 			</div>
 			<div class="flex items-center justify-center flex-wrap">
-				<div class="m-1 cursor-pointer" v-for="v in tag" @click="goSearch(v)">
-					<n-button strong secondary round size="small" type="success">{{
+				<div
+v-for="v in tag"
+:key="v"
+class="m-1 cursor-pointer"
+@click="goSearch(v)">
+					<n-button
+strong
+secondary
+round
+size="small"
+type="success">{{
 						v
 					}}</n-button>
 				</div>
@@ -242,7 +280,9 @@ defineExpose({ searchQ });
 				<div class="w-[400px]"><aiGptsAdd /></div>
 			</div>
 		</div>
-		<div class="h-full flex items-center justify-center" v-else>
+		<div
+v-else
+class="h-full flex items-center justify-center">
 			{{ $t("mjchat.loading2") }}
 		</div>
 	</div>

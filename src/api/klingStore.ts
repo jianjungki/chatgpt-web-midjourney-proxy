@@ -1,4 +1,4 @@
-import { ss } from "@/utils/storage";
+import { ss } from "@/utils/storage"
 
 export interface KlingTask {
 	cat?: string; //类别
@@ -29,38 +29,38 @@ export interface KlingTask {
 
 export class klingStore {
 	//private id: string;
-	private localKey = "kling-store";
+	private localKey = "kling-store"
 	public save(obj: KlingTask) {
-		if (!obj.data.task_id) throw "taskID must";
-		let arr = this.getObjs();
-		let i = arr.findIndex((v) => v.data.task_id == obj.data.task_id);
-		if (i > -1) arr[i] = obj;
-		else arr.push(obj);
-		ss.set(this.localKey, arr);
-		return this;
+		if (!obj.data.task_id) throw "taskID must"
+		let arr = this.getObjs()
+		let i = arr.findIndex((v) => v.data.task_id == obj.data.task_id)
+		if (i > -1) arr[i] = obj
+		else arr.push(obj)
+		ss.set(this.localKey, arr)
+		return this
 	}
 	public findIndex(id: string) {
-		return this.getObjs().findIndex((v) => v.data.task_id == id);
+		return this.getObjs().findIndex((v) => v.data.task_id == id)
 	}
 
 	public getObjs(): KlingTask[] {
-		const obj = ss.get(this.localKey) as undefined | KlingTask[];
-		if (!obj) return [];
-		return obj;
+		const obj = ss.get(this.localKey) as undefined | KlingTask[]
+		if (!obj) return []
+		return obj
 	}
 	public getOneById(id: string): KlingTask | null {
-		const i = this.findIndex(id);
-		if (i < 0) return null;
-		let arr = this.getObjs();
-		return arr[i];
+		const i = this.findIndex(id)
+		if (i < 0) return null
+		let arr = this.getObjs()
+		return arr[i]
 	}
 	public delete(id: string) {
 		//if(!obj.data.task_id ) throw "id must";
-		let arr = this.getObjs();
-		let i = arr.findIndex((v) => v.data.task_id == id);
-		if (i < 0) return false;
-		arr.splice(i, 1);
-		ss.set(this.localKey, arr);
-		return true;
+		let arr = this.getObjs()
+		let i = arr.findIndex((v) => v.data.task_id == id)
+		if (i < 0) return false
+		arr.splice(i, 1)
+		ss.set(this.localKey, arr)
+		return true
 	}
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
-import { useBasicLayout } from "@/hooks/useBasicLayout";
-import { t } from "@/locales";
+import { ref, computed, watch, onMounted } from "vue"
+import { useBasicLayout } from "@/hooks/useBasicLayout"
+import { t } from "@/locales"
 import {
 	NInput,
 	NButton,
@@ -13,8 +13,8 @@ import {
 	NPopover,
 	NModal,
 	NDropdown,
-} from "naive-ui";
-import { SvgIcon } from "@/components/common";
+} from "naive-ui"
+import { SvgIcon } from "@/components/common"
 import {
 	canVisionModel,
 	GptUploader,
@@ -27,29 +27,29 @@ import {
 	Recognition,
 	regCookie,
 	isCanBase64Model,
-} from "@/api";
-import { gptConfigStore, homeStore, useChatStore } from "@/store";
-import { AutoCompleteOptions } from "naive-ui/es/auto-complete/src/interface";
-import { RenderLabel } from "naive-ui/es/_internal/select-menu/src/interface";
-import { useRoute } from "vue-router";
-import aiModel from "@/views/mj/aiModel.vue";
-import AiMic from "./aiMic.vue";
-import { useIconRender } from "@/hooks/useIconRender";
-import VueTurnstile from "vue-turnstile";
+} from "@/api"
+import { gptConfigStore, homeStore, useChatStore } from "@/store"
+import { AutoCompleteOptions } from "naive-ui/es/auto-complete/src/interface"
+import { RenderLabel } from "naive-ui/es/_internal/select-menu/src/interface"
+import { useRoute } from "vue-router"
+import aiModel from "@/views/mj/aiModel.vue"
+import AiMic from "./aiMic.vue"
+import { useIconRender } from "@/hooks/useIconRender"
+import VueTurnstile from "vue-turnstile"
 
-const { iconRender } = useIconRender();
+const { iconRender } = useIconRender()
 //import FormData from 'form-data'
-const route = useRoute();
-const chatStore = useChatStore();
+const route = useRoute()
+const chatStore = useChatStore()
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue"])
 const props = defineProps<{
 	modelValue: string;
 	disabled?: boolean;
 	searchOptions?: AutoCompleteOptions;
 	renderOption?: RenderLabel;
-}>();
-const fsRef = ref();
+}>()
+const fsRef = ref()
 const st = ref<{
 	fileBase64: string[];
 	fileName: string[];
@@ -64,71 +64,71 @@ const st = ref<{
 	isShow: false,
 	showMic: false,
 	micStart: false,
-});
-const { isMobile } = useBasicLayout();
+})
+const { isMobile } = useBasicLayout()
 const placeholder = computed(() => {
-	if (isMobile.value) return t("chat.placeholderMobile");
-	return t("chat.placeholder"); //可输入说点什么，也可贴截图或拖拽文件
-});
+	if (isMobile.value) return t("chat.placeholderMobile")
+	return t("chat.placeholder") //可输入说点什么，也可贴截图或拖拽文件
+})
 
-const { uuid } = route.params as { uuid: string };
+const { uuid } = route.params as { uuid: string }
 
-const dataSources = computed(() => chatStore.getChatByUuid(+uuid));
+const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 
 const handleSubmit = () => {
-	if (mvalue.value == "") return;
+	if (mvalue.value == "") return
 	if (checkDisableGpt4(gptConfigStore.myData.model)) {
-		ms.error(t("mj.disableGpt4"));
-		return false;
+		ms.error(t("mj.disableGpt4"))
+		return false
 	}
 	if (homeStore.myData.isLoader) {
-		return;
+		return
 	}
 	let obj = {
 		prompt: mvalue.value,
 		fileBase64: st.value.fileBase64,
 		fileName: st.value.fileName,
-	};
-	homeStore.setMyData({ act: "gpt.submit", actData: obj });
-	mvalue.value = "";
-	st.value.fileBase64 = [];
-	st.value.fileName = [];
-	return false;
-};
-const ms = useMessage();
+	}
+	homeStore.setMyData({ act: "gpt.submit", actData: obj })
+	mvalue.value = ""
+	st.value.fileBase64 = []
+	st.value.fileName = []
+	return false
+}
+const ms = useMessage()
 const mvalue = computed({
 	get() {
-		return props.modelValue;
+		return props.modelValue
 	},
 	set(value) {
-		emit("update:modelValue", value);
+		emit("update:modelValue", value)
 	},
-});
+})
 function selectFile(input: any) {
-	const file = input.target.files[0];
-	upFile(file);
+	const file = input.target.files[0]
+	upFile(file)
 }
 
-const myToken = ref({ remain: 0, modelTokens: "4k" });
+const myToken = ref({ remain: 0, modelTokens: "4k" })
 const funt = async () => {
 	const d = await countTokens(
 		dataSources.value,
 		mvalue.value,
 		chatStore.active ?? 1002,
-	);
-	myToken.value = d;
-	return d;
-};
-watch(() => mvalue.value, funt);
-watch(() => dataSources.value, funt);
-watch(() => gptConfigStore.myData, funt, { deep: true });
-watch(() => homeStore.myData.isLoader, funt, { deep: true });
-funt();
+	)
+	myToken.value = d
+	return d
+}
+watch(() => mvalue.value, funt)
+watch(() => dataSources.value, funt)
+watch(() => gptConfigStore.myData, funt, { deep: true })
+watch(() => homeStore.myData.isLoader, funt, { deep: true })
+funt()
 
 const upFile = (file: any) => {
 	if (!canVisionModel(gptConfigStore.myData.model)) {
 		if (isFileMp3(file.name)) {
-			mlog("mp3", file);
+			mlog("mp3", file)
 			//  const formData = new FormData( );
 			// formData.append('file', file);
 			// formData.append('model', 'whisper-1');
@@ -139,119 +139,119 @@ const upFile = (file: any) => {
 			homeStore.setMyData({
 				act: "gpt.whisper",
 				actData: { file, prompt: "whisper" },
-			});
-			return;
+			})
+			return
 		} else {
 			upImg(file)
 				.then((d) => {
-					fsRef.value.value = "";
+					fsRef.value.value = ""
 					if (st.value.fileBase64.findIndex((v) => v == d) > -1) {
-						ms.error(t("mj.noReUpload")); //'不能重复上传'
-						return;
+						ms.error(t("mj.noReUpload")) //'不能重复上传'
+						return
 					}
-					st.value.fileBase64.push(d);
-					st.value.fileName.push(file.name);
+					st.value.fileBase64.push(d)
+					st.value.fileName.push(file.name)
 				})
-				.catch((e) => ms.error(e));
+				.catch((e) => ms.error(e))
 		}
 	} else {
-		const formData = new FormData();
+		const formData = new FormData()
 		//const file = input.target.files[0];
-		formData.append("file", file);
-		ms.info(t("mj.uploading"));
-		st.value.isLoad = 1;
+		formData.append("file", file)
+		ms.info(t("mj.uploading"))
+		st.value.isLoad = 1
 		GptUploader("/v1/upload", formData)
 			.then((r) => {
 				//mlog('上传成功', r);
-				st.value.isLoad = 0;
+				st.value.isLoad = 0
 				if (r.url) {
-					ms.info(t("mj.uploadSuccess"));
+					ms.info(t("mj.uploadSuccess"))
 					if (r.url.indexOf("http") > -1) {
-						st.value.fileBase64.push(r.url);
-						st.value.fileName.push(file.name);
+						st.value.fileBase64.push(r.url)
+						st.value.fileName.push(file.name)
 					} else {
-						st.value.fileBase64.push(location.origin + r.url);
-						st.value.fileName.push(file.name);
+						st.value.fileBase64.push(location.origin + r.url)
+						st.value.fileName.push(file.name)
 					}
-				} else if (r.error) ms.error(r.error);
+				} else if (r.error) ms.error(r.error)
 			})
 			.catch((e) => {
-				st.value.isLoad = 0;
-				ms.error(t("mj.uploadFail") + (e.message ?? JSON.stringify(e)));
-			});
+				st.value.isLoad = 0
+				ms.error(t("mj.uploadFail") + (e.message ?? JSON.stringify(e)))
+			})
 	}
-};
+}
 
 function handleEnter(event: KeyboardEvent) {
 	if (!isMobile.value) {
 		if (event.key === "Enter" && !event.shiftKey) {
-			event.preventDefault();
-			handleSubmit();
+			event.preventDefault()
+			handleSubmit()
 		}
 	} else {
 		if (event.key === "Enter" && event.ctrlKey) {
-			event.preventDefault();
-			handleSubmit();
+			event.preventDefault()
+			handleSubmit()
 		}
 	}
 }
 
 const acceptData = computed(() => {
-	if (canVisionModel(gptConfigStore.myData.model)) return "*/*";
-	return "image/jpeg, image/jpg, image/png, image/gif, .mp3, .mp4, .mpeg, .mpga, .m4a, .wav, .webm";
-});
+	if (canVisionModel(gptConfigStore.myData.model)) return "*/*"
+	return "image/jpeg, image/jpg, image/png, image/gif, .mp3, .mp4, .mpeg, .mpga, .m4a, .wav, .webm"
+})
 
 const drop = (e: DragEvent) => {
-	e.preventDefault();
-	e.stopPropagation();
-	if (!e.dataTransfer || e.dataTransfer.files.length == 0) return;
-	const files = e.dataTransfer.files;
-	upFile(files[0]);
+	e.preventDefault()
+	e.stopPropagation()
+	if (!e.dataTransfer || e.dataTransfer.files.length == 0) return
+	const files = e.dataTransfer.files
+	upFile(files[0])
 	//mlog('drop', files);
-};
+}
 const paste = (e: ClipboardEvent) => {
-	let rz = getFileFromClipboard(e);
-	if (rz.length > 0) upFile(rz[0]);
-};
+	let rz = getFileFromClipboard(e)
+	if (rz.length > 0) upFile(rz[0])
+}
 
 const sendMic = (e: any) => {
-	mlog("sendMic", e);
-	st.value.showMic = false;
-	let du = "whisper.wav"; // (e.stat && e.stat.duration)?(e.stat.duration.toFixed(2)+'s'):'whisper.wav';
-	const file = new File([e.blob], du, { type: "audio/wav" });
+	mlog("sendMic", e)
+	st.value.showMic = false
+	let du = "whisper.wav" // (e.stat && e.stat.duration)?(e.stat.duration.toFixed(2)+'s'):'whisper.wav';
+	const file = new File([e.blob], du, { type: "audio/wav" })
 	homeStore.setMyData({
 		act: "gpt.whisper",
 		actData: { file, prompt: "whisper", duration: e.stat?.duration },
-	});
-};
+	})
+}
 
 //语音识别ASR
 const goASR = () => {
-	const olod = mvalue.value;
-	const rec = new Recognition();
-	let rz = "";
+	const olod = mvalue.value
+	const rec = new Recognition()
+	let rz = ""
 	rec
 		.setListener((r: string) => {
 			//mlog('result ', r  );
-			rz = r;
-			mvalue.value = r;
-			st.value.micStart = true;
+			rz = r
+			mvalue.value = r
+			st.value.micStart = true
 		})
 		.setOnEnd(() => {
 			//mlog('rec end');
-			mvalue.value = olod + rz;
-			ms.info(t("mj.micRecEnd"));
-			st.value.micStart = false;
+			mvalue.value = olod + rz
+			ms.info(t("mj.micRecEnd"))
+			st.value.micStart = false
 		})
 		.setOpt({
 			timeOut: 2000,
 			onStart: () => {
-				ms.info(t("mj.micRec"));
-				st.value.micStart = true;
+				ms.info(t("mj.micRec"))
+				st.value.micStart = true
 			},
 		})
-		.start();
-};
+		.start()
+}
 
 const drOption = [
 	{
@@ -264,59 +264,71 @@ const drOption = [
 		icon: iconRender({ icon: "ri:chrome-line" }),
 		key: "asr",
 	},
-];
+]
 const handleSelectASR = (key: string | number) => {
-	if (key == "asr") goASR();
-	if (key == "whisper") st.value.showMic = true;
-};
+	if (key == "asr") goASR()
+	if (key == "whisper") st.value.showMic = true
+}
 
 const appearance = computed(() => {
-	return homeStore.myData.vtoken ? "interaction-only" : "always";
-});
-const tRef = ref();
+	return homeStore.myData.vtoken ? "interaction-only" : "always"
+})
+const tRef = ref()
 //const vt= ref<{thandel?:any}>({ });
 onMounted(() => {
 	if (homeStore.myData.session.turnstile) {
-		setTimeout(tRef.value.render, 4000);
+		setTimeout(tRef.value.render, 4000)
 		//vt.value.thandel= setInterval( tRef.value.reset , 8300)
 	}
-});
+})
 // onUnmounted( ()=>{
 //     if(vt.value.thandel) clearInterval( vt.value.thandel)
 // });
-watch(() => homeStore.myData.vtoken, regCookie);
+watch(() => homeStore.myData.vtoken, regCookie)
 </script>
 <template>
 	<vue-turnstile
+		v-if="homeStore.myData.session.turnstile"
 		ref="tRef"
+		v-model="homeStore.myData.vtoken"
 		:site-key="homeStore.myData.session.turnstile"
 		:appearance="appearance"
-		v-model="homeStore.myData.vtoken"
-		v-if="homeStore.myData.session.turnstile"
 	/>
 	<!-- <div>{{ homeStore.myData.vtoken }}</div> -->
-	<div v-if="st.showMic" class="myinputs flex justify-center items-center">
-		<AiMic @cancel="st.showMic = false" @send="sendMic" />
+	<div
+v-if="st.showMic"
+class="myinputs flex justify-center items-center">
+		<AiMic
+@cancel="st.showMic = false"
+@send="sendMic" />
 	</div>
-	<div class="myinputs" @drop="drop" @paste="paste" v-else>
+	<div
+v-else
+class="myinputs"
+@drop="drop"
+@paste="paste">
 		<input
-			type="file"
 			id="fileInput"
-			@change="selectFile"
-			class="hidden"
 			ref="fsRef"
+			type="file"
+			class="hidden"
 			:accept="acceptData"
+			@change="selectFile"
 		/>
 		<div class="w-full relative">
 			<div
-				class="flex items-base justify-start pb-1 flex-wrap-reverse"
 				v-if="st.fileBase64.length > 0"
+				class="flex items-base justify-start pb-1 flex-wrap-reverse"
 			>
 				<div
-					class="w-[60px] h-[60px] rounded-sm bg-slate-50 mr-1 mt-1 text-red-300 relative group"
 					v-for="(v, ii) in st.fileBase64"
+					:key="ii"
+					class="w-[60px] h-[60px] rounded-sm bg-slate-50 mr-1 mt-1 text-red-300 relative group"
 				>
-					<NImage :src="v" object-fit="cover" class="w-full h-full">
+					<NImage
+:src="v"
+object-fit="cover"
+class="w-full h-full">
 						<template #placeholder>
 							<a
 								class="w-full h-full flex items-center justify-center text-neutral-500"
@@ -354,9 +366,14 @@ watch(() => homeStore.myData.vtoken, regCookie);
 					</template>
 					<div class="w-[300px]">
 						{{ $t("mj.tokenInfo1") }}
-						<p class="py-1" v-text="$t('mj.tokenInfo2')"></p>
+						<p
+class="py-1"
+v-text="$t('mj.tokenInfo2')"></p>
 						<p class="text-right">
-							<NButton @click="st.isShow = true" type="info" size="small">{{
+							<NButton
+type="info"
+size="small"
+@click="st.isShow = true">{{
 								$t("setting.setting")
 							}}</NButton>
 						</p>
@@ -386,26 +403,28 @@ watch(() => homeStore.myData.vtoken, regCookie);
 							<n-tooltip trigger="hover">
 								<template #trigger>
 									<SvgIcon
+										v-if="st.isLoad == 1"
 										icon="line-md:uploading-loop"
 										class="absolute bottom-[10px] left-[8px] cursor-pointer"
-										v-if="st.isLoad == 1"
 									></SvgIcon>
 									<SvgIcon
+										v-else
 										icon="ri:attachment-line"
 										class="absolute bottom-[10px] left-[8px] cursor-pointer"
 										@click="fsRef.click()"
-										v-else
 									></SvgIcon>
 								</template>
 								<div
 									v-if="canVisionModel(gptConfigStore.myData.model)"
-									v-html="$t('mj.upPdf')"
+									v-text="$t('mj.upPdf')"
 								></div>
 								<div
 									v-else-if="isCanBase64Model(gptConfigStore.myData.model)"
-									v-html="$t('mj.upImg2')"
+									v-text="$t('mj.upImg2')"
 								></div>
-								<div v-else v-html="$t('mj.upImg')"></div>
+								<div
+v-else
+v-text="$t('mj.upImg')"></div>
 							</n-tooltip>
 						</div>
 						<!-- <div  class=" relative; w-[22px]">
@@ -418,8 +437,8 @@ watch(() => homeStore.myData.vtoken, regCookie);
 						>
 							<div class="relative; w-[22px]">
 								<div
-									class="absolute bottom-[14px] left-[31px]"
 									v-if="st.micStart"
+									class="absolute bottom-[14px] left-[31px]"
 								>
 									<span class="relative flex h-3 w-3">
 										<span
@@ -449,10 +468,12 @@ watch(() => homeStore.myData.vtoken, regCookie);
 									<template #icon>
 										<span class="dark:text-black">
 											<SvgIcon
-												icon="ri:stop-circle-line"
 												v-if="homeStore.myData.isLoader"
+												icon="ri:stop-circle-line"
 											/>
-											<SvgIcon icon="ri:send-plane-fill" v-else />
+											<SvgIcon
+v-else
+icon="ri:send-plane-fill" />
 										</span>
 									</template>
 								</NButton>

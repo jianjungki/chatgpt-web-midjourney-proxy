@@ -1,10 +1,10 @@
-import { defineStore } from "pinia";
-import { getToken, removeToken, setToken } from "./helper";
-import { store } from "@/store/helper";
-import { fetchSession } from "@/api";
-import { gptConfigStore, homeStore } from "@/store/homeStore";
-import { useAppStore } from "@/store";
-const appStore = useAppStore();
+import { defineStore } from "pinia"
+import { getToken, removeToken, setToken } from "./helper"
+import { store } from "@/store/helper"
+import { fetchSession } from "@/api"
+import { gptConfigStore, homeStore } from "@/store/homeStore"
+import { useAppStore } from "@/store"
+const appStore = useAppStore()
 interface SessionResponse {
 	theme?: string;
 	auth: boolean;
@@ -24,43 +24,43 @@ export const useAuthStore = defineStore("auth-store", {
 
 	getters: {
 		isChatGPTAPI(state): boolean {
-			return state.session?.model === "ChatGPTAPI";
+			return state.session?.model === "ChatGPTAPI"
 		},
 	},
 
 	actions: {
 		async getSession() {
 			try {
-				const { data } = await fetchSession<SessionResponse>();
-				this.session = { ...data };
+				const { data } = await fetchSession<SessionResponse>()
+				this.session = { ...data }
 
-				homeStore.setMyData({ session: data });
+				homeStore.setMyData({ session: data })
 				if (appStore.$state.theme == "auto") {
 					appStore.setTheme(
 						data.theme && data.theme == "light" ? "light" : "dark",
-					);
+					)
 				}
 
-				let str = localStorage.getItem("gptConfigStore");
-				if (!str) setTimeout(() => gptConfigStore.setInit(), 500);
-				return Promise.resolve(data);
+				let str = localStorage.getItem("gptConfigStore")
+				if (!str) setTimeout(() => gptConfigStore.setInit(), 500)
+				return Promise.resolve(data)
 			} catch (error) {
-				return Promise.reject(error);
+				return Promise.reject(error)
 			}
 		},
 
 		setToken(token: string) {
-			this.token = token;
-			setToken(token);
+			this.token = token
+			setToken(token)
 		},
 
 		removeToken() {
-			this.token = undefined;
-			removeToken();
+			this.token = undefined
+			removeToken()
 		},
 	},
-});
+})
 
 export function useAuthStoreWithout() {
-	return useAuthStore(store);
+	return useAuthStore(store)
 }

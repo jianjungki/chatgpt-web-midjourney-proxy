@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import type { CSSProperties } from "vue";
-import { computed, ref, watch } from "vue";
-import { NButton, NLayoutSider, useDialog } from "naive-ui";
-import List from "./List.vue";
-import Footer from "./Footer.vue";
-import { useAppStore, useChatStore } from "@/store";
-import { useBasicLayout } from "@/hooks/useBasicLayout";
-import { PromptStore, SvgIcon } from "@/components/common";
-import { t } from "@/locales";
+import type { CSSProperties } from "vue"
+import { computed, ref, watch } from "vue"
+import { NButton, NLayoutSider, useDialog } from "naive-ui"
+import List from "./List.vue"
+import Footer from "./Footer.vue"
+import { useAppStore, useChatStore } from "@/store"
+import { useBasicLayout } from "@/hooks/useBasicLayout"
+import { PromptStore, SvgIcon } from "@/components/common"
+import { t } from "@/locales"
 
-const appStore = useAppStore();
-const chatStore = useChatStore();
+const appStore = useAppStore()
+const chatStore = useChatStore()
 
-const dialog = useDialog();
+const dialog = useDialog()
 
-const { isMobile } = useBasicLayout();
-const show = ref(false);
+const { isMobile } = useBasicLayout()
+const show = ref(false)
 
-const collapsed = computed(() => appStore.siderCollapsed);
+const collapsed = computed(() => appStore.siderCollapsed)
 
 function handleAdd() {
-	chatStore.addHistory({ title: "New Chat", uuid: Date.now(), isEdit: false });
-	if (isMobile.value) appStore.setSiderCollapsed(true);
+	chatStore.addHistory({ title: "New Chat", uuid: Date.now(), isEdit: false })
+	if (isMobile.value) appStore.setSiderCollapsed(true)
 }
 
 function handleUpdateCollapsed() {
-	appStore.setSiderCollapsed(!collapsed.value);
+	appStore.setSiderCollapsed(!collapsed.value)
 }
 
 function handleClearAll() {
@@ -35,10 +35,10 @@ function handleClearAll() {
 		positiveText: t("common.yes"),
 		negativeText: t("common.no"),
 		onPositiveClick: () => {
-			chatStore.clearHistory();
-			if (isMobile.value) appStore.setSiderCollapsed(true);
+			chatStore.clearHistory()
+			if (isMobile.value) appStore.setSiderCollapsed(true)
 		},
-	});
+	})
 }
 
 const getMobileClass = computed<CSSProperties>(() => {
@@ -47,30 +47,30 @@ const getMobileClass = computed<CSSProperties>(() => {
 			position: "fixed",
 			zIndex: 50,
 			height: "100%",
-		};
+		}
 	}
-	return {};
-});
+	return {}
+})
 
 const mobileSafeArea = computed(() => {
 	if (isMobile.value) {
 		return {
 			paddingBottom: "env(safe-area-inset-bottom)",
-		};
+		}
 	}
-	return {};
-});
+	return {}
+})
 
 watch(
 	isMobile,
 	(val) => {
-		appStore.setSiderCollapsed(val);
+		appStore.setSiderCollapsed(val)
 	},
 	{
 		immediate: true,
 		flush: "post",
 	},
-);
+)
 </script>
 
 <template>
@@ -84,10 +84,15 @@ watch(
 		:style="getMobileClass"
 		@update-collapsed="handleUpdateCollapsed"
 	>
-		<div class="flex flex-col h-full" :style="mobileSafeArea">
+		<div
+class="flex flex-col h-full"
+:style="mobileSafeArea">
 			<main class="flex flex-col flex-1 min-h-0">
 				<div class="p-4">
-					<NButton dashed block @click="handleAdd">
+					<NButton
+dashed
+block
+@click="handleAdd">
 						{{ $t("chat.newChatButton") }}
 					</NButton>
 				</div>
@@ -96,7 +101,9 @@ watch(
 				</div>
 				<div class="flex items-center p-4 space-x-4">
 					<div class="flex-1">
-						<NButton block @click="show = true">
+						<NButton
+block
+@click="show = true">
 							{{ $t("store.siderButton") }}
 						</NButton>
 					</div>
