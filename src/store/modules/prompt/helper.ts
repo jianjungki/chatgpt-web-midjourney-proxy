@@ -1,18 +1,18 @@
-import { ss } from '@/utils/storage'
+import { ss } from "@/utils/storage"
 
-const LOCAL_NAME = 'promptStore'
+const LOCAL_NAME = "promptStore"
 
-export type PromptList = []
+export type PromptList = [];
 
 export interface PromptStore {
-  promptList: PromptList
+	promptList: PromptList;
 }
 
 export function getLocalPromptList(): PromptStore {
-  const promptStore: PromptStore | undefined = ss.get(LOCAL_NAME)
-  return promptStore ?? { promptList: [] }
+	const promptStore: PromptStore | undefined = ss.get(LOCAL_NAME)
+	return promptStore ?? { promptList: [] }
 }
 
 export function setLocalPromptList(promptStore: PromptStore): void {
-  ss.set(LOCAL_NAME, promptStore)
+	ss.set(LOCAL_NAME, promptStore)
 }

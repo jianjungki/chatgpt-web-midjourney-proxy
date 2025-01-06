@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { NInput, NButton, useMessage,NSwitch } from "naive-ui" //NInfiniteScroll
- 
-import {gptServerStore} from '@/store'
-import { mlog, myTrim,blurClean} from "@/api";
-import { t } from '@/locales'
-import {  watch } from "vue";
+import { NInput, NButton, useMessage, NSwitch } from "naive-ui" //NInfiniteScroll
 
-const emit= defineEmits(['close']);
-const ms= useMessage();
-const save = ()=>{
-    gptServerStore.setMyData( gptServerStore.myData );
-    ms.success( t('mjchat.success'));
-    emit('close');
+import { gptServerStore } from "@/store"
+import { blurClean } from "@/api"
+import { t } from "@/locales"
+import { watch } from "vue"
+
+const emit = defineEmits(["close"])
+const ms = useMessage()
+const save = () => {
+	gptServerStore.setMyData(gptServerStore.myData)
+	ms.success(t("mjchat.success"))
+	emit("close")
 }
 // const blurClean= ()=>{
 //   mlog('blurClean');
@@ -293,7 +293,7 @@ watch(() => gptServerStore.myData.OPENAI_API_KEY , (n)=>{
 </div>
 </template>
 <style>
-#setserver .n-input .n-input__input-el{
-    text-align: right;
+#setserver .n-input .n-input__input-el {
+	text-align: right;
 }
 </style>

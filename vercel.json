@@ -1,12 +1,12 @@
 {
-  "rewrites": [
-    {
-      "source": "/openapi/(.*)",
-      "destination": "/api/proxy"
-    },
-    {
-      "source": "/mjapi/(.*)",
-      "destination": "/api/proxy"
-    }
-  ]
+	"rewrites": [
+		{
+			"source": "/openapi/(.*)",
+			"destination": "/api/proxy"
+		},
+		{
+			"source": "/mjapi/(.*)",
+			"destination": "/api/proxy"
+		}
+	]
 }

@@ -1,8 +1,8 @@
-import { darkTheme, lightTheme } from 'naive-ui'
+import { darkTheme, lightTheme } from "naive-ui"
 
 const setupScrollbarStyle = () => {
-  const style = document.createElement('style')
-  const styleContent = `
+	const style = document.createElement("style")
+	const styleContent = `
     ::-webkit-scrollbar {
       background-color: transparent;
       width: ${lightTheme.Scrollbar.common?.scrollbarWidth};
@@ -21,8 +21,8 @@ const setupScrollbarStyle = () => {
     }
   `
 
-  style.innerHTML = styleContent
-  document.head.appendChild(style)
+	style.innerHTML = styleContent
+	document.head.appendChild(style)
 }
 
 export default setupScrollbarStyle

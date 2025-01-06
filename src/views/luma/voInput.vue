@@ -9,13 +9,12 @@ import { gptServerStore } from '@/store';
 import {  ref } from 'vue';
 import { useRoute } from 'vue-router';
 import PixInput from './pixInput.vue';
+const route = useRoute() // 获取当前路由对象
 
-const route = useRoute(); // 获取当前路由对象
-
-const st= ref({tab:''});
-const handleUpdateValue=(v:string)=>{
-   mlog("handleUpdateValue",v)
-   gptServerStore.setMyData({TAB_VIDEO:v})
+const st = ref({ tab: "" })
+const handleUpdateValue = (v: string) => {
+	mlog("handleUpdateValue", v)
+	gptServerStore.setMyData({ TAB_VIDEO: v })
 }
 
 const initLoad=()=>{
@@ -30,8 +29,9 @@ const initLoad=()=>{
     }
     else st.value.tab=( gptServerStore.myData.TAB_VIDEO?gptServerStore.myData.TAB_VIDEO:'Luma')
     if( st.value.tab=='runwayml') st.value.tab='runway'
+
 }
-initLoad();
+initLoad()
 </script>
 
 <template>
@@ -63,3 +63,4 @@ initLoad();
     --n-tab-gap:20px  !important;
 }
 </style>
+

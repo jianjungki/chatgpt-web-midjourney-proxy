@@ -14,6 +14,7 @@
     "node": "^16 || ^18 || ^19"
   },
   "scripts": {
+    "format": "prettier .  --write",
     "start": "esno ./src/index.ts",
     "dev": "esno watch ./src/index.ts",
     "prod": "node ./build/index.mjs",
@@ -40,6 +41,7 @@
     "md5": "^2.3.0",
     "multer": "1.4.5-lts.1",
     "node-fetch": "^3.3.0",
+    "pino": "^9.6.0",
     "socks-proxy-agent": "^7.0.0",
     "uuid": "^9.0.1"
   },

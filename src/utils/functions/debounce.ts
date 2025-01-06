@@ -1,18 +1,19 @@
-type CallbackFunc<T extends unknown[]> = (...args: T) => void
+// eslint-disable-next-line no-unused-vars
+type CallbackFunc<T extends unknown[]> = (...args: T) => void;
 
 export function debounce<T extends unknown[]>(
-  func: CallbackFunc<T>,
-  wait: number,
+	func: CallbackFunc<T>,
+	wait: number,
+// eslint-disable-next-line no-unused-vars
 ): (...args: T) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | undefined
+	let timeoutId: ReturnType<typeof setTimeout> | undefined
+	return (...args: T) => {
+		const later = () => {
+			clearTimeout(timeoutId)
+			func(...args)
+		}
 
-  return (...args: T) => {
-    const later = () => {
-      clearTimeout(timeoutId)
-      func(...args)
-    }
-
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(later, wait)
-  }
+		clearTimeout(timeoutId)
+		timeoutId = setTimeout(later, wait)
+	}
 }

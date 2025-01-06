@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { gptServerStore } from '@/store';
-import { NInput, NButton, NSwitch,NSelect ,useMessage} from 'naive-ui';
-import { computed } from 'vue';
-import {instructions} from '@/api';
-import { t } from '@/locales';
+import { gptServerStore } from "@/store"
+import { NInput, NButton, NSwitch, NSelect, useMessage } from "naive-ui"
+import { computed } from "vue"
+import { instructions } from "@/api"
+import { t } from "@/locales"
 
-const blurClean=()=>{
-}
-const ms= useMessage();
-const emit= defineEmits(['close']);
-const save = ()=>{
-    gptServerStore.setMyData( gptServerStore.myData );
-    ms.success( t('mjchat.success'));
-    emit('close');
+const blurClean = () => {}
+const ms = useMessage()
+const emit = defineEmits(["close"])
+const save = () => {
+	gptServerStore.setMyData(gptServerStore.myData)
+	ms.success(t("mjchat.success"))
+	emit("close")
 }
 
 const voiceList= computed(()=>{
@@ -27,26 +26,35 @@ const modelList= computed(()=>{
 });
 </script>
 <template>
-    <div  class="w-full  ">
-        <div class="p-2">
-            <div class="flex justify-between items-baseline ">
-                <div class="pb-1">
-                <n-switch v-model:value="gptServerStore.myData.REALTIME_IS_WHISPER" size="small" >
-                    <template #checked>whisper-1 ON </template> 
-                    <template #unchecked>whisper-1 Off</template>
-                </n-switch>
-                </div>
-                <div class="text-right">{{ $t('mj.setOpen') }}</div>
+	<div class="w-full">
+		<div class="p-2">
+			<div class="flex justify-between items-baseline">
+				<div class="pb-1">
+					<n-switch
+						v-model:value="gptServerStore.myData.REALTIME_IS_WHISPER"
+						size="small"
+					>
+						<template #checked>whisper-1 ON </template>
+						<template #unchecked>whisper-1 Off</template>
+					</n-switch>
+				</div>
+				<div class="text-right">{{ $t("mj.setOpen") }}</div>
+			</div>
 
-                </div>
-
-            <section class="mb-4 flex justify-between items-center"  >
-                <n-input @blur="blurClean"  :placeholder="$t('mj.setOpenPlaceholder') " v-model:value="gptServerStore.myData.OPENAI_API_BASE_URL" clearable>
-                    <template #prefix>
-                    <span class="text-[var(--n-tab-text-color-active)]">{{ $t('mj.setOpenUrl') }}:</span>
-                    </template>
-                </n-input>
-            </section>
+			<section class="mb-4 flex justify-between items-center">
+				<n-input
+					v-model:value="gptServerStore.myData.OPENAI_API_BASE_URL"
+					:placeholder="$t('mj.setOpenPlaceholder')"
+					clearable
+					@blur="blurClean"
+				>
+					<template #prefix>
+						<span class="text-[var(--n-tab-text-color-active)]"
+							>{{ $t("mj.setOpenUrl") }}:</span
+						>
+					</template>
+				</n-input>
+			</section>
 
             <section class="mb-4 flex justify-between items-center"  >
                 <n-input  @blur="blurClean" type="password"  :placeholder="$t('mj.setOpenKeyPlaceholder')" show-password-on="click" v-model:value="gptServerStore.myData.OPENAI_API_KEY" clearable>
@@ -64,19 +72,24 @@ const modelList= computed(()=>{
                 <n-select v-model:value="gptServerStore.myData.REALTIME_MODEL" :options="modelList" size="small"  class="!w-[70%]"   />
             </section>
 
-            <section class="mb-4"  >
-                <div>{{ $t('mjchat.role') }}</div>
-                <div>
-                    <n-input  type="textarea"  :placeholder="instructions"   
-                    v-model:value="gptServerStore.myData.REALTIME_SYSMSG" :autosize="{ minRows: 3 }"
-                    />
-                </div>
-            </section>
+			<section class="mb-4">
+				<div>{{ $t("mjchat.role") }}</div>
+				<div>
+					<n-input
+						v-model:value="gptServerStore.myData.REALTIME_SYSMSG"
+						type="textarea"
+						:placeholder="instructions"
+						:autosize="{ minRows: 3 }"
+					/>
+				</div>
+			</section>
 
-            <section class=" text-right flex justify-end space-x-2"  >
-                <!-- <NButton   @click="gptServerStore.setInit()">{{$t('mj.setBtBack')}}</NButton> -->
-                <NButton type="primary" @click="save">{{$t('mj.setBtSave')}}</NButton>
-            </section>
-        </div>
-    </div>
+			<section class="text-right flex justify-end space-x-2">
+				<!-- <NButton   @click="gptServerStore.setInit()">{{$t('mj.setBtBack')}}</NButton> -->
+				<NButton
+type="primary"
+@click="save">{{ $t("mj.setBtSave") }}</NButton>
+			</section>
+		</div>
+	</div>
 </template>

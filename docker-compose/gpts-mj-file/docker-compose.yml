@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   gptweb:
@@ -39,7 +39,7 @@ services:
       mj.discord.channel-id: xxx
       mj.discord.user-token: xxx
       mj.api-secret: mygod # MJ_API_SECRET
-  
+
   #文件服务 可选
   fileserver:
     image: ydlhero/file-server:latest
@@ -52,4 +52,3 @@ services:
       - "3102:3102"
     volumes:
       - /data/uploads:/app/uploads
-

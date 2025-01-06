@@ -459,103 +459,102 @@ export default {
 			portrait: "肖像 (2:3)",
 			landscape: "风景 (3:2)",
 		},
-	}
+	},
 
-  ,suno:{
-    description:"描述模式"
-    ,custom:"定制模式"
-    ,style:'歌曲风格'
-    ,stylepls:'歌曲名称比如:流行音乐'
-    ,emputy:'暂无内容'
-    ,noly:'无歌词'
-    ,inputly:'请输入歌曲名称或歌词'
-    ,doingly:"正在执行请稍后."
-    ,doingly2: "正在获取歌词..."
-    ,title:'歌曲名称'
-    ,titlepls:'歌曲名称比如:假期'
-    ,desc:'歌曲描述'
-    ,descpls:'歌曲描述 比如:关于假期的原声流行音乐'
-    ,noneedly:'无需歌词'
-    ,rank:'随机获取'
-    ,ly:'歌词'
-    ,lypls:'歌词:有一定的格式'
-    ,generate:'创作歌曲'
-    ,generately:'生成歌词'
-    ,nodata:'请先创作才有歌曲列表'
+	suno: {
+		description: "描述模式",
+		custom: "定制模式",
+		style: "歌曲风格",
+		stylepls: "歌曲名称比如:流行音乐",
+		emputy: "暂无内容",
+		noly: "无歌词",
+		inputly: "请输入歌曲名称或歌词",
+		doingly: "正在执行请稍后.",
+		doingly2: "正在获取歌词...",
+		title: "歌曲名称",
+		titlepls: "歌曲名称比如:假期",
+		desc: "歌曲描述",
+		descpls: "歌曲描述 比如:关于假期的原声流行音乐",
+		noneedly: "无需歌词",
+		rank: "随机获取",
+		ly: "歌词",
+		lypls: "歌词:有一定的格式",
+		generate: "创作歌曲",
+		generately: "生成歌词",
+		nodata: "请先创作才有歌曲列表",
 
-    ,menu:'音乐'
-    ,menuinfo:'Suno、Udio等音乐创作'
-    ,server:'Suno 接口地址'
-    ,serverabout:'Suno 相关'
-    ,setOpenKeyPlaceholder:'Suno API 的相关KEY；可不填'
+		menu: "音乐",
+		menuinfo: "Suno、Udio等音乐创作",
+		server: "Suno 接口地址",
+		serverabout: "Suno 相关",
+		setOpenKeyPlaceholder: "Suno API 的相关KEY；可不填",
 
-    ,upMps:'上传音频'
-    ,extend:'延伸'
-    ,extendFrom:'延伸于'
-    ,extendAt:'延伸开始于'
-    ,fail:'失败'
-    ,info:'说明:<br>上传音频时长必须在6s-60s内'
-    ,lyricsFail:'获取歌曲失败'
-  }
-  ,video:{
-    menu:"视频",
-    menuinfo:'Luma等 视频创作',
-    descpls:'视频创作描述',
-    lumaabout:"Luma 相关",
-    lumaserver:"Luma 接口地址",
-    setOpenKeyPlaceholder:'Luma API 的key, 可不填',
-    generate:'生成视频',
-    nodata:'暂无可用视频，请先生成！',
-    selectimg:'参考图片',
-    clear:'清除',
-    plsInput:'请输入内容！',
-    submitSuccess:'已提交成功！',
-    process:'视频生成中...',
-    repeat:'重新获取',
-    pending:'状态:队列中',
-    processing:'状态:生产中',
-    failed:'状态:生成失败！',
-    download:'下载',
-    extend:'延展',
+		upMps: "上传音频",
+		extend: "延伸",
+		extendFrom: "延伸于",
+		extendAt: "延伸开始于",
+		fail: "失败",
+		info: "说明:<br>上传音频时长必须在6s-60s内",
+		lyricsFail: "获取歌曲失败",
+	},
+	video: {
+		menu: "视频",
+		menuinfo: "Luma等 视频创作",
+		descpls: "视频创作描述",
+		lumaabout: "Luma 相关",
+		lumaserver: "Luma 接口地址",
+		setOpenKeyPlaceholder: "Luma API 的key, 可不填",
+		generate: "生成视频",
+		nodata: "暂无可用视频，请先生成！",
+		selectimg: "参考图片",
+		clear: "清除",
+		plsInput: "请输入内容！",
+		submitSuccess: "已提交成功！",
+		process: "视频生成中...",
+		repeat: "重新获取",
+		pending: "状态:队列中",
+		processing: "状态:生产中",
+		failed: "状态:生成失败！",
+		download: "下载",
+		extend: "延展",
 
-    lumainfo:'说明：<ul><li >1.relax版已下线，<b style="color:red">入口已经更换到pro无水印版</b></li><li>2.无水印版本需要通过“下载按钮”得到下载链接</li><li>3.pro得到的链接有时限；请及时保存mp4文件到本地</li><li>4.请在生成后的30分钟内；将mp4保存到本地，渠道号也可能被封或者下线</li> <li>5.当下载链接无效时会给出带水印的视频链接</li></ul>',
-    runwayabout:'Runway 相关',
-    runwayserver:'Runway 接口地址',
-    setOpenKeyPlaceholder2:'Runway API 的key, 可不填',
-    endImg:'尾帧图',
-    runwayinfo:'说明：<ul><li>1. Runway 图片与视频都有有效期</li>  <li>2. 请在生成视频后30分钟内将mp4保存到本地</li>  <li>3. 过期重新获取，可能存在账号下线而获取失败</li><li>4. Gen3A Turbo 必须带图或者视频</li><li>5. 参考可以是图或者视频mp4 </li></ul>',
-    nosup:'暂不支持',
-    rwgen2:'版本: Gen-2, 价格实惠',
-    rwgen3:'版本: Gen-3 Alpha',
-    rwgen3fast:'版本: Gen-3 Alpha Fast',
-    repeat2:'过期.重新获取',
+		lumainfo:
+			'说明：<ul><li >1.relax版已下线，<b style="color:red">入口已经更换到pro无水印版</b></li><li>2.无水印版本需要通过“下载按钮”得到下载链接</li><li>3.pro得到的链接有时限；请及时保存mp4文件到本地</li><li>4.请在生成后的30分钟内；将mp4保存到本地，渠道号也可能被封或者下线</li> <li>5.当下载链接无效时会给出带水印的视频链接</li></ul>',
+		runwayabout: "Runway 相关",
+		runwayserver: "Runway 接口地址",
+		setOpenKeyPlaceholder2: "Runway API 的key, 可不填",
+		endImg: "尾帧图",
+		runwayinfo:
+			"说明：<ul><li>1. Runway 图片与视频都有有效期</li>  <li>2. 请在生成视频后30分钟内将mp4保存到本地</li>  <li>3. 过期重新获取，可能存在账号下线而获取失败</li><li>4. Gen3A Turbo 必须带图或者视频</li><li>5. 参考可以是图或者视频mp4 </li></ul>",
+		nosup: "暂不支持",
+		rwgen2: "版本: Gen-2, 价格实惠",
+		rwgen3: "版本: Gen-3 Alpha",
+		rwgen3fast: "版本: Gen-3 Alpha Fast",
+		repeat2: "过期.重新获取",
 
-    rwgen3turbo:'版本: Gen-3 Alpha Turbo',
-    gen3a_turbo_img:'Gen-3 Alpha Turbo 必须带图',
-
-  }
-  ,dance:{
-    menu:"舞蹈",
-    menuinfo:'Viggle等 舞蹈视频创作'
-    ,character:'人物角色'
-    ,viggleabout:"Viggle 相关",
-    viggleserver:"Viggle 接口地址",
-    setOpenKeyPlaceholder:'Viggle API 的key, 可不填',
-    info:'说明:<br>1.角色图片最好是个人全身照片<br>2.舞蹈模版视频最好是个人视频 别传群舞',
-    model:'模型',
-    bgw:'白色背景',
-    bgg:'绿色背景',
-    bgmoban:'模版背景',
-    bgrole:'角色背景',
-    gring:'生成中...',
-    uprolefirst:'请先上传角色图片',
-    uprolefail:'上传失败',
-    upvideo:'+上传模版舞蹈视频',
-    usevideo:'+使用官网模版',
-    moban:'舞蹈模版',
-    moban2:'模版名称',
-    use:'使用',
-  }
-
-
+		rwgen3turbo: "版本: Gen-3 Alpha Turbo",
+		gen3a_turbo_img: "Gen-3 Alpha Turbo 必须带图",
+	},
+	dance: {
+		menu: "舞蹈",
+		menuinfo: "Viggle等 舞蹈视频创作",
+		character: "人物角色",
+		viggleabout: "Viggle 相关",
+		viggleserver: "Viggle 接口地址",
+		setOpenKeyPlaceholder: "Viggle API 的key, 可不填",
+		info: "说明:<br>1.角色图片最好是个人全身照片<br>2.舞蹈模版视频最好是个人视频 别传群舞",
+		model: "模型",
+		bgw: "白色背景",
+		bgg: "绿色背景",
+		bgmoban: "模版背景",
+		bgrole: "角色背景",
+		gring: "生成中...",
+		uprolefirst: "请先上传角色图片",
+		uprolefail: "上传失败",
+		upvideo: "+上传模版舞蹈视频",
+		usevideo: "+使用官网模版",
+		moban: "舞蹈模版",
+		moban2: "模版名称",
+		use: "使用",
+	},
 }

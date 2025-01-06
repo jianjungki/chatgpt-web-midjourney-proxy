@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "lib": [
-      "esnext"
-    ],
+    "lib": ["esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -17,11 +15,6 @@
     "outDir": "build",
     "noEmit": true
   },
-  "exclude": [
-    "node_modules",
-    "build"
-  ],
-  "include": [
-    "**/*.ts"
-  ]
+  "exclude": ["node_modules", "build"],
+  "include": ["**/*.ts"]
 }
