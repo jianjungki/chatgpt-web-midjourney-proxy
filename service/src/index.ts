@@ -3,7 +3,6 @@ import fs from 'fs'
 import multer from 'multer'
 import express from 'express'
 // const { createProxyMiddleware } = require('http-proxy-middleware');
-
 // import {createProxyMiddleware} from "http-proxy-middleware"
 import proxy from 'express-http-proxy'
 import bodyParser from 'body-parser'
@@ -11,7 +10,21 @@ import FormData from 'form-data'
 import axios from 'axios'
 import AWS from 'aws-sdk'
 import { v4 as uuidv4 } from 'uuid'
+
 import pkg from '../package.json'
+import {
+  ideoProxy, ideoProxyFileDo, klingProxy, lumaProxy, pikaProxy, pixverseProxy, runwayProxy,
+
+  runwaymlProxy,
+
+  sunoProxy,
+  udioProxy,
+
+  viggleProxy,
+
+  viggleProxyFileDo,
+
+} from './myfun'
 import { formattedDate, isNotEmptyString } from './utils/is'
 import {
   auth,
@@ -23,18 +36,6 @@ import {
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import type { ChatMessage } from './chatgpt'
 import type { RequestProps } from './types'
-import {
-  ideoProxy,
-  ideoProxyFileDo,
-  klingProxy,
-  lumaProxy,
-  pikaProxy,
-  runwayProxy,
-  runwaymlProxy,
-  udioProxy,
-  viggleProxy,
-  viggleProxyFileDo,
-} from './myfun'
 import { logger } from './utils/logger'
 
 const app = express()
@@ -372,6 +373,7 @@ app.use(
     else {
       res.status(400).json({ error: 'uploader fail' })
     }
+<<<<<<< HEAD
   })// End of Selection
 app.use('/luma', authV2, lumaProxy)
 app.use('/pro/luma', authV2, lumaProxy)
@@ -393,6 +395,52 @@ app.use('/pika', authV2, pikaProxy)
 app.use('/udio', authV2, udioProxy)
 
 // app.use('/pixverse', authV2, pixverseProxy)
+=======
+  },
+)
+
+// 代理openai 接口
+app.use('/openapi', authV2, turnstileCheck, proxy(API_BASE_URL, {
+  https: false,
+  limit: '10mb',
+  proxyReqPathResolver(req) {
+    return req.originalUrl.replace('/openapi', '') // 将URL中的 `/openapi` 替换为空字符串
+  },
+  proxyReqOptDecorator(proxyReqOpts, srcReq) {
+    proxyReqOpts.headers.Authorization = `Bearer ${process.env.OPENAI_API_KEY}`
+    proxyReqOpts.headers['Content-Type'] = 'application/json'
+    proxyReqOpts.headers['Mj-Version'] = pkg.version
+    return proxyReqOpts
+  },
+  // limit: '10mb'
+}))
+
+// 代理sunoApi 接口
+app.use('/sunoapi', authV2, sunoProxy)
+app.use('/suno', authV2, sunoProxy)
+
+// 代理luma 接口
+app.use('/luma', authV2, lumaProxy)
+app.use('/pro/luma', authV2, lumaProxy)
+
+// 代理 viggle 文件
+app.use('/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo)
+app.use('/pro/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo)
+// 代理 viggle
+app.use('/viggle', authV2, viggleProxy)
+app.use('/pro/viggle', authV2, viggleProxy)
+
+app.use('/runwayml', authV2, runwaymlProxy)
+app.use('/runway', authV2, runwayProxy)
+app.use('/kling', authV2, klingProxy)
+
+app.use('/ideogram/remix', authV2, upload2.single('image_file'), ideoProxyFileDo)
+app.use('/ideogram', authV2, ideoProxy)
+app.use('/pika', authV2, pikaProxy)
+app.use('/udio', authV2, udioProxy)
+
+app.use('/pixverse', authV2, pixverseProxy)
+>>>>>>> 15d3a56b48d8dcfa347e3bf83879e3359210535a
 
 // 代理openai 接口
 app.use(
