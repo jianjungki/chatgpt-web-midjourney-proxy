@@ -373,29 +373,6 @@ app.use(
     else {
       res.status(400).json({ error: 'uploader fail' })
     }
-<<<<<<< HEAD
-  })// End of Selection
-app.use('/luma', authV2, lumaProxy)
-app.use('/pro/luma', authV2, lumaProxy)
-
-// 代理 viggle 文件
-app.use('/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo)
-app.use('/pro/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo)
-// 代理 viggle
-app.use('/viggle', authV2, viggleProxy)
-app.use('/pro/viggle', authV2, viggleProxy)
-
-app.use('/runwayml', authV2, runwaymlProxy)
-app.use('/runway', authV2, runwayProxy)
-app.use('/kling', authV2, klingProxy)
-
-app.use('/ideogram/remix', authV2, upload2.single('image_file'), ideoProxyFileDo)
-app.use('/ideogram', authV2, ideoProxy)
-app.use('/pika', authV2, pikaProxy)
-app.use('/udio', authV2, udioProxy)
-
-// app.use('/pixverse', authV2, pixverseProxy)
-=======
   },
 )
 
@@ -440,7 +417,6 @@ app.use('/pika', authV2, pikaProxy)
 app.use('/udio', authV2, udioProxy)
 
 app.use('/pixverse', authV2, pixverseProxy)
->>>>>>> 15d3a56b48d8dcfa347e3bf83879e3359210535a
 
 // 代理openai 接口
 app.use(
